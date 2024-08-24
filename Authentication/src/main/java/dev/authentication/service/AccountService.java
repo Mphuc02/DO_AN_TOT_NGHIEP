@@ -7,6 +7,10 @@ import dev.authentication.model.request.RegisterAccountRequest;
 import dev.authentication.model.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
+import dev.common.constant.ExceptionConstant.*;
+import dev.common.exception.FailAuthenticationException;
+import dev.common.exception.ObjectIllegalArgumentException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,21 +34,37 @@ public class AccountService {
     @Value(ValueConstant.JWT.ACCESS_TOKEN_EXPIRATION)
     public int ACCESS_TOKEN_EXPIRATION;
 
+    @Transactional
     public void register(RegisterAccountRequest request){
-        Account account = accountUtil.mapFromRegister(request);
-        accountRepository.save(account);
+        Account entity = accountUtil.mapFromRegister(request);
+        List<Account> accountsMatchedConditions = accountRepository.findByUserNameOrEmailOrNumberPhone(entity.getUsername(),
+                                                                            entity.getEmail(),
+                                                                            entity.getNumberPhone());
+
+        if(!accountsMatchedConditions.isEmpty()){
+            Map<String, String> existedFields = new HashMap<>();
+            accountsMatchedConditions.forEach(account -> {
+                if(account.getUsername().equals(entity.getUsername()))
+                    existedFields.put("userName", "Tài khoản đã tồn tại");
+                if(account.getEmail().equals(entity.getEmail()))
+                    existedFields.put("email", "Email đã tồn tại");
+                if(account.getNumberPhone().equals(entity.getNumberPhone()))
+                    existedFields.put("numberPhone", "Số điện thoại đã tồn tại");
+            });
+            throw new ObjectIllegalArgumentException(existedFields, AUTHENTICATION_EXCEPTION.FAIL_VALIDATION_ACCOUNT);
+        }
+        accountRepository.save(entity);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+        //Todo: Trả về thêm refresh token
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassWord()));
             Account account = (Account) authentication.getPrincipal();
             String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION);
-
             return new AuthenticationResponse(accessToken, "");
         } catch (AuthenticationException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new FailAuthenticationException(AUTHENTICATION_EXCEPTION.FAIL_AUTHENTICATION);
         }
     }
 }
