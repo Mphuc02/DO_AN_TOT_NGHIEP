@@ -1,0 +1,21 @@
+spring:
+    application:
+        name: authentication
+    
+    datasource:
+        username: root
+        password: 123456
+        url: jdbc:mysql://localhost:3306/authentication
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
