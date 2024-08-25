@@ -24,6 +24,7 @@
     <modules>
         <module>Authentication</module>
         <module>Common</module>
+        <module>Patient</module>
     </modules>
     <scm>
 		<connection/>
