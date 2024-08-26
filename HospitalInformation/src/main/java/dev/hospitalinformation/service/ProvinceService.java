@@ -1,7 +1,7 @@
 package dev.hospitalinformation.service;
 
 import dev.hospitalinformation.entity.Province;
-import dev.hospitalinformation.model.response.ProvinceResponse;
+import dev.common.dto.response.ProvinceResponse;
 import dev.hospitalinformation.repository.ProvinceRepository;
 import dev.hospitalinformation.util.ProvinceUtil;
 import jakarta.transaction.Transactional;

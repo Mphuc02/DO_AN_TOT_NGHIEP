@@ -1,7 +1,7 @@
 package dev.hospitalinformation.util;
 
 import dev.hospitalinformation.entity.Commune;
-import dev.hospitalinformation.model.response.CommuneResponse;
+import dev.common.dto.response.CommuneResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

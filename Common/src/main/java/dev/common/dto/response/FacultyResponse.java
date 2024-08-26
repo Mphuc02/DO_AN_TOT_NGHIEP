@@ -1,7 +1,7 @@
-package dev.hospitalinformation.model.response;
+package dev.common.dto.response;
 
 import lombok.*;
-import java.util.List;
+
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -9,8 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class ProvinceResponse {
+public class FacultyResponse {
     private UUID id;
     private String name;
-    private List<DistrictResponse> districts;
+    private String describe;
 }

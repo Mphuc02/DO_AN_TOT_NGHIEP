@@ -20,4 +20,10 @@ public class ExceptionAdvice {
         log.error("Exception when receive object request", ex);
         return new ResponseEntity<>(ex.getErrors(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handler(NotFoundException ex){
+        log.error("Exception when find entity", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

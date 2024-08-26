@@ -14,5 +14,10 @@ public class ApiConstant {
             public static final String DISTRICT_ID_PARAM = "district-id";
             public static final String COMMUNE_ID_PARAM = "commune-id";
         }
+
+        public static final class FACULTY_URL{
+            public static final String URL = "/api/v1/faculty";
+            public static final String ID = "/{id}";
+        }
     }
 }
