@@ -25,7 +25,7 @@ public class District {
 
     private String name;
 
-    @OneToMany(mappedBy = "district", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Commune> communes;
 
     @ManyToOne

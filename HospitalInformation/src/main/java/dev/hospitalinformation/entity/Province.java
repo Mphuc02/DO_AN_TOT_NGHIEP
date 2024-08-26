@@ -25,6 +25,6 @@ public class Province {
 
     private String name;
 
-    @OneToMany(mappedBy = "province", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "province", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<District> districts;
 }
