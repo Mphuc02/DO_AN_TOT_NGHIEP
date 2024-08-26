@@ -2,9 +2,9 @@ package dev.authentication.service;
 
 import dev.authentication.constant.ValueConstant;
 import dev.authentication.entity.Account;
-import dev.authentication.model.request.AuthenticationRequest;
-import dev.authentication.model.request.RegisterAccountRequest;
-import dev.authentication.model.response.AuthenticationResponse;
+import dev.authentication.dto.request.AuthenticationRequest;
+import dev.authentication.dto.request.RegisterAccountRequest;
+import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
 import dev.common.constant.ExceptionConstant.*;

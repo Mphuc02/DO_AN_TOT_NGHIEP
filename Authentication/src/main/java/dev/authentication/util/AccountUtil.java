@@ -1,7 +1,7 @@
 package dev.authentication.util;
 
 import dev.authentication.entity.Account;
-import dev.authentication.model.request.RegisterAccountRequest;
+import dev.authentication.dto.request.RegisterAccountRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

@@ -3,9 +3,9 @@ spring:
         name: authentication
     
     datasource:
+        url: jdbc:mysql://localhost:3306/authentication
         username: root
         password: 123456
-        url: jdbc:mysql://localhost:3306/authentication
         driver-class-name: com.mysql.cj.jdbc.Driver
     
     jpa:

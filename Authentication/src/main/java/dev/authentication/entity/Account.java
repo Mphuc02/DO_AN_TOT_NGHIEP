@@ -8,9 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_account")
@@ -31,9 +30,16 @@ public class Account implements UserDetails {
     private String email;
     private Date createdAt;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private Set<AccountRole> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if(roles.isEmpty())
+            return List.of(new SimpleGrantedAuthority("USER"));
+        else{
+            return roles.stream().map(role -> new SimpleGrantedAuthority(role.getPermission().name())).collect(Collectors.toList());
+        }
     }
 
     @Override

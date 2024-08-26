@@ -1,4 +1,4 @@
-package dev.authentication.model.request;
+package dev.authentication.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

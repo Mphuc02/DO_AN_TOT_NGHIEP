@@ -1,4 +1,4 @@
-package dev.authentication.model.response;
+package dev.authentication.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

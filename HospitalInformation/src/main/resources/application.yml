@@ -3,7 +3,6 @@ spring:
         name: HospitalInformation
     
     datasource:
-
         url: jdbc:mysql://localhost:3306/hospital_information
         username: root
         password: 123456

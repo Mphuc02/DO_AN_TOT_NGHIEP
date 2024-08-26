@@ -1,7 +1,7 @@
 package dev.authentication.rest;
 
-import dev.authentication.model.request.AuthenticationRequest;
-import dev.authentication.model.request.RegisterAccountRequest;
+import dev.authentication.dto.request.AuthenticationRequest;
+import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.authentication.service.AccountService;
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant.*;
