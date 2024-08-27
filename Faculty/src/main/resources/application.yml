@@ -1,0 +1,30 @@
+spring:
+    application:
+        name: Faculty
+        
+    datasource:
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/faculty
+    
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+        
+server:
+    port: 0

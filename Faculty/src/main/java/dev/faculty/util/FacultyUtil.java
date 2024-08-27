@@ -1,12 +1,11 @@
-package dev.hospitalinformation.util;
+package dev.faculty.util;
 
 import dev.common.dto.response.FacultyResponse;
-import dev.hospitalinformation.dto.request.CreateFacultyRequest;
-import dev.hospitalinformation.dto.request.UpdateFacultyRequest;
-import dev.hospitalinformation.entity.Faculty;
+import dev.faculty.dto.request.CreateFacultyRequest;
+import dev.faculty.dto.request.UpdateFacultyRequest;
+import dev.faculty.entity.Faculty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,8 +1,9 @@
-package dev.hospitalinformation.entity;
+package dev.faculty.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,4 +20,7 @@ public class Faculty {
 
     private String name;
     private String facultyDescribe;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "faculty")
+    private List<Position> positions;
 }

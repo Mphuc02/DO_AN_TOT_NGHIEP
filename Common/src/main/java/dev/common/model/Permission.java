@@ -1,4 +1,4 @@
-package dev.authentication.model;
+package dev.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

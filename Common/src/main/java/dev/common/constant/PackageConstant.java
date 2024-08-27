@@ -5,4 +5,5 @@ public class PackageConstant {
     public static final String COMMON_PACKAGE = "dev.common";
     public static final String PATIENT_PACKAGE = "dev.patient";
     public static final String HOSPITAL_INFORMATION_PACKAGE = "dev.hospitalinformation";
+    public static final String FACULTY_PACKAGE = "dev.faculty";
 }

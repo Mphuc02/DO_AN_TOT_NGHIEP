@@ -1,11 +1,11 @@
-package dev.hospitalinformation.rest;
+package dev.faculty.rest;
 
 import dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.FACULTY_URL;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
-import dev.hospitalinformation.dto.request.CreateFacultyRequest;
-import dev.hospitalinformation.dto.request.UpdateFacultyRequest;
-import dev.hospitalinformation.service.FacultyService;
+import dev.faculty.dto.request.CreateFacultyRequest;
+import dev.faculty.dto.request.UpdateFacultyRequest;
+import dev.faculty.service.FacultyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

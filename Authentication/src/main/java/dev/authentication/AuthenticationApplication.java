@@ -2,7 +2,7 @@ package dev.authentication;
 
 import dev.authentication.entity.Account;
 import dev.authentication.entity.AccountRole;
-import dev.authentication.model.Permission;
+import dev.common.model.Permission;
 import dev.authentication.repository.AccountRepository;
 import dev.common.constant.PackageConstant;
 import lombok.RequiredArgsConstructor;
