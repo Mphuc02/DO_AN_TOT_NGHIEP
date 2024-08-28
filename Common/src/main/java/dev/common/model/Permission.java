@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public enum Permission {
-    ADMIN_READ("admin:read"),
-    ADMIN_UPDATE("admin:update"),
-    ADMIN_CREATE("admin:create"),
-    ADMIN_DELETE("admin:delete");
+    ADMIN_READ("admin:read", "Quản trị viên"),
+    ADMIN_UPDATE("admin:update", "Quản trị viên"),
+    ADMIN_CREATE("admin:create", "Quản trị viên"),
+    ADMIN_DELETE("admin:delete", "Quản trị viên");
 
-    @Getter
     private final String permission;
+    private final String position;
 }

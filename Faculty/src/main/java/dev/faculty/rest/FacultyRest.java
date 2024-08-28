@@ -1,6 +1,6 @@
 package dev.faculty.rest;
 
-import dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.FACULTY_URL;
+import dev.common.constant.ApiConstant.FACULTY_URL;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.faculty.dto.request.CreateFacultyRequest;
@@ -27,7 +27,7 @@ public class FacultyRest {
     @PostMapping()
     public ResponseEntity<Object> save(@Valid @RequestBody CreateFacultyRequest request, BindingResult result){
         if(result.hasErrors()){
-            throw new ObjectIllegalArgumentException(result.getAllErrors(), HOSPITAL_INFORMATION.FAIL_VALIDATION_FACULTY);
+            throw new ObjectIllegalArgumentException(result.getAllErrors(), FACULTY_EXCEPTION.FAIL_VALIDATION_FACULTY);
         }
         return ResponseEntity.ok(facultyService.save(request));
     }
@@ -35,7 +35,7 @@ public class FacultyRest {
     @PutMapping(FACULTY_URL.ID)
     public ResponseEntity<Object> update(@PathVariable UUID id, @Valid @RequestBody UpdateFacultyRequest request, BindingResult result){
         if(result.hasErrors()){
-            throw new ObjectIllegalArgumentException(result.getAllErrors(), HOSPITAL_INFORMATION.FAIL_VALIDATION_FACULTY);
+            throw new ObjectIllegalArgumentException(result.getAllErrors(), FACULTY_EXCEPTION.FAIL_VALIDATION_FACULTY);
         }
         return ResponseEntity.ok(facultyService.update(request, id));
     }

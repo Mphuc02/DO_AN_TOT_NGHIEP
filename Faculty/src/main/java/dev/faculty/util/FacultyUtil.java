@@ -4,13 +4,17 @@ import dev.common.dto.response.FacultyResponse;
 import dev.faculty.dto.request.CreateFacultyRequest;
 import dev.faculty.dto.request.UpdateFacultyRequest;
 import dev.faculty.entity.Faculty;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class FacultyUtil {
+    private final PositionUtil positionUtil;
+
     public Faculty createRequestToEntity(CreateFacultyRequest request){
         return Faculty.builder()
                 .name(request.getName())

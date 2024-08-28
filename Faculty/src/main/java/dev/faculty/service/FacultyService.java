@@ -31,7 +31,7 @@ public class FacultyService {
 
     @Transactional
     public FacultyResponse update(UpdateFacultyRequest request, UUID id){
-        Faculty findToUpdate = facultyRepository.findById(id).orElseThrow(() -> new NotFoundException(HOSPITAL_INFORMATION.FACULTY_NOT_FOUND));
+        Faculty findToUpdate = facultyRepository.findById(id).orElseThrow(() -> new NotFoundException(FACULTY_EXCEPTION.FACULTY_NOT_FOUND));
         facultyUtil.updateRequestToEntity(request, findToUpdate);
         findToUpdate = facultyRepository.save(findToUpdate);
         return facultyUtil.entityToResponse(findToUpdate);
@@ -39,7 +39,7 @@ public class FacultyService {
 
     public void delete(UUID id){
         if(!facultyRepository.existsById(id))
-            throw new NotFoundException(HOSPITAL_INFORMATION.FACULTY_NOT_FOUND);
+            throw new NotFoundException(FACULTY_EXCEPTION.FACULTY_NOT_FOUND);
         facultyRepository.deleteById(id);
     }
 }
