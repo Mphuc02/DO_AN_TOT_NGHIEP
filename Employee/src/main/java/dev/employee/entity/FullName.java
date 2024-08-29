@@ -4,23 +4,25 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
+
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_emplyee")
+@Table(name = "tbl_name")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Employee {
+public class FullName {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
+    private String firstName;
+    private String middleName;
+    private String lastName;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-    private FullName fullName;
-
-    @Column(columnDefinition = "TEXT")
-    private String introduce;
+    @OneToOne
+    private Employee employee;
 }

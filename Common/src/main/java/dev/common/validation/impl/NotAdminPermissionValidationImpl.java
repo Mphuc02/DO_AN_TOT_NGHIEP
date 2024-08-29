@@ -11,10 +11,9 @@ public class NotAdminPermissionValidationImpl implements ConstraintValidator<Not
     public boolean isValid(Permission permission, ConstraintValidatorContext constraintValidatorContext) {
         if(ObjectUtils.isEmpty(permission))
             return true;
-        //Todo: Chưa thể xác thực các role khác ADMIN
-        return  !permission.getPermission().equals(Permission.ADMIN_CREATE) &&
-                !permission.getPermission().equals(Permission.ADMIN_UPDATE) &&
-                !permission.getPermission().equals(Permission.ADMIN_READ) &&
-                !permission.getPermission().equals(Permission.ADMIN_DELETE);
+        return  !permission.equals(Permission.ADMIN_CREATE) &&
+                !permission.equals(Permission.ADMIN_UPDATE) &&
+                !permission.equals(Permission.ADMIN_READ) &&
+                !permission.equals(Permission.ADMIN_DELETE);
     }
 }
