@@ -2,8 +2,8 @@ package dev.common.dto.response;
 
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Getter
 @Setter
 @Builder

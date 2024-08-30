@@ -23,4 +23,8 @@ public class ApiConstant {
         public static final String POSITION_URL = "/api/v1/positions";
         public static final String FACULTY_ID = "/faculty/{id}";
     }
+
+    public static final class EMPLOYEE_URL{
+        public static final String URL = "/api/v1/employees";
+    }
 }
