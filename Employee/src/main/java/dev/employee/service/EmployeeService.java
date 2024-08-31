@@ -1,6 +1,8 @@
 package dev.employee.service;
 
-import dev.common.dto.response.EmployeeResponse;
+import com.google.gson.Gson;
+import dev.common.dto.request.CommonRegisterAccountRequest;
+import dev.employee.constant.KafkaConstrant.*;
 import dev.employee.dto.request.CreateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.repository.EmployeeRepository;
@@ -16,12 +18,17 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeUtil employeeUtil;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    @Value("${kafka.topics.create-acccount-topic}")
+    private final Gson gson;
+
+    @Value(TOPICS.CREATE_ACCOUNT_TOPIC)
     private String CREATE_ACCOUNT_TOPIC;
 
-    public EmployeeResponse save(CreateEmployeeRequest request){
+
+    public void save(CreateEmployeeRequest request){
+//        CommonRegisterAccountRequest registerRequest = employeeUtil.createRegisterAccountRequest(request);
+//        kafkaTemplate.send(CREATE_ACCOUNT_TOPIC, gson.toJson(registerRequest));
+
         Employee entity = employeeUtil.createRequestToEntity(request);
-        kafkaTemplate.send(CREATE_ACCOUNT_TOPIC, "hello may me");
-        return null;
+        employeeRepository.save(entity);
     }
 }

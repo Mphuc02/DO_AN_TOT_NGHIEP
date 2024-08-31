@@ -1,11 +1,11 @@
 package dev.employee.dto.request;
 
+import dev.common.validation.DateOfBirthValidation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
+
+import java.sql.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +24,10 @@ public class CreateEmployeeRequest {
     @NotEmpty(message = "Email không được bỏ trống")
     @Email(message = "Email không đúng đinh dạng")
     private String email;
+
+    @NotNull(message = "Ngày sinh không được bỏ trống")
+    @DateOfBirthValidation(minimumAge = 18, message = "Tuổi phải ít nhất 18 tuổi")
+    private Date dateOfBirth;
 
     @Valid
     private CreateFullNameRequest fullName;

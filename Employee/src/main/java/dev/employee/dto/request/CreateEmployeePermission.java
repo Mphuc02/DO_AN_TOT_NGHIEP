@@ -1,8 +1,8 @@
 package dev.employee.dto.request;
 
+import dev.common.model.Permission;
 import dev.common.validation.NotAdminPermissionValidation;
 import lombok.*;
-import java.security.Permission;
 
 @AllArgsConstructor
 @NoArgsConstructor

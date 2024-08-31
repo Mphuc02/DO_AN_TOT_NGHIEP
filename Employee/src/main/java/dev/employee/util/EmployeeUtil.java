@@ -1,5 +1,6 @@
 package dev.employee.util;
 
+import dev.common.dto.request.CommonRegisterAccountRequest;
 import dev.employee.dto.request.CreateEmployeeRequest;
 import dev.employee.entity.Employee;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,16 @@ public class EmployeeUtil {
         return Employee.builder()
                 .fullName(fullNameUtil.createRequestToEntity(request.getFullName()))
                 .introduce(request.getIntroduce())
+                .dateOfBirth(request.getDateOfBirth())
                 .build();
     }
+
+//    public CommonRegisterAccountRequest createRegisterAccountRequest(CreateEmployeeRequest request){
+//        return CommonRegisterAccountRequest.builder()
+//                .email(request.getEmail())
+//                .numberPhone(request.getNumberPhone())
+//                .userName()
+//                .passWord()
+//                .build();
+//    }
 }

@@ -14,4 +14,8 @@ public class ExceptionConstant {
         public static final String POSITION_NOT_FOUND = "Vị trí với id không tồn tại";
         public static final String FAIL_VALIDATION_POSITION = "Lỗi khi kiểm tra thuộc tính của Position";
     }
+
+    public static final class EMPLOYEE_EXCEPTION{
+        public static final String FAIL_VALIDATION_EMPLOYEE = "Lỗi khi kiểm tra thuộc tính của Employee";
+    }
 }
