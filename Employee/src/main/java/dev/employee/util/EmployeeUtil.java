@@ -17,19 +17,21 @@ import java.util.stream.Collectors;
 public class EmployeeUtil {
     private final FullNameUtil fullNameUtil;
     public Employee createRequestToEntity(CommonRegisterEmployeeRequest request){
+        Employee employee = Employee.builder()
+                .id(request.getId())
+                .introduce(request.getIntroduce())
+                .dateOfBirth(new Date(request.getDateOfBirth().getTime()))
+                .build();
+
         Set<EmployeeRole> roles = request.getPermissions().stream()
                                             .map(permission -> EmployeeRole.builder()
                                                                     .permission(permission)
+                                                                    .employee(employee)
                                                                     .build())
                                             .collect(Collectors.toSet());
-
-        return Employee.builder()
-                .id(request.getId())
-                .fullName(fullNameUtil.createRequestToEntity(request.getFullName()))
-                .introduce(request.getIntroduce())
-                .dateOfBirth(new Date(request.getDateOfBirth().getTime()))
-                .roles(roles)
-                .build();
+        employee.setRoles(roles);
+        employee.setFullName(fullNameUtil.createRequestToEntity(request.getFullName(), employee));
+        return employee;
     }
 
     public EmployeeResponse entityToResponse(Employee entity){
@@ -38,6 +40,7 @@ public class EmployeeUtil {
                                             .map(EmployeeRole::getPermission)
                                             .collect(Collectors.toSet());
         return EmployeeResponse.builder()
+                .id(entity.getId())
                 .introduce(entity.getIntroduce())
                 .date(entity.getDateOfBirth())
                 .fullName(fullNameUtil.entityToResponse(entity.getFullName()))

@@ -5,6 +5,7 @@ public class ApiConstant {
         public static final String URL = "/api/v1/authentication";
         public static final String REGISTER = "/register";
         public static final String AUTHENTICATE = "/authenticate";
+        public static final String EMPLOYEE_AUTHENTICATION = "/authentication-employee";
         public static final String EMPLOYEE = "/employee";
     }
     public static final class HOSPITAL_INFORMATION {
@@ -27,5 +28,8 @@ public class ApiConstant {
 
     public static final class EMPLOYEE_URL{
         public static final String URL = "/api/v1/employees";
+        public static final String SERVICE_NAME = "EMPLOYEE";
+        public static final String ROLE_URL = "/api/v1/roles";
+        public static final String ID = "/{id}";
     }
 }

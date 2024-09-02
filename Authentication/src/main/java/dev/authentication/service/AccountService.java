@@ -1,6 +1,6 @@
 package dev.authentication.service;
 
-import com.google.gson.Gson;
+import dev.authentication.client.EmployeeRoleOpenClient;
 import dev.authentication.constant.ValueConstant;
 import dev.authentication.dto.request.RegisterEmployeeRequest;
 import dev.authentication.entity.Account;
@@ -15,6 +15,7 @@ import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.exception.DuplicateException;
 import dev.common.exception.FailAuthenticationException;
 import dev.common.exception.ObjectIllegalArgumentException;
+import dev.common.model.Permission;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class AccountService {
     private final JwtService jwtService;
     private final AccountUtil accountUtil;
     private final AuthenticationManager authenticationManager;
-    private final Gson gson;
+    private final EmployeeRoleOpenClient employeeRoleOpenClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value(ValueConstant.JWT.ACCESS_TOKEN_EXPIRATION)
@@ -67,13 +68,25 @@ public class AccountService {
         accountRepository.save(entity);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticateUser(AuthenticationRequest request){
         //Todo: Trả về thêm refresh token
+        Account account = authenticate(request);
+        String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION, null);
+        return new AuthenticationResponse(accessToken, "");
+    }
+
+    public AuthenticationResponse authenticationForEmployee(AuthenticationRequest request){
+        //Todo: Trả về thêm refresh token
+        Account account = authenticate(request);
+        List<Permission> permissions = employeeRoleOpenClient.getAllRolesOfEmployee(account.getId());
+        String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION, permissions);
+        return new AuthenticationResponse(accessToken, "");
+    }
+
+    private Account authenticate(AuthenticationRequest request){
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassWord()));
-            Account account = (Account) authentication.getPrincipal();
-            String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION);
-            return new AuthenticationResponse(accessToken, "");
+            return  (Account) authentication.getPrincipal();
         } catch (AuthenticationException e) {
             throw new FailAuthenticationException(AUTHENTICATION_EXCEPTION.FAIL_AUTHENTICATION);
         }

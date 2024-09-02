@@ -1,6 +1,6 @@
 spring:
     application:
-        name: authentication
+        name: Authentication
     
     datasource:
         url: jdbc:mysql://localhost:3306/authentication
@@ -35,3 +35,15 @@ jwt:
 kafka:
     topics:
         create-employee-topic: create_employee
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost

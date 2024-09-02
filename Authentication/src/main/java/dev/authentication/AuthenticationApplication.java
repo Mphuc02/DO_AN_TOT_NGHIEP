@@ -13,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.sql.Date;
@@ -20,6 +22,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @EnableConfigurationProperties
+@EnableFeignClients
+@EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {PackageConstant.AUTHENTICATION_PACKAGE, PackageConstant.COMMON_PACKAGE})
 public class AuthenticationApplication implements CommandLineRunner {
     public static void main(String[] args) {

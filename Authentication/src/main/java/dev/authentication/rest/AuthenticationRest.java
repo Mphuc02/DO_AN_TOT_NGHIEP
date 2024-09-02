@@ -33,11 +33,20 @@ public class AuthenticationRest {
     }
 
     @PostMapping(AUTHENTICATION_URL.AUTHENTICATE)
-    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest request, BindingResult result){
+    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest request,
+                                               BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), AUTHENTICATION_EXCEPTION.FAIL_VALIDATION_ACCOUNT);
         }
-        return ResponseEntity.ok(accountService.authenticate(request));
+        return ResponseEntity.ok(accountService.authenticateUser(request));
+    }
+
+    @PostMapping(AUTHENTICATION_URL.EMPLOYEE_AUTHENTICATION)
+    public ResponseEntity<Object> employeeAuthentication(@Valid @RequestBody AuthenticationRequest request, BindingResult result){
+        if(result.hasErrors()){
+            throw new ObjectIllegalArgumentException(result.getAllErrors(), AUTHENTICATION_EXCEPTION.FAIL_VALIDATION_ACCOUNT);
+        }
+        return ResponseEntity.ok(accountService.authenticationForEmployee(request));
     }
 
     @PostMapping(AUTHENTICATION_URL.EMPLOYEE)
