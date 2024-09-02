@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-
 import java.sql.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -27,4 +27,7 @@ public class Employee {
     private String introduce;
 
     private Date dateOfBirth;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
+    private Set<EmployeeRole> roles;
 }

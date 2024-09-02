@@ -26,4 +26,10 @@ public class ExceptionAdvice {
         log.error("Exception when find entity", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<Object> handler(DuplicateException ex){
+        log.error("Exception for duplicate", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

@@ -5,6 +5,7 @@ public class ApiConstant {
         public static final String URL = "/api/v1/authentication";
         public static final String REGISTER = "/register";
         public static final String AUTHENTICATE = "/authenticate";
+        public static final String EMPLOYEE = "/employee";
     }
     public static final class HOSPITAL_INFORMATION {
         public static final class PROVINCE_URL {

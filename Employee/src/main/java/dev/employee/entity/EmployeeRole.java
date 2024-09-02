@@ -1,4 +1,4 @@
-package dev.authentication.entity;
+package dev.employee.entity;
 
 import dev.common.model.Permission;
 import jakarta.persistence.*;
@@ -8,21 +8,21 @@ import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_account_role")
-@Getter
-@Setter
+@Table(name = "tbl_employee_role")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
-public class AccountRole {
+public class EmployeeRole {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 
-    @Enumerated
+    @Enumerated()
     private Permission permission;
 
     @ManyToOne
-    private Account account;
+    private Employee employee;
 }

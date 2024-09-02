@@ -1,33 +1,36 @@
 package dev.employee.service;
 
 import com.google.gson.Gson;
-import dev.common.dto.request.CommonRegisterAccountRequest;
-import dev.employee.constant.KafkaConstrant.*;
-import dev.employee.dto.request.CreateEmployeeRequest;
+import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.response.EmployeeResponse;
 import dev.employee.entity.Employee;
 import dev.employee.repository.EmployeeRepository;
 import dev.employee.util.EmployeeUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeUtil employeeUtil;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final Gson gson;
 
-    @Value(TOPICS.CREATE_ACCOUNT_TOPIC)
-    private String CREATE_ACCOUNT_TOPIC;
+    public List<EmployeeResponse> getAll(){
+        return employeeUtil.listEntitiesToResponses(employeeRepository.findAll());
+    }
 
-
-    public void save(CreateEmployeeRequest request){
-//        CommonRegisterAccountRequest registerRequest = employeeUtil.createRegisterAccountRequest(request);
-//        kafkaTemplate.send(CREATE_ACCOUNT_TOPIC, gson.toJson(registerRequest));
-
+    @KafkaListener(topics = "${kafka.topics.create-employee-topic}", groupId = "${kafka.group-id.account}")
+//        public void save(ConsumerRecord<String, Object> request){ Way1
+    public void save(@Payload CommonRegisterEmployeeRequest request){
+        log.info(String.format("Receive request save Employee from Kafka with value: %s", gson.toJson(request)));
         Employee entity = employeeUtil.createRequestToEntity(request);
         employeeRepository.save(entity);
     }

@@ -1,4 +1,4 @@
-package dev.employee.dto.request;
+package dev.common.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

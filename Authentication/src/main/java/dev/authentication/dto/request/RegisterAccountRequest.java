@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 public class RegisterAccountRequest {
     @NotEmpty(message = "Tài khoản không được bỏ trống")
-    @Length(min = 7, max = 20, message = "Tài khoản có độ dài từ 7 đến 20 ký tự")
+    @Length(min = 7, max = 20, message = "Tài khoản có độ dài từ 7 đên 20 ký tự")
     private String userName;
 
     @NotEmpty(message = "Mật khẩu không được bỏ trống")

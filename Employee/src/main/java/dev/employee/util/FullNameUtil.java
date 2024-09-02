@@ -1,6 +1,7 @@
 package dev.employee.util;
 
-import dev.employee.dto.request.CreateFullNameRequest;
+import dev.common.dto.request.CreateFullNameRequest;
+import dev.common.dto.response.FullNameResponse;
 import dev.employee.entity.FullName;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,14 @@ public class FullNameUtil {
                 .firstName(firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase())
                 .middleName(middleName.substring(0,1).toUpperCase() + middleName.substring(1).toLowerCase())
                 .lastName(lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase())
+                .build();
+    }
+
+    public FullNameResponse entityToResponse(FullName entity){
+        return FullNameResponse.builder()
+                .firstName(entity.getFirstName())
+                .middleName(entity.getMiddleName())
+                .lastName(entity.getLastName())
                 .build();
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_account")
@@ -23,23 +22,21 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     public UUID id;
-
-    private String userName;
     private String passWord;
+
+    @Column(columnDefinition = "varchar(20) unique")
+    private String userName;
+
+    @Column(columnDefinition = "varchar(20) unique")
     private String numberPhone;
+
+    @Column(columnDefinition = "varchar(255) unique")
     private String email;
     private Date createdAt;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private Set<AccountRole> roles;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(roles.isEmpty())
-            return List.of(new SimpleGrantedAuthority("USER"));
-        else{
-            return roles.stream().map(role -> new SimpleGrantedAuthority(role.getPermission().name())).collect(Collectors.toList());
-        }
+        return List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override

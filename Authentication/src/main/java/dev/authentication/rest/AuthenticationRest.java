@@ -2,6 +2,7 @@ package dev.authentication.rest;
 
 import dev.authentication.dto.request.AuthenticationRequest;
 import dev.authentication.dto.request.RegisterAccountRequest;
+import dev.authentication.dto.request.RegisterEmployeeRequest;
 import dev.authentication.service.AccountService;
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant.*;
@@ -37,5 +38,13 @@ public class AuthenticationRest {
             throw new ObjectIllegalArgumentException(result.getAllErrors(), AUTHENTICATION_EXCEPTION.FAIL_VALIDATION_ACCOUNT);
         }
         return ResponseEntity.ok(accountService.authenticate(request));
+    }
+
+    @PostMapping(AUTHENTICATION_URL.EMPLOYEE)
+    public void registerEmployee(@Valid @RequestBody RegisterEmployeeRequest request, BindingResult result){
+        if(result.hasErrors()){
+            throw new ObjectIllegalArgumentException(result.getAllErrors(), EMPLOYEE_EXCEPTION.FAIL_VALIDATION_EMPLOYEE);
+        }
+        accountService.saveEmployee(request);
     }
 }

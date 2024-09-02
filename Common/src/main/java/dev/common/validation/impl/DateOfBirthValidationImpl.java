@@ -19,7 +19,6 @@ public class DateOfBirthValidationImpl implements ConstraintValidator<DateOfBirt
             return true;
 
         Date today = new Date();
-        System.out.println(date.getYear() + " " + (today.getYear() - minimumAge + 1));
         return date.getYear() <= (today.getYear() - minimumAge + 1);
     }
 }

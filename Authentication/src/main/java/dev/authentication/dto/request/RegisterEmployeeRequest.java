@@ -1,18 +1,19 @@
-package dev.employee.dto.request;
+package dev.authentication.dto.request;
 
+import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.validation.DateOfBirthValidation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.sql.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class CreateEmployeeRequest {
+public class RegisterEmployeeRequest {
     @NotEmpty(message = "Giới thiệu về nhân viên không được bỏ trống")
     @Size(max = 1000, message = "Giới thiệu về nhân viên không được quá 1000 ký tự")
     private String introduce;
@@ -33,5 +34,6 @@ public class CreateEmployeeRequest {
     private CreateFullNameRequest fullName;
 
     @Valid
-    private CreateEmployeePermission permission;
+    @NotEmpty(message = "Phải có ít nhất 1 quyền")
+    private List<CreateEmployeePermission> permissions;
 }
