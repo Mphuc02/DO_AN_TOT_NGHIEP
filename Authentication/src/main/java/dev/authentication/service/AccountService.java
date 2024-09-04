@@ -2,7 +2,7 @@ package dev.authentication.service;
 
 import dev.authentication.client.EmployeeRoleOpenClient;
 import dev.authentication.constant.ValueConstant;
-import dev.authentication.dto.request.RegisterEmployeeRequest;
+import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.entity.Account;
 import dev.authentication.dto.request.AuthenticationRequest;
 import dev.authentication.dto.request.RegisterAccountRequest;
@@ -92,7 +92,7 @@ public class AccountService {
         }
     }
 
-    public void saveEmployee(RegisterEmployeeRequest request){
+    public void saveEmployee(CreateEmployeeRequest request){
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new DuplicateException(String.format("Đã tồn tại tài khoản với email: %s", request.getEmail()));
 

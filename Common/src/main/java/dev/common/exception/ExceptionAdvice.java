@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
@@ -24,12 +26,18 @@ public class ExceptionAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handler(NotFoundException ex){
         log.error("Exception when find entity", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        HashMap<String, Object> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        errors.put("data", ex.getData());
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateException.class)
     public ResponseEntity<Object> handler(DuplicateException ex){
         log.error("Exception for duplicate", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        HashMap<String, Object> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        errors.put("data", ex.getData());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

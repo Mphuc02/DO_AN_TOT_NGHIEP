@@ -1,7 +1,7 @@
 package dev.authentication.util;
 
-import dev.authentication.dto.request.CreateEmployeePermission;
-import dev.authentication.dto.request.RegisterEmployeeRequest;
+import dev.authentication.dto.request.CreateEmployeeRequest;
+import dev.common.dto.request.CreatePermissionRequest;
 import dev.authentication.entity.Account;
 import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
@@ -27,7 +27,7 @@ public class AccountUtil {
                 .build();
     }
 
-    public Account mapFromRegisterEmployeeRequest(RegisterEmployeeRequest request){
+    public Account mapFromRegisterEmployeeRequest(CreateEmployeeRequest request){
         return Account.builder()
                 .userName(request.getEmail())
                 .passWord(passwordEncoder.encode(request.getEmail()))
@@ -37,14 +37,14 @@ public class AccountUtil {
                 .build();
     }
 
-    public CommonRegisterEmployeeRequest createRegisterEmployeeRequest(RegisterEmployeeRequest request, UUID id){
+    public CommonRegisterEmployeeRequest createRegisterEmployeeRequest(CreateEmployeeRequest request, UUID id){
         return CommonRegisterEmployeeRequest.builder()
                 .id(id)
                 .dateOfBirth(request.getDateOfBirth())
                 .fullName(request.getFullName())
                 .introduce(request.getIntroduce())
                 .permissions(request.getPermissions().stream()
-                                    .map(CreateEmployeePermission::getPermission)
+                                    .map(CreatePermissionRequest::getPermission)
                                     .collect(Collectors.toList()))
                 .build();
     }

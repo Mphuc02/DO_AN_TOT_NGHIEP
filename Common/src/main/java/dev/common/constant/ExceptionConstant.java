@@ -17,5 +17,9 @@ public class ExceptionConstant {
 
     public static final class EMPLOYEE_EXCEPTION{
         public static final String FAIL_VALIDATION_EMPLOYEE = "Lỗi khi kiểm tra thuộc tính của Employee";
+        public static final String EMPLOYEE_NOT_FOUND = "Không tìm thấy nhân viên với id này";
+        public static final String EMPLOYEE_HAD_ROLES = "Nhân viên đã có các vai trò sau";
+        public static final String EMPLOYEE_DID_NOT_HAD_ROLES = "Nhân viên không có các vai trò sau";
+        public static final String FULL_NAME_NOT_FOUND = "Họ và tên của nhân viên không tồn tại";
     }
 }

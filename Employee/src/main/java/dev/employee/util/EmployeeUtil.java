@@ -3,10 +3,13 @@ package dev.employee.util;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.EmployeeResponse;
 import dev.common.model.Permission;
+import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.entity.EmployeeRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
@@ -50,5 +53,13 @@ public class EmployeeUtil {
 
     public List<EmployeeResponse> listEntitiesToResponses(List<Employee> entities){
         return entities.stream().map(this::entityToResponse).collect(Collectors.toList());
+    }
+
+    public void updateRequestToEntity(UpdateEmployeeRequest request, Employee entity){
+        if(!ObjectUtils.isEmpty(request.getIntroduce()))
+            entity.setIntroduce(request.getIntroduce());
+
+        if(!ObjectUtils.isEmpty(request.getDateOfBirth()))
+            entity.setDateOfBirth(new Date(request.getDateOfBirth().getTime()));
     }
 }

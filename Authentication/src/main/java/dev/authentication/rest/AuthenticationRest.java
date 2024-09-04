@@ -1,8 +1,8 @@
 package dev.authentication.rest;
 
 import dev.authentication.dto.request.AuthenticationRequest;
+import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.dto.request.RegisterAccountRequest;
-import dev.authentication.dto.request.RegisterEmployeeRequest;
 import dev.authentication.service.AccountService;
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant.*;
@@ -50,7 +50,7 @@ public class AuthenticationRest {
     }
 
     @PostMapping(AUTHENTICATION_URL.EMPLOYEE)
-    public void registerEmployee(@Valid @RequestBody RegisterEmployeeRequest request, BindingResult result){
+    public void registerEmployee(@Valid @RequestBody CreateEmployeeRequest request, BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), EMPLOYEE_EXCEPTION.FAIL_VALIDATION_EMPLOYEE);
         }
