@@ -1,4 +1,4 @@
-package dev.authentication.constant;
+package dev.common.constant;
 
 public class ValueConstant {
     public static final class JWT{

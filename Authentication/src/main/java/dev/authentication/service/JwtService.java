@@ -1,6 +1,6 @@
 package dev.authentication.service;
 
-import dev.authentication.constant.ValueConstant.*;
+import dev.common.constant.ValueConstant.*;
 import dev.authentication.entity.Account;
 import dev.common.model.Permission;
 import io.jsonwebtoken.*;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -31,31 +30,5 @@ public class JwtService {
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
-    }
-
-    // Lấy thông tin user từ jwt
-    public UUID getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-
-        return UUID.fromString(claims.getSubject());
-    }
-
-    public boolean validateToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(authToken);
-            return true;
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
-        }
-        return false;
     }
 }

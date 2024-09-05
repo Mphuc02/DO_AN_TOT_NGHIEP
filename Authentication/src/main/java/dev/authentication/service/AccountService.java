@@ -1,7 +1,7 @@
 package dev.authentication.service;
 
 import dev.authentication.client.EmployeeRoleOpenClient;
-import dev.authentication.constant.ValueConstant;
+import dev.common.constant.ValueConstant;
 import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.entity.Account;
 import dev.authentication.dto.request.AuthenticationRequest;
@@ -9,7 +9,6 @@ import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
-import dev.common.constant.ExceptionConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;

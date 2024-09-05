@@ -21,7 +21,7 @@ public class ExaminationForm {
 
     private UUID patientId;
     private UUID employeeId;
-    private Integer numericalOrder;
+    private Integer ticketIndex;
 
     @Column(columnDefinition = "TEXT")
     private String symptom;
