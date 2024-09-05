@@ -7,4 +7,5 @@ public class PackageConstant {
     public static final String HOSPITAL_INFORMATION_PACKAGE = "dev.hospitalinformation";
     public static final String FACULTY_PACKAGE = "dev.faculty";
     public static final String EMPLOYEE_PACKAGE = "dev.employee";
+    public static final String GREETING_PACKAGE = "dev.greeting";
 }

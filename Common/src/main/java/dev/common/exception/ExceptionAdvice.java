@@ -14,7 +14,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(FailAuthenticationException.class)
     public ResponseEntity<Object> handler(FailAuthenticationException ex){
         log.error("Exception when authenticate user", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotPermissionException.class)
+    public ResponseEntity<Object> handler(NotPermissionException ex){
+        log.error("Exception when user doesn't have authorization", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ObjectIllegalArgumentException.class)

@@ -17,6 +17,17 @@ public class ApiConstant {
             public static final String COMMUNE_ID_PARAM = "commune-id";
 
         }
+
+        public static final class DISTRICT_URL {
+            public static final String URL = "/api/v1/districts";
+            public static final String ID = "/{id}";
+            public static final String PROVINCE_ID = "/province/{id}";
+        }
+
+        public static final class COMMUNE_URL{
+            public static final String URL = "/api/v1/communes";
+            public static final String DISTRICT_ID = "/district/{id}";
+        }
     }
 
     public static final class FACULTY_URL{
@@ -31,5 +42,11 @@ public class ApiConstant {
         public static final String SERVICE_NAME = "EMPLOYEE";
         public static final String ROLE_URL = "/api/v1/roles";
         public static final String ID = "/{id}";
+    }
+
+    public static final class GREETING_URL{
+        public static final String EXAMINATION_FORM_URL = "/api/v1/greeting";
+        public static final String TICKET_URL = "/api/v1/tickets";
+        public static final String PRINT = "/print";
     }
 }

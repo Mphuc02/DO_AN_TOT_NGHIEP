@@ -9,11 +9,13 @@ import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
+import dev.common.constant.ExceptionConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.exception.DuplicateException;
 import dev.common.exception.FailAuthenticationException;
+import dev.common.exception.NotPermissionException;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.common.model.Permission;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +83,9 @@ public class AccountService {
         //Todo: Trả về thêm refresh token
         Account account = authenticate(request);
         List<Permission> permissions = employeeRoleOpenClient.getAllRolesOfEmployee(account.getId());
+        if(ObjectUtils.isEmpty(permissions))
+            throw new NotPermissionException(EMPLOYEE_EXCEPTION.NOT_PERMISSION);
+
         String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION, permissions);
         return new AuthenticationResponse(accessToken, "");
     }

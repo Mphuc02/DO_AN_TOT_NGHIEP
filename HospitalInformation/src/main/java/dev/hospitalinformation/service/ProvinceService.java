@@ -1,10 +1,10 @@
 package dev.hospitalinformation.service;
 
-import dev.hospitalinformation.entity.Province;
+import dev.common.constant.ExceptionConstant.*;
+import dev.common.exception.NotFoundException;
 import dev.common.dto.response.ProvinceResponse;
 import dev.hospitalinformation.repository.ProvinceRepository;
 import dev.hospitalinformation.util.ProvinceUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -25,15 +25,17 @@ public class ProvinceService {
     }
 
     public ProvinceResponse getById(UUID id){
-        return provinceUtil.entityToResponse(provinceRepository.findById(id).get());
+        return provinceUtil.entityToResponse(provinceRepository.findById(id)
+                                                .orElseThrow(() ->
+                                                            new NotFoundException(HOSPITAL_INFORMATION_EXCEPTION.PROVINCE_ID_NOT_FOUND)));
     }
 
-    @Transactional
-    public void saveAll(List<Province> provinces){
-        provinces.forEach(province -> province.getDistricts().forEach(district -> {
-            district.setProvince(province);
-            district.getCommunes().forEach(commune -> commune.setDistrict(district));
-        }));
-        provinceRepository.saveAll(provinces);
-    }
+//    @Transactional
+//    public void saveAll(List<Province> provinces){
+//        provinces.forEach(province -> province.getDistricts().forEach(district -> {
+//            district.setProvince(province);
+//            district.getCommunes().forEach(commune -> commune.setDistrict(district));
+//        }));
+//        provinceRepository.saveAll(provinces);
+//    }
 }

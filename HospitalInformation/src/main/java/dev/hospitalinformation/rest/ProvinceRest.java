@@ -38,19 +38,19 @@ public class ProvinceRest {
         return ResponseEntity.ok(provinceService.checkAddress(provinceId, districtId, communeId));
     }
 
-    @GetMapping("/test")
-    public String test() throws IOException {
-        Gson gson = new Gson();
-        ClassPathResource resource = new ClassPathResource("static/out.json");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-        String line = rd.readLine();
-        StringBuilder result = new StringBuilder(line);
-        while((line = rd.readLine()) != null){
-            result.append(line);
-        }
-
-        List<Province> provinces = Arrays.asList(gson.fromJson(result.toString(), Province[].class));
-        provinceService.saveAll(provinces);
-        return "ok";
-    }
+//    @GetMapping("/test")
+//    public String test() throws IOException {
+//        Gson gson = new Gson();
+//        ClassPathResource resource = new ClassPathResource("static/out.json");
+//        BufferedReader rd = new BufferedReader(new InputStreamReader(resource.getInputStream()));
+//        String line = rd.readLine();
+//        StringBuilder result = new StringBuilder(line);
+//        while((line = rd.readLine()) != null){
+//            result.append(line);
+//        }
+//
+//        List<Province> provinces = Arrays.asList(gson.fromJson(result.toString(), Province[].class));
+//        provinceService.saveAll(provinces);
+//        return "ok";
+//    }
 }

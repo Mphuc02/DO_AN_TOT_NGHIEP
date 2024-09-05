@@ -17,7 +17,7 @@ public class ProvinceUtil {
         return ProvinceResponse.builder()
                 .id(province.getId())
                 .name(province.getName())
-                .districts(districtUtil.listEntityToResponse(province.getDistricts()))
+//                .districts(districtUtil.listEntityToResponse(province.getDistricts()))
                 .build();
     }
 

@@ -6,7 +6,7 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_ACCOUNT = "Lỗi khi kiểm tra thuộc tính của Account";
     }
     public static final class HOSPITAL_INFORMATION_EXCEPTION {
-
+        public static final String PROVINCE_ID_NOT_FOUND = "Tỉnh với id không tồn tại";
     }
     public static final class FACULTY_EXCEPTION{
         public static final String FAIL_VALIDATION_FACULTY = "Lỗi khi kiểm tra thuộc tính của Faculty";
@@ -21,5 +21,6 @@ public class ExceptionConstant {
         public static final String EMPLOYEE_HAD_ROLES = "Nhân viên đã có các vai trò sau";
         public static final String EMPLOYEE_DID_NOT_HAD_ROLES = "Nhân viên không có các vai trò sau";
         public static final String FULL_NAME_NOT_FOUND = "Họ và tên của nhân viên không tồn tại";
+        public static final String NOT_PERMISSION = "Bạn không có quyền thao tác";
     }
 }
