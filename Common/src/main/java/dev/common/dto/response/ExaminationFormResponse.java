@@ -1,6 +1,8 @@
 package dev.common.dto.response;
 
 import lombok.*;
+import java.sql.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -8,5 +10,10 @@ import lombok.*;
 @Setter
 @Builder
 public class ExaminationFormResponse {
-    private String test;
+    private UUID id;
+    private UUID patientId;
+    private UUID employeeId;
+    private Integer ticketIndex;
+    private Date createdAt;
+    private String symptom;
 }

@@ -1,8 +1,9 @@
 package dev.hospitalinformation.rest;
 
 import com.google.gson.Gson;
-import dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
-import dev.hospitalinformation.entity.Province;
+import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
+
+import dev.common.dto.request.CheckAddressRequest;
 import dev.hospitalinformation.service.ProvinceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(PROVINCE_URL.URL)
+@RequestMapping(URL)
 public class ProvinceRest {
     private final ProvinceService provinceService;
 
@@ -31,11 +32,9 @@ public class ProvinceRest {
         return ResponseEntity.ok(provinceService.getById(id));
     }
 
-    @GetMapping(PROVINCE_URL.CHECK_ADDRESS)
-    public ResponseEntity<Boolean> checkAddress(@RequestParam(PROVINCE_URL.PROVINCE_ID_PARAM) UUID provinceId,
-                                                @RequestParam(PROVINCE_URL.DISTRICT_ID_PARAM) UUID districtId,
-                                                @RequestParam(PROVINCE_URL.COMMUNE_ID_PARAM) UUID communeId){
-        return ResponseEntity.ok(provinceService.checkAddress(provinceId, districtId, communeId));
+    @PostMapping(CHECK_ADDRESS)
+    public ResponseEntity<Boolean> checkAddress(@RequestBody CheckAddressRequest request){
+        return ResponseEntity.ok(provinceService.checkAddress(request));
     }
 
 //    @GetMapping("/test")

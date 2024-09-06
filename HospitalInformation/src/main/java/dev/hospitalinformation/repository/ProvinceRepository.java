@@ -20,5 +20,5 @@ public interface ProvinceRepository extends JpaRepository<Province, UUID> {
                        WHERE
                             p.id = :provinceId
                    )""", nativeQuery = true)
-    int checkAddress(UUID provinceId, UUID districtId, UUID communeId);
+    int checkAddress(String provinceId, String districtId, String communeId);
 }

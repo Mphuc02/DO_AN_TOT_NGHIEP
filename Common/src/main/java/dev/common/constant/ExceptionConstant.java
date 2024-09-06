@@ -23,4 +23,8 @@ public class ExceptionConstant {
         public static final String FULL_NAME_NOT_FOUND = "Họ và tên của nhân viên không tồn tại";
         public static final String NOT_PERMISSION = "Bạn không có quyền thao tác";
     }
+
+    public static final class GREETING_EXCEPTION{
+        public static final String FAIL_VALIDATION_FORM = "Lôi khi kiểm tra thuộc tính của Form";
+    }
 }

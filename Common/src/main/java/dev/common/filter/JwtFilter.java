@@ -2,6 +2,7 @@ package dev.common.filter;
 
 import dev.common.constant.ApiConstant;
 import dev.common.constant.JwtConstant;
+import dev.common.exception.NotFoundException;
 import dev.common.model.AuthenticatedUser;
 import dev.common.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
@@ -55,20 +56,24 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        response.sendError(401, "oke");
-        return;
+        try {
+            jwtUtil.validateToken(jwt);
+        } catch (JwtException ex) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(ex.getMessage());
+            return;
+        }
 
-//        jwtUtil.validateToken(jwt);
-//        AuthenticatedUser user = jwtUtil.getUserFromJWT(jwt);
-//        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
-//                null,
-//                user.getPermissions()
-//                        .stream()
-//                        .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-//                        .collect(Collectors.toList()));
-//
-//        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//        SecurityContextHolder.getContext().setAuthentication(authToken);
-//        filterChain.doFilter(request, response);
+        AuthenticatedUser user = jwtUtil.getUserFromJWT(jwt);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
+                null,
+                user.getPermissions()
+                        .stream()
+                        .map(permission -> new SimpleGrantedAuthority(permission.toString()))
+                        .toList());
+
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+        filterChain.doFilter(request, response);
     }
 }

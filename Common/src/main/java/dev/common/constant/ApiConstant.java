@@ -9,25 +9,12 @@ public class ApiConstant {
         public static final String EMPLOYEE = "/employee";
     }
     public static final class HOSPITAL_INFORMATION {
-        public static final class PROVINCE_URL {
-            public static final String URL = "/api/v1/provinces";
-            public static final String CHECK_ADDRESS = "/check-address";
-            public static final String PROVINCE_ID_PARAM = "province-id";
-            public static final String DISTRICT_ID_PARAM = "district-id";
-            public static final String COMMUNE_ID_PARAM = "commune-id";
-
-        }
-
-        public static final class DISTRICT_URL {
-            public static final String URL = "/api/v1/districts";
-            public static final String ID = "/{id}";
-            public static final String PROVINCE_ID = "/province/{id}";
-        }
-
-        public static final class COMMUNE_URL{
-            public static final String URL = "/api/v1/communes";
-            public static final String DISTRICT_ID = "/district/{id}";
-        }
+        public static final String SERVICE_NAME = "HOSPITALINFORMATION";
+        public static final String URL = "/api/v1/provinces";
+        public static final String CHECK_ADDRESS = "/check-address";
+        public static final String PROVINCE_ID_PARAM = "province-id";
+        public static final String DISTRICT_ID_PARAM = "district-id";
+        public static final String COMMUNE_ID_PARAM = "commune-id";
     }
 
     public static final class FACULTY_URL{

@@ -1,6 +1,7 @@
 package dev.hospitalinformation.service;
 
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.dto.request.CheckAddressRequest;
 import dev.common.exception.NotFoundException;
 import dev.common.dto.response.ProvinceResponse;
 import dev.hospitalinformation.repository.ProvinceRepository;
@@ -16,8 +17,10 @@ public class ProvinceService {
     private final ProvinceRepository provinceRepository;
     private final ProvinceUtil provinceUtil;
 
-    public boolean checkAddress(UUID provinceId, UUID districtId, UUID communeId){
-        return provinceRepository.checkAddress(provinceId, districtId, communeId) > 0;
+    public boolean checkAddress(CheckAddressRequest request){
+        return provinceRepository.checkAddress(request.getProvinceId().toString(),
+                                                    request.getDistrictId().toString(),
+                                                    request.getCommuneId().toString()) > 0;
     }
 
     public List<ProvinceResponse> getAll(){
