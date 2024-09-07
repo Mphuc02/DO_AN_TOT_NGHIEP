@@ -1,6 +1,5 @@
 package dev.patient.entity;
 
-import dev.common.entity.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -24,9 +23,11 @@ public class Patient {
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 
-    private String fullName;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Address address;
 
-
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FullName fullName;
 
     private boolean usingAccount;
 }

@@ -1,19 +1,20 @@
-package dev.greeting.dto.request;
+package dev.common.dto.request;
 
-import dev.common.dto.request.CreateFullNameRequest;
-import dev.common.dto.request.CreatePatientAddressRequest;
 import dev.common.validation.PatientAddressValidation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class NewPatientRequest {
+public class CreateNewPatientRequest {
+    private UUID id;
+
     @NotNull(message = "Họ và tên không được bỏ trống")
     @Valid
     private CreateFullNameRequest fullName;

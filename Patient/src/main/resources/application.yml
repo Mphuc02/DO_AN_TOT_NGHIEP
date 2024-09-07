@@ -1,3 +1,6 @@
+server:
+    port: 8086
+
 spring:
     application:
         name: Patient
@@ -8,7 +11,6 @@ spring:
         username: root
         password: 123456
     
-    
     jpa:
         show-sql: true
         hibernate:
@@ -16,5 +18,38 @@ spring:
         properties:
             hibernate:
                 format_sql: true
-server:
-    port: 8081
+                
+    kafka:
+        bootstrap-servers:
+            - localhost:9092
+        producer:
+            key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*"
+                
+            
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
+    
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+        
+kafka:
+    topics:
+        create-patient-from-greeting: create_patient_from_greeting
+    group-id:
+        patient: patient
