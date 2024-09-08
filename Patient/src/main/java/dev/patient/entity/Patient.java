@@ -19,7 +19,6 @@ import java.util.UUID;
 @DynamicInsert
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 

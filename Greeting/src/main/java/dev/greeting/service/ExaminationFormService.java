@@ -1,6 +1,9 @@
 package dev.greeting.service;
 
+import dev.common.client.InternalAccountClient;
+import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.response.ExaminationFormResponse;
+import dev.common.exception.DuplicateException;
 import dev.common.model.AuthenticatedUser;
 import dev.greeting.constant.KafkaConstant;
 import dev.greeting.dto.request.CreateFormWithoutAppointmentRequest;
@@ -22,17 +25,21 @@ public class ExaminationFormService {
     private final TicketService ticketService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ExaminationFormUtil examinationFormUtil;
+    private final InternalAccountClient internalAccountClient;
 
     @Value(KafkaConstant.CREATE_PATIENT_FROM_GREETING)
     private String CREATE_PATIENT_FROM_GREETING;
 
     public ExaminationFormResponse saveWithoutAppointment(CreateFormWithoutAppointmentRequest request){
+        request.getPatient().setId(UUID.randomUUID());
+        if(!internalAccountClient.saveAccountFrommGreeting(request.getPatient()))
+            throw new DuplicateException(AUTHENTICATION_EXCEPTION.NUMBER_PHONE_EXISTED);
+
         ExaminationForm entity = examinationFormUtil.createRequestToEntity(request);
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         entity.setEmployeeId(employee.getEmployeeId());
         entity = examinationFormRepository.save(entity);
 
-        request.getPatient().setId(UUID.randomUUID());
         kafkaTemplate.send(CREATE_PATIENT_FROM_GREETING, request.getPatient());
 
         return examinationFormUtil.entityToResponse(entity);

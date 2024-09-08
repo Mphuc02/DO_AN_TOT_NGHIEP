@@ -2,11 +2,16 @@ package dev.common.constant;
 
 public class ApiConstant {
     public static final class AUTHENTICATION_URL {
+        public static final String SERVICE_NAME = "AUTHENTICATION";
         public static final String URL = "/api/v1/authentication";
         public static final String REGISTER = "/register";
         public static final String AUTHENTICATE = "/authenticate";
         public static final String EMPLOYEE_AUTHENTICATION = "/authentication-employee";
         public static final String EMPLOYEE = "/employee";
+
+        public static final class INTERNAL{
+            public static final String URL = "/api/v1/internal/authentication";
+        }
     }
     public static final class HOSPITAL_INFORMATION {
         public static final String SERVICE_NAME = "HOSPITALINFORMATION";

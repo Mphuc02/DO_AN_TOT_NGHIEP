@@ -12,6 +12,7 @@ import dev.authentication.util.AccountUtil;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.request.CreateNewPatientRequest;
 import dev.common.exception.DuplicateException;
 import dev.common.exception.FailAuthenticationException;
 import dev.common.exception.NotPermissionException;
@@ -21,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +31,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,5 +109,18 @@ public class AccountService {
         entity = accountRepository.save(entity);
         CommonRegisterEmployeeRequest registerRequest = accountUtil.createRegisterEmployeeRequest(request, entity.getId());
         kafkaTemplate.send(CREATE_EMPLOYEE_TOPIC, registerRequest);
+    }
+
+    public boolean saveAccountFromGreeting(CreateNewPatientRequest request){
+        if(accountRepository.existsByNumberPhone(request.getNumberPhone()))
+            return false;
+
+        Account account = Account.builder()
+                .id(request.getId())
+                .createdAt(new Date(new java.util.Date().getTime()))
+                .numberPhone(request.getNumberPhone())
+                .build();
+        accountRepository.save(account);
+        return true;
     }
 }

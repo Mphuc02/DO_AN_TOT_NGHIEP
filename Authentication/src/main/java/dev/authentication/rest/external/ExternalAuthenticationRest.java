@@ -1,4 +1,4 @@
-package dev.authentication.rest;
+package dev.authentication.rest.external;
 
 import dev.authentication.dto.request.AuthenticationRequest;
 import dev.authentication.dto.request.CreateEmployeeRequest;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(AUTHENTICATION_URL.URL)
-public class AuthenticationRest {
+public class ExternalAuthenticationRest {
     private final AccountService accountService;
 
     @PostMapping(AUTHENTICATION_URL.REGISTER)

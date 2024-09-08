@@ -4,6 +4,7 @@ public class ExceptionConstant {
     public static final class AUTHENTICATION_EXCEPTION {
         public static final String FAIL_AUTHENTICATION = "Tài khoản hoặc mật khẩu không chính xác";
         public static final String FAIL_VALIDATION_ACCOUNT = "Lỗi khi kiểm tra thuộc tính của Account";
+        public static final String NUMBER_PHONE_EXISTED = "Đã tồn tại tài khoản với số điện thoại này";
     }
     public static final class HOSPITAL_INFORMATION_EXCEPTION {
         public static final String PROVINCE_ID_NOT_FOUND = "Tỉnh với id không tồn tại";

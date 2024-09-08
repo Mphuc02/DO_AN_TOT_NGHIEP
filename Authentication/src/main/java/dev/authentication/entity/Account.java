@@ -19,7 +19,6 @@ import java.util.*;
 @Builder
 public class Account implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     public UUID id;
     private String passWord;
