@@ -1,7 +1,7 @@
 package dev.employee.dto.request;
 
 import dev.common.model.Permission;
-import dev.common.validation.NotAdminPermissionValidation;
+import dev.common.validator.NotAdminPermissionValidator;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +14,6 @@ import lombok.Setter;
 @Setter
 public class UpdateEmployeeRoleRequest {
     @NotNull(message = "Chức vụ không được bỏ trống")
-    @NotAdminPermissionValidation
+    @NotAdminPermissionValidator
     private Permission permission;
 }

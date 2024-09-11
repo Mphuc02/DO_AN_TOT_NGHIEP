@@ -1,24 +1,18 @@
 package dev.hospitalinformation.rest;
 
-import com.google.gson.Gson;
 import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
 
 import dev.common.dto.request.CheckAddressRequest;
 import dev.hospitalinformation.service.ProvinceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(URL)
+@RequestMapping(PROVINCE_URL)
 public class ProvinceRest {
     private final ProvinceService provinceService;
 

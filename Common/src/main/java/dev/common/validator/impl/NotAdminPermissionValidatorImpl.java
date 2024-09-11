@@ -1,12 +1,12 @@
-package dev.common.validation.impl;
+package dev.common.validator.impl;
 
 import dev.common.model.Permission;
-import dev.common.validation.NotAdminPermissionValidation;
+import dev.common.validator.NotAdminPermissionValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.ObjectUtils;
 
-public class NotAdminPermissionValidationImpl implements ConstraintValidator<NotAdminPermissionValidation, Permission> {
+public class NotAdminPermissionValidatorImpl implements ConstraintValidator<NotAdminPermissionValidator, Permission> {
     @Override
     public boolean isValid(Permission permission, ConstraintValidatorContext constraintValidatorContext) {
         if(ObjectUtils.isEmpty(permission))

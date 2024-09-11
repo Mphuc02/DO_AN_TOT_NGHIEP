@@ -2,7 +2,7 @@ package dev.authentication.dto.request;
 
 import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.dto.request.CreatePermissionRequest;
-import dev.common.validation.DateOfBirthValidation;
+import dev.common.validator.DateOfBirthValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -28,7 +28,7 @@ public class CreateEmployeeRequest {
     private String email;
 
     @NotNull(message = "Ngày sinh không được bỏ trống")
-    @DateOfBirthValidation(minimumAge = 18, message = "Tuổi phải ít nhất 18 tuổi")
+    @DateOfBirthValidator(minimumAge = 18, message = "Tuổi phải ít nhất 18 tuổi")
     private Date dateOfBirth;
 
     @Valid

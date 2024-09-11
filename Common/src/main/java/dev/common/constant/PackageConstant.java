@@ -8,4 +8,5 @@ public class PackageConstant {
     public static final String FACULTY_PACKAGE = "dev.faculty";
     public static final String EMPLOYEE_PACKAGE = "dev.employee";
     public static final String GREETING_PACKAGE = "dev.greeting";
+    public static final String WORKING_SCHEDULE_PACKAGE = "dev.workingschedule";
 }

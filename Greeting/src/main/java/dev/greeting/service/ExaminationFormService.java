@@ -27,10 +27,8 @@ public class ExaminationFormService {
     private final ExaminationFormUtil examinationFormUtil;
     private final InternalAccountClient internalAccountClient;
 
-    @Value(KafkaConstant.CREATE_PATIENT_FROM_GREETING)
-    private String CREATE_PATIENT_FROM_GREETING;
-
     public ExaminationFormResponse saveWithoutAppointment(CreateFormWithoutAppointmentRequest request){
+        //Todo: Kiểm tra la việc gư message có thành công hay không
         request.getPatient().setId(UUID.randomUUID());
         if(!internalAccountClient.saveAccountFrommGreeting(request.getPatient()))
             throw new DuplicateException(AUTHENTICATION_EXCEPTION.NUMBER_PHONE_EXISTED);
@@ -39,8 +37,6 @@ public class ExaminationFormService {
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         entity.setEmployeeId(employee.getEmployeeId());
         entity = examinationFormRepository.save(entity);
-
-        kafkaTemplate.send(CREATE_PATIENT_FROM_GREETING, request.getPatient());
 
         return examinationFormUtil.entityToResponse(entity);
     }

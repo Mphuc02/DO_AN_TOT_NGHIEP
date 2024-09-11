@@ -2,8 +2,7 @@ package dev.greeting.rest;
 
 import static dev.common.constant.ApiConstant.GREETING_URL.*;
 import static dev.common.constant.ExceptionConstant.*;
-
-import dev.common.client.AddressClient;
+import dev.common.constant.AuthorizationConstrant;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.greeting.dto.request.CreateFormWithoutAppointmentRequest;
 import dev.greeting.service.ExaminationFormService;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExaminationFormRest {
     private final ExaminationFormService examinationFormService;
 
-    @PreAuthorize("hasAuthority('TEST')")
+    @PreAuthorize(AuthorizationConstrant.GREETING_EMPLOYEE)
     @PostMapping()
     public ResponseEntity<Object> save(@Valid @RequestBody CreateFormWithoutAppointmentRequest request,
                                        BindingResult result){

@@ -1,6 +1,6 @@
 package dev.common.dto.request;
 
-import dev.common.validation.PatientAddressValidation;
+import dev.common.validator.PatientAddressValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +25,6 @@ public class CreateNewPatientRequest {
 
     @Valid
     @NotNull(message = "Địa chỉ không được bỏ trống")
-    @PatientAddressValidation
+    @PatientAddressValidator
     private CreatePatientAddressRequest address;
 }

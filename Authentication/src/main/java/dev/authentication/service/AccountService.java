@@ -1,6 +1,7 @@
 package dev.authentication.service;
 
 import dev.authentication.client.EmployeeRoleOpenClient;
+import dev.authentication.constant.KafkaConstant;
 import dev.common.constant.ValueConstant;
 import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.entity.Account;
@@ -52,6 +53,9 @@ public class AccountService {
 
     @Value(KafkaConstrant.TOPICS.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
+
+    @Value(KafkaConstant.CREATE_PATIENT_FROM_GREETING)
+    private String CREATE_PATIENT_FROM_GREETING;
 
     @Transactional
     public void register(RegisterAccountRequest request){
@@ -121,6 +125,8 @@ public class AccountService {
                 .numberPhone(request.getNumberPhone())
                 .build();
         accountRepository.save(account);
+        kafkaTemplate.send(CREATE_PATIENT_FROM_GREETING, request);
+
         return true;
     }
 }

@@ -38,7 +38,6 @@ jwt:
 kafka:
     topics:
         greeting-topic: greeting
-        create-patient-from-greeting: create_patient_from_greeting
         
 eureka:
     client:

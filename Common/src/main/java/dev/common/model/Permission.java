@@ -6,12 +6,13 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Permission {
-    ADMIN_READ("admin:read", "Quản trị viên"),
-    ADMIN_UPDATE("admin:update", "Quản trị viên"),
-    ADMIN_CREATE("admin:create", "Quản trị viên"),
-    ADMIN_DELETE("admin:delete", "Quản trị viên"),
-    TEST("ASD", "112312");
+    ADMIN_READ("Quản trị viên"),
+    ADMIN_UPDATE( "Quản trị viên"),
+    ADMIN_CREATE("Quản trị viên"),
+    ADMIN_DELETE("Quản trị viên"),
+    RECEPTION_STAFF("Nhân viên tiếp đón"),
+    DOCTOR("Bác sĩ"),
+    MEDICINE_DISPENSER("Nhân viên phát thuốc");
 
-    private final String permission;
     private final String position;
 }

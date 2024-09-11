@@ -1,0 +1,52 @@
+package dev.workingschedule.service;
+
+import dev.common.constant.ExceptionConstant.*;
+import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.exception.DuplicateException;
+import dev.common.exception.NotFoundException;
+import dev.common.util.DateUtil;
+import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
+import dev.workingschedule.dto.request.UpdateWorkingScheduleRequest;
+import dev.workingschedule.entity.WorkingSchedule;
+import dev.workingschedule.repository.WorkingScheduleRepository;
+import dev.workingschedule.util.WorkingScheduleUtil;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import java.sql.Date;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class WorkingScheduleService {
+    private final WorkingScheduleRepository workingScheduleRepository;
+    private final WorkingScheduleUtil workingScheduleUtil;
+    private final DateUtil dateUtil;
+
+    @Transactional
+    public WorkingScheduleCommonResponse save(CreateWorkingScheduleRequest request){
+        WorkingSchedule entity = workingScheduleUtil.mapCreateRequestToEntity(request);
+
+        Date selectedDate = dateUtil.formatDateToDD_MM_YYYY(request.getDate());
+        if(workingScheduleRepository.existsByRoomIdAndDate(request.getRoomId(), selectedDate)){
+            throw new DuplicateException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
+        }
+
+        entity = workingScheduleRepository.save(entity);
+        return workingScheduleUtil.mapEntityToResponse(entity);
+    }
+
+    @Transactional
+    public WorkingScheduleCommonResponse update(UpdateWorkingScheduleRequest request, UUID id){
+        WorkingSchedule findToUpdate = workingScheduleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
+
+        workingScheduleUtil.mapUpdateRequestToEntity(request, findToUpdate);
+        if(workingScheduleRepository.existsByRoomIdAndDate(findToUpdate.getRoomId(), findToUpdate.getDate())){
+            throw new DuplicateException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
+        }
+
+        findToUpdate = workingScheduleRepository.save(findToUpdate);
+        return workingScheduleUtil.mapEntityToResponse(findToUpdate);
+    }
+}

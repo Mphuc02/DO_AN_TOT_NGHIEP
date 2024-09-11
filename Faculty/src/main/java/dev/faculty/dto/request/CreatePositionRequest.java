@@ -1,10 +1,9 @@
 package dev.faculty.dto.request;
 
 import dev.common.model.Permission;
-import dev.common.validation.NotAdminPermissionValidation;
+import dev.common.validator.NotAdminPermissionValidator;
 import dev.faculty.validation.FacultyExistValidation;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +22,7 @@ public class CreatePositionRequest {
     private Integer quantity;
 
     @NotNull(message = "Chức vụ không được bỏ trống")
-    @NotAdminPermissionValidation
+    @NotAdminPermissionValidator
     private Permission permission;
 
     @NotNull(message = "Khoa không được bỏ trống")

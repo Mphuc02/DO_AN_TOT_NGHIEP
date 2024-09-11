@@ -35,6 +35,7 @@ jwt:
 kafka:
     topics:
         create-employee-topic: create_employee
+        create-patient-from-greeting: create_patient_from_greeting
 
 eureka:
     client:

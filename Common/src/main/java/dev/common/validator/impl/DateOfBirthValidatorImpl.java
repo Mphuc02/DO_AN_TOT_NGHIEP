@@ -1,15 +1,15 @@
-package dev.common.validation.impl;
+package dev.common.validator.impl;
 
-import dev.common.validation.DateOfBirthValidation;
+import dev.common.validator.DateOfBirthValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Date;
 
-public class DateOfBirthValidationImpl implements ConstraintValidator<DateOfBirthValidation, Date> {
+public class DateOfBirthValidatorImpl implements ConstraintValidator<DateOfBirthValidator, Date> {
     int minimumAge;
 
     @Override
-    public void initialize(DateOfBirthValidation constraintAnnotation) {
+    public void initialize(DateOfBirthValidator constraintAnnotation) {
         this.minimumAge = constraintAnnotation.minimumAge();
     }
 

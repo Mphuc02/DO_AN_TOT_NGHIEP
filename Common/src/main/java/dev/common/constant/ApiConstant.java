@@ -15,8 +15,10 @@ public class ApiConstant {
     }
     public static final class HOSPITAL_INFORMATION {
         public static final String SERVICE_NAME = "HOSPITALINFORMATION";
-        public static final String URL = "/api/v1/provinces";
+        public static final String PROVINCE_URL = "/api/v1/provinces";
         public static final String CHECK_ADDRESS = "/check-address";
+        public static final String EXAMINATION_ROOM_URL = "/api/v1/examination-room";
+        public static final String CHECK_ROOM_EXIST = "/check-room/{id}";
         public static final String PROVINCE_ID_PARAM = "province-id";
         public static final String DISTRICT_ID_PARAM = "district-id";
         public static final String COMMUNE_ID_PARAM = "commune-id";
@@ -40,5 +42,11 @@ public class ApiConstant {
         public static final String EXAMINATION_FORM_URL = "/api/v1/greeting";
         public static final String TICKET_URL = "/api/v1/tickets";
         public static final String PRINT = "/print";
+    }
+
+    public static final class WORKING_SCHEDULE_URL{
+        public static final String URL = "/api/v1/working-schedules";
+        public static final String SERVICE_NAME = "WORKING_SCHEDULE";
+        public static final String ID = "/{id}";
     }
 }

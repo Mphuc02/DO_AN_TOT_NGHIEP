@@ -1,6 +1,6 @@
-package dev.common.validation;
+package dev.common.validator;
 
-import dev.common.validation.impl.PatientAddressValidationImpl;
+import dev.common.validator.impl.DateAfterTodayValidatorImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PatientAddressValidationImpl.class)
-public @interface PatientAddressValidation {
-    String message() default "Địa chỉ không hợp lệ";
+@Constraint(validatedBy = DateAfterTodayValidatorImpl.class)
+public @interface DateAfterTodayValidator {
+    String message() default "Ngày lựa chọn phải sớm hơn hôm nay";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
