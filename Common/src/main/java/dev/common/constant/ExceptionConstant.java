@@ -35,5 +35,7 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_SCHEDULE = "Lỗi khi kiểm tra thuộc tính CreateWorkingSchedule";
         public static final String ROOM_HAS_BEEN_SELECTED = "Phòng khám đã được lên lịch làm việc";
         public static final String WORKING_SCHEDULE_NOT_FOUND = "Lịch làm việc không tồn tại";
+        public static final String NOT_PERMISSION_WITH_SCHEDULE = "Không có quyền thao tác với lịch làm việc này";
+        public static final String CAN_NOT_UPDATE_OLD_SCHEDULE = "Không thể chỉnh sửa ngày làm việc đã qua";
     }
 }

@@ -4,13 +4,14 @@ import dev.common.dto.response.WorkingScheduleCommonResponse;
 import dev.common.util.AuditingUtil;
 import dev.common.util.DateUtil;
 import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
-import dev.workingschedule.dto.request.UpdateWorkingScheduleRequest;
 import dev.workingschedule.entity.WorkingSchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class WorkingScheduleUtil {
                 .build();
     }
 
-    public void mapUpdateRequestToEntity(UpdateWorkingScheduleRequest request, WorkingSchedule entity){
+    public void mapUpdateRequestToEntity(CreateWorkingScheduleRequest request, WorkingSchedule entity){
         if(!ObjectUtils.isEmpty(request.getDate()))
             entity.setDate(dateUtil.formatDateToDD_MM_YYYY(request.getDate()));
 
@@ -42,5 +43,9 @@ public class WorkingScheduleUtil {
                 .employeeId(entity.getEmployeeId())
                 .date(entity.getDate())
                 .build();
+    }
+
+    public List<WorkingScheduleCommonResponse> mapEntitiesToResponses(List<WorkingSchedule> schedules){
+        return schedules.stream().map(this::mapEntityToResponse).collect(Collectors.toList());
     }
 }

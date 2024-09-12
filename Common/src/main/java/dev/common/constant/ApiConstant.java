@@ -48,5 +48,6 @@ public class ApiConstant {
         public static final String URL = "/api/v1/working-schedules";
         public static final String SERVICE_NAME = "WORKING_SCHEDULE";
         public static final String ID = "/{id}";
+        public static final String SEARCH = "/search";
     }
 }
