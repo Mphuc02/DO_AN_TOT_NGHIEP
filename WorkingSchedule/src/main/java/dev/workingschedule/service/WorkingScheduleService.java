@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,6 +30,15 @@ public class WorkingScheduleService {
 
     public List<WorkingScheduleCommonResponse> searchWorkingSchedule(SearchWorkingScheduleRequest request){
         return workingScheduleUtil.mapEntitiesToResponses(workingScheduleRepository.searchWorkingSchedule(request.getStartDate(), request.getEndDate(), request.getRoomId(), request.getEmployeeId()));
+    }
+
+    public boolean checkScheduleIsToday(UUID id){
+        Optional<WorkingSchedule> optional = workingScheduleRepository.findById(id);
+        if(optional.isEmpty())
+            return false;
+        WorkingSchedule schedule = optional.get();
+        Date today = dateUtil.getFormattedToday();
+        return schedule.getDate().equals(today);
     }
 
     @Transactional

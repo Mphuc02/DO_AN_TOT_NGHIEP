@@ -24,6 +24,9 @@ public class ExaminationForm {
     private UUID patientId;
     private UUID employeeId;
     private Integer ticketIndex;
+
+    private UUID workingScheduleId;
+
     private Date createdAt;
 
     @Column(columnDefinition = "TEXT")

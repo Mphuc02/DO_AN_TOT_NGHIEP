@@ -24,6 +24,11 @@ public class WorkingScheduleRest {
         return ResponseEntity.ok(workingScheduleService.searchWorkingSchedule(request));
     }
 
+    @GetMapping(WORKING_SCHEDULE_URL.CHECk_SCHEDULE_TODAY)
+    public ResponseEntity<Boolean> checkScheduleIsToday(@PathVariable UUID id){
+        return ResponseEntity.ok(workingScheduleService.checkScheduleIsToday(id));
+    }
+
     @PostMapping()
     public ResponseEntity<Object> save(@Valid @RequestBody CreateWorkingScheduleRequest request,
                                        BindingResult result){

@@ -3,7 +3,7 @@ server:
 
 spring:
     application:
-        name: Working_Schedule
+        name: WorkingSchedule
     
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
@@ -30,8 +30,6 @@ spring:
             value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
             properties:
                 spring.json.trusted.packages: "*"
-    
-    
     
     main:
         allow-bean-definition-overriding: true
