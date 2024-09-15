@@ -51,4 +51,9 @@ public class ApiConstant {
         public static final String SEARCH = "/search";
         public static final String CHECk_SCHEDULE_TODAY = "/check-schedule-today/{id}";
     }
+
+    public static final class EXAMINATION_RESULT_URL{
+        public static final String URL = "/api/v1/examination-results";
+        public static final String ID = "/{id}";
+    }
 }

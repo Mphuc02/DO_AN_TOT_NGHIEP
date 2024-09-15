@@ -38,4 +38,9 @@ public class ExceptionConstant {
         public static final String NOT_PERMISSION_WITH_SCHEDULE = "Không có quyền thao tác với lịch làm việc này";
         public static final String CAN_NOT_UPDATE_OLD_SCHEDULE = "Không thể chỉnh sửa ngày làm việc đã qua";
     }
+
+    public static final class EXAMINATION_RESULT_EXCEPTION {
+        public static final String RESULT_NOT_FOUND = "Không tìm thấy kết quả khám với id";
+        public static final String FAIL_VALIDATION_RESULT = "Lỗi khi kiểm tra thuộc tính ExaminationResult";
+    }
 }
