@@ -1,12 +1,12 @@
 server:
-    port: 8083
+    port: 8088
 
 spring:
     application:
-        name: Greeting
-        
+        name: ExaminationResult
+    
     datasource:
-        url: jdbc:mysql://localhost:3306/greeting
+        url: jdbc:mysql://localhost:3306/examination_result
         username: root
         password: 123456
         driver-class-name: com.mysql.cj.jdbc.Driver
@@ -18,7 +18,7 @@ spring:
         show-sql: true
         hibernate:
             ddl-auto: update
-    
+        
     kafka:
         bootstrap-servers:
             - localhost:9092
@@ -36,16 +36,13 @@ spring:
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
     access-token=expiration: 300000
-    
+
 kafka:
     topics:
-        greeting-topic: greeting
-        
-        create-patient-from-greeting: create_patient_from_greeting
-        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
-        
         create-examination-topic: create_examination_result_from_greeting
-        
+    group-id:
+        examination-result: examination_result
+
 eureka:
     client:
         service-url:

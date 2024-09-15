@@ -8,7 +8,12 @@ spring:
                 - id: faculty
                   uri: lb://FACULTY
                   predicates:
-                      - Path=/api/v1/faculty
+                      - Path=/api/v1/faculty/**
+                
+                - id: authentication
+                  uri: lb://AUTHENTICATION
+                  predicates:
+                    - Path=/api/v1/authentication/**
             
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
@@ -20,6 +25,7 @@ spring:
                         allowedMethods:
                             - GET
                             - POST
+            
 
 eureka:
     client:

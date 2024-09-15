@@ -1,5 +1,6 @@
 package dev.greeting.util;
 
+import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.response.ExaminationFormResponse;
 import dev.greeting.dto.request.CreateFormWithoutAppointmentRequest;
 import dev.greeting.entity.ExaminationForm;
@@ -13,9 +14,11 @@ import java.util.UUID;
 public class ExaminationFormUtil {
     public ExaminationForm createRequestToEntity(CreateFormWithoutAppointmentRequest request){
         return ExaminationForm.builder()
-                .patientId(UUID.randomUUID())
+                .id(UUID.randomUUID())
+                .patientId(request.getPatient().getId())
                 .symptom(request.getSymptom())
                 .ticketIndex(request.getNumberCall())
+                .workingScheduleId(request.getWorkingSchedule())
                 .createdAt(new Date(new java.util.Date().getTime()))
                 .build();
     }
@@ -28,6 +31,14 @@ public class ExaminationFormUtil {
                 .patientId(entity.getPatientId())
                 .createdAt(entity.getCreatedAt())
                 .symptom(entity.getSymptom())
+                .build();
+    }
+
+    public CreateExaminationResultCommonRequest buildCreateExaminationResultRequest(ExaminationForm form){
+        return CreateExaminationResultCommonRequest.builder()
+                .id(UUID.randomUUID())
+                .workingScheduleId(form.getWorkingScheduleId())
+                .patientId(form.getPatientId())
                 .build();
     }
 }

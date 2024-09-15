@@ -1,7 +1,7 @@
 package dev.authentication;
 
 import dev.authentication.entity.Account;
-import dev.common.constant.KafkaConstrant;
+import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.model.Permission;
@@ -34,7 +34,7 @@ public class AuthenticationApplication implements CommandLineRunner {
     private final PasswordEncoder encoder;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Value(KafkaConstrant.TOPICS.CREATE_EMPLOYEE_TOPIC)
+    @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
 
     @Override

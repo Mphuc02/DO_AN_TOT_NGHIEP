@@ -8,9 +8,9 @@ public class ApiConstant {
         public static final String AUTHENTICATE = "/authenticate";
         public static final String EMPLOYEE_AUTHENTICATION = "/authentication-employee";
         public static final String EMPLOYEE = "/employee";
-
-        public static final class INTERNAL{
+        public static final class INTERNAL_URL{
             public static final String URL = "/api/v1/internal/authentication";
+            public static final String CHECK_PHONE_NUMBER_EXIST = "/check-phone-number";
         }
     }
     public static final class HOSPITAL_INFORMATION {

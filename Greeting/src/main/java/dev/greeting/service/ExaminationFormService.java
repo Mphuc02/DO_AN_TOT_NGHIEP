@@ -1,11 +1,8 @@
 package dev.greeting.service;
 
-import dev.common.client.InternalAccountClient;
-import dev.common.constant.ExceptionConstant.*;
+import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.response.ExaminationFormResponse;
-import dev.common.exception.DuplicateException;
 import dev.common.model.AuthenticatedUser;
-import dev.greeting.constant.KafkaConstant;
 import dev.greeting.dto.request.CreateFormWithoutAppointmentRequest;
 import dev.greeting.entity.ExaminationForm;
 import dev.greeting.repository.ExaminationFormRepository;
@@ -16,28 +13,28 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class ExaminationFormService {
     private final ExaminationFormRepository examinationFormRepository;
-    private final TicketService ticketService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ExaminationFormUtil examinationFormUtil;
-    private final InternalAccountClient internalAccountClient;
+
+    @Value(CREATE_PATIENT_FROM_GREETING_TOPIC)
+    private String CREATE_PATIENT_TOPIC;
+
+    @Value(CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC)
+    private String CREATE_EXAMINATION_RESULT_TOPIC;
 
     public ExaminationFormResponse saveWithoutAppointment(CreateFormWithoutAppointmentRequest request){
-        //Todo: Kiểm tra la việc gư message có thành công hay không
-        request.getPatient().setId(UUID.randomUUID());
-        if(!internalAccountClient.saveAccountFrommGreeting(request.getPatient()))
-            throw new DuplicateException(AUTHENTICATION_EXCEPTION.NUMBER_PHONE_EXISTED);
-
         ExaminationForm entity = examinationFormUtil.createRequestToEntity(request);
+        request.getPatient().setExaminationFormID(entity.getId());
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         entity.setEmployeeId(employee.getEmployeeId());
         entity = examinationFormRepository.save(entity);
 
+        kafkaTemplate.send(CREATE_PATIENT_TOPIC, request.getPatient());
+        kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormUtil.buildCreateExaminationResultRequest(entity));
         return examinationFormUtil.entityToResponse(entity);
     }
 }

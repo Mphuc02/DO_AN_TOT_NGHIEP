@@ -20,11 +20,12 @@ public class CreateNewPatientRequest {
     private CreateFullNameRequest fullName;
 
     @NotEmpty(message = "Số điện thoại không được bỏ trống")
-//    @
     private String numberPhone;
 
     @Valid
     @NotNull(message = "Địa chỉ không được bỏ trống")
     @PatientAddressValidator
     private CreatePatientAddressRequest address;
+
+    private UUID examinationFormID;
 }

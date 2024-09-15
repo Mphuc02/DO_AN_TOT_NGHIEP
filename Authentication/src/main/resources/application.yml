@@ -27,6 +27,12 @@ spring:
             value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
             properties:
                 spring.json.trusted.packages: "*"
+                
+    data:
+        redis:
+            #            host: 10.10.100.42
+            port: 6379
+            host: localhost
 
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
@@ -37,6 +43,10 @@ kafka:
     topics:
         create-employee-topic: create_employee
         create-patient-from-greeting: create_patient_from_greeting
+        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+    group-id:
+        authentication: authentication
+    
 
 eureka:
     client:

@@ -1,32 +1,32 @@
-package dev.greeting.entity;
+package dev.examinationresult.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_examination_form")
+@Table(name = "tbl_examination_result")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ExaminationForm {
+public class ExaminationResult {
     @Id
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 
     private UUID patientId;
-    private UUID employeeId;
-    private Integer ticketIndex;
 
     private UUID workingScheduleId;
+    private LocalDateTime createdAt;
 
-    private Date createdAt;
+    private Integer orderNumber;
 
-    @Column(columnDefinition = "TEXT")
-    private String symptom;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "result")
+    private List<ExaminationResultDetail> details;
 }

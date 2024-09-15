@@ -1,4 +1,4 @@
-package dev.authentication.rest.external;
+package dev.authentication.rest;
 
 import dev.authentication.dto.request.AuthenticationRequest;
 import dev.authentication.dto.request.CreateEmployeeRequest;
@@ -11,16 +11,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(AUTHENTICATION_URL.URL)
-public class ExternalAuthenticationRest {
+public class AuthenticationRest {
     private final AccountService accountService;
 
     @PostMapping(AUTHENTICATION_URL.REGISTER)

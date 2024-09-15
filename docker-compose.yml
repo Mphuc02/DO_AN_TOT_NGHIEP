@@ -1,4 +1,3 @@
----
 version: '2'
 services:
     zookeeper:
@@ -54,3 +53,19 @@ services:
             CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
             CONFLUENT_METRICS_TOPIC_REPLICATION: 1
             PORT: 9021
+    
+    redis:
+        image: docker.io/bitnami/redis:7.4
+        container_name: cache_server
+        environment:
+            # ALLOW_EMPTY_PASSWORD is recommended only for development.
+            - ALLOW_EMPTY_PASSWORD=yes
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        ports:
+            - '6379:6379'
+        volumes:
+            - 'redis_data:/bitnami/redis/data'
+
+volumes:
+    redis_data:
+        driver: local

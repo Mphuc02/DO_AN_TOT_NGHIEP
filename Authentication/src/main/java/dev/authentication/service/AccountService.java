@@ -1,7 +1,8 @@
 package dev.authentication.service;
 
 import dev.authentication.client.EmployeeRoleOpenClient;
-import dev.authentication.constant.KafkaConstant;
+import static dev.common.constant.RedisPrefixConstant.*;
+import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.constant.ValueConstant;
 import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.entity.Account;
@@ -11,7 +12,6 @@ import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.constant.KafkaConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.request.CreateNewPatientRequest;
 import dev.common.exception.DuplicateException;
@@ -31,11 +31,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -47,15 +47,16 @@ public class AccountService {
     private final AuthenticationManager authenticationManager;
     private final EmployeeRoleOpenClient employeeRoleOpenClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final RedisService redisService;
 
     @Value(ValueConstant.JWT.ACCESS_TOKEN_EXPIRATION)
     public int ACCESS_TOKEN_EXPIRATION;
 
-    @Value(KafkaConstrant.TOPICS.CREATE_EMPLOYEE_TOPIC)
+    @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
 
-    @Value(KafkaConstant.CREATE_PATIENT_FROM_GREETING)
-    private String CREATE_PATIENT_FROM_GREETING;
+    @Value(KafkaTopicsConstrant.FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC)
+    private String FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC;
 
     @Transactional
     public void register(RegisterAccountRequest request){
@@ -105,6 +106,7 @@ public class AccountService {
         }
     }
 
+    @Transactional
     public void saveEmployee(CreateEmployeeRequest request){
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new DuplicateException(String.format("Đã tồn tại tài khoản với email: %s", request.getEmail()));
@@ -115,9 +117,28 @@ public class AccountService {
         kafkaTemplate.send(CREATE_EMPLOYEE_TOPIC, registerRequest);
     }
 
-    public boolean saveAccountFromGreeting(CreateNewPatientRequest request){
-        if(accountRepository.existsByNumberPhone(request.getNumberPhone()))
+    public boolean checkPhoneNumberNotExist(String phoneNumber, UUID userId){
+        UUID findNumberPhone = (UUID) redisService.getValue(USER_PHONE_PREFIX(phoneNumber), UUID.class);
+        if(!ObjectUtils.isEmpty(findNumberPhone)){
             return false;
+        }
+
+        if(accountRepository.existsByNumberPhone(phoneNumber))
+            return false;
+
+        redisService.setValue(USER_PHONE_PREFIX(phoneNumber), userId);
+        return true;
+    }
+
+    @KafkaListener(topics = KafkaTopicsConstrant.CREATE_PATIENT_FROM_GREETING_TOPIC,
+                    groupId = KafkaTopicsConstrant.AUTHENTICATION_GROUP)
+    public void saveAccountFromGreeting(CreateNewPatientRequest request){
+        UUID userId = (UUID) redisService.getValue(USER_PHONE_PREFIX(request.getNumberPhone()), UUID.class);
+        if(ObjectUtils.isEmpty(userId) ||
+            !userId.equals(request.getId())){
+            kafkaTemplate.send(FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC, request.getId());
+            return;
+        }
 
         Account account = Account.builder()
                 .id(request.getId())
@@ -125,8 +146,6 @@ public class AccountService {
                 .numberPhone(request.getNumberPhone())
                 .build();
         accountRepository.save(account);
-        kafkaTemplate.send(CREATE_PATIENT_FROM_GREETING, request);
-
-        return true;
+        redisService.deleteValue(USER_PHONE_PREFIX(request.getNumberPhone()));
     }
 }

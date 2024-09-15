@@ -1,32 +1,28 @@
-package dev.greeting.entity;
+package dev.examinationresult.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-import java.sql.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_examination_form")
+@Table(name = "tbl_examination_result_detail")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ExaminationForm {
+public class ExaminationResultDetail {
     @Id
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 
-    private UUID patientId;
-    private UUID employeeId;
-    private Integer ticketIndex;
-
-    private UUID workingScheduleId;
-
-    private Date createdAt;
+    private UUID diseaseId;
 
     @Column(columnDefinition = "TEXT")
-    private String symptom;
+    private String diseaseDescription;
+
+    @ManyToOne
+    private ExaminationResult result;
 }
