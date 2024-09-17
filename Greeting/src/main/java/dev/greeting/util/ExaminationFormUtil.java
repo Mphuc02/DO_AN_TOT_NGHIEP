@@ -36,7 +36,7 @@ public class ExaminationFormUtil {
 
     public CreateExaminationResultCommonRequest buildCreateExaminationResultRequest(ExaminationForm form){
         return CreateExaminationResultCommonRequest.builder()
-                .id(UUID.randomUUID())
+                .id(form.getId())
                 .workingScheduleId(form.getWorkingScheduleId())
                 .patientId(form.getPatientId())
                 .build();

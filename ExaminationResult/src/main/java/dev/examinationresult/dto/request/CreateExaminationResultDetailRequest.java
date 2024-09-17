@@ -1,6 +1,7 @@
 package dev.examinationresult.dto.request;
 
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.util.UUID;
 
@@ -10,8 +11,9 @@ import java.util.UUID;
 @Setter
 @Builder
 public class CreateExaminationResultDetailRequest {
+    @NotNull(message = "Tên bệnh không được bỏ trống")
     private UUID diseaseId;
 
-    @Column(columnDefinition = "TEXT")
+    @NotEmpty(message = "Mô tả của bệnh không được bỏ trống")
     private String diseaseDescription;
 }

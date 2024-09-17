@@ -10,6 +10,9 @@ public class ExceptionConstant {
         public static final String PROVINCE_ID_NOT_FOUND = "Tỉnh với id không tồn tại";
         public static final String EXAMINATION_ROOM_NOT_FOUND = "Phòng khám với id không tồn tại";
         public static final String FAIL_VALIDATION_ROOM = "Lỗi khi kiểm tra thuộc tính ExaminationRoom";
+
+        public static final String DISEASE_NOT_FOUND = "Bệnh với id không tồn tại";
+        public static final String FAIL_VALIDATION_DISEASE = "Lỗi khi kiểm tra thuộc tính DISEASE";
     }
     public static final class FACULTY_EXCEPTION{
         public static final String FAIL_VALIDATION_FACULTY = "Lỗi khi kiểm tra thuộc tính của Faculty";
@@ -42,5 +45,7 @@ public class ExceptionConstant {
     public static final class EXAMINATION_RESULT_EXCEPTION {
         public static final String RESULT_NOT_FOUND = "Không tìm thấy kết quả khám với id";
         public static final String FAIL_VALIDATION_RESULT = "Lỗi khi kiểm tra thuộc tính ExaminationResult";
+        public static final String NOT_RESULT_OWNER = "Bạn không có quyền chỉnh sửa với kết quả khám này";
+        public static final String FINISHED_RESULT = "Kết quả khám đã được hoàn thành, không thể chỉnh sửa thêm";
     }
 }

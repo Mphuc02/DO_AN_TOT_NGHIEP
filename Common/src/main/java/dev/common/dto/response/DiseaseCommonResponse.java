@@ -1,7 +1,6 @@
-package dev.common.model;
+package dev.common.dto.response;
 
 import lombok.*;
-import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -9,7 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class AuthenticatedUser {
+public class DiseaseCommonResponse {
     private UUID id;
-    private Set<Permission> permissions;
+    private String name;
+    private String description;
 }

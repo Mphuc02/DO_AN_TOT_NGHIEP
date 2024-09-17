@@ -6,8 +6,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -29,10 +27,11 @@ public class ExaminationResult {
 
     private UUID workingScheduleId;
 
+    private UUID employeeId;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
     private LocalDateTime examinatedAt;
 
     private Integer orderNumber;

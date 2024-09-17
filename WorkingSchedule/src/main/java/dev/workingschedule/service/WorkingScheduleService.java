@@ -28,6 +28,12 @@ public class WorkingScheduleService {
     private final DateUtil dateUtil;
     private final AuditingUtil auditingUtil;
 
+    public WorkingScheduleCommonResponse getById(UUID id){
+        WorkingSchedule schedule = workingScheduleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
+        return workingScheduleUtil.mapEntityToResponse(schedule);
+    }
+
     public List<WorkingScheduleCommonResponse> searchWorkingSchedule(SearchWorkingScheduleRequest request){
         return workingScheduleUtil.mapEntitiesToResponses(workingScheduleRepository.searchWorkingSchedule(request.getStartDate(), request.getEndDate(), request.getRoomId(), request.getEmployeeId()));
     }
@@ -78,7 +84,7 @@ public class WorkingScheduleService {
         WorkingSchedule findToDelete = workingScheduleRepository.findById(id)
                         .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
 
-        if(!findToDelete.getEmployeeId().equals(auditingUtil.getUserLogged().getEmployeeId()))
+        if(!findToDelete.getEmployeeId().equals(auditingUtil.getUserLogged().getId()))
             throw new NotPermissionException(WORKING_SCHEDULE_EXCEPTION.NOT_PERMISSION_WITH_SCHEDULE);
 
         Date today = new Date(new java.util.Date().getTime());

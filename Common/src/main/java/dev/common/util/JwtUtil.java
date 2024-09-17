@@ -29,7 +29,7 @@ public class JwtUtil {
         List<String> roles = (List<String>) claims.get("roles");
         Set<Permission> permissions = roles.stream().map(role -> Permission.valueOf(role)).collect(Collectors.toSet());
         return AuthenticatedUser.builder()
-                .employeeId(UUID.fromString(claims.getSubject()))
+                .id(UUID.fromString(claims.getSubject()))
                 .permissions(permissions)
                 .build();
     }

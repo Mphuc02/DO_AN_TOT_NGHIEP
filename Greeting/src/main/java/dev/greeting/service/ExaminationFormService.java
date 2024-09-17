@@ -30,7 +30,7 @@ public class ExaminationFormService {
         ExaminationForm entity = examinationFormUtil.createRequestToEntity(request);
         request.getPatient().setExaminationFormID(entity.getId());
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        entity.setEmployeeId(employee.getEmployeeId());
+        entity.setEmployeeId(employee.getId());
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_PATIENT_TOPIC, request.getPatient());

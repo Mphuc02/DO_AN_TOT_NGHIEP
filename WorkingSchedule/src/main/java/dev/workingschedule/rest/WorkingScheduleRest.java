@@ -2,6 +2,7 @@ package dev.workingschedule.rest;
 
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.dto.response.WorkingScheduleCommonResponse;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
 import dev.workingschedule.dto.request.SearchWorkingScheduleRequest;
@@ -19,14 +20,19 @@ import java.util.UUID;
 public class WorkingScheduleRest {
     private final WorkingScheduleService workingScheduleService;
 
-    @PostMapping(WORKING_SCHEDULE_URL.SEARCH)
-    public ResponseEntity<Object> search(@RequestBody SearchWorkingScheduleRequest request){
-        return ResponseEntity.ok(workingScheduleService.searchWorkingSchedule(request));
+    @GetMapping(WORKING_SCHEDULE_URL.ID)
+    public ResponseEntity<WorkingScheduleCommonResponse> getById(@PathVariable UUID id){
+        return ResponseEntity.ok(workingScheduleService.getById(id));
     }
 
     @GetMapping(WORKING_SCHEDULE_URL.CHECk_SCHEDULE_TODAY)
     public ResponseEntity<Boolean> checkScheduleIsToday(@PathVariable UUID id){
         return ResponseEntity.ok(workingScheduleService.checkScheduleIsToday(id));
+    }
+
+    @PostMapping(WORKING_SCHEDULE_URL.SEARCH)
+    public ResponseEntity<Object> search(@RequestBody SearchWorkingScheduleRequest request){
+        return ResponseEntity.ok(workingScheduleService.searchWorkingSchedule(request));
     }
 
     @PostMapping()

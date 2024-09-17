@@ -19,9 +19,9 @@ public class ApiConstant {
         public static final String CHECK_ADDRESS = "/check-address";
         public static final String EXAMINATION_ROOM_URL = "/api/v1/examination-room";
         public static final String CHECK_ROOM_EXIST = "/check-room/{id}";
-        public static final String PROVINCE_ID_PARAM = "province-id";
-        public static final String DISTRICT_ID_PARAM = "district-id";
-        public static final String COMMUNE_ID_PARAM = "commune-id";
+        public static final String ID = "{id}";
+        public static final String CHECK_DISEASES_EXIST = "/check";
+        public static final String DISEASE_URL = "/api/v1/diseases";
     }
 
     public static final class FACULTY_URL{

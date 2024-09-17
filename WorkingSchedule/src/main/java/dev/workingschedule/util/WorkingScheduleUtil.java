@@ -23,7 +23,7 @@ public class WorkingScheduleUtil {
         return WorkingSchedule.builder()
                 .id(UUID.randomUUID())
                 .date(dateUtil.formatDateToDD_MM_YYYY(request.getDate()))
-                .employeeId(auditingUtil.getUserLogged().getEmployeeId())
+                .employeeId(auditingUtil.getUserLogged().getId())
                 .roomId(request.getRoomId())
                 .build();
     }
