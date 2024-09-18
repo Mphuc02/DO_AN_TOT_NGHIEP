@@ -56,4 +56,11 @@ public class ApiConstant {
         public static final String URL = "/api/v1/examination-results";
         public static final String ID = "/{id}";
     }
+
+    public static final class MEDICINE_URL{
+        public static final String MEDICINE_URL = "/api/v1/medicines";
+        public static final String ID = "/{id}";
+        public static final String CHECK_MEDICINES_EXIST = "/check";
+        public static final String ORIGIN_URL = "/api/v1/origins";
+    }
 }

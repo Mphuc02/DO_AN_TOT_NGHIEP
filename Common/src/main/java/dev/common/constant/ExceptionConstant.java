@@ -48,4 +48,11 @@ public class ExceptionConstant {
         public static final String NOT_RESULT_OWNER = "Bạn không có quyền chỉnh sửa với kết quả khám này";
         public static final String FINISHED_RESULT = "Kết quả khám đã được hoàn thành, không thể chỉnh sửa thêm";
     }
+
+    public static final class MEDICINE_EXCEPTION {
+        public static final String MEDICINE_NOT_FOUND = "Thuốc với id không tồn tại";
+        public static final String FAIL_VALIDATION_MEDICINE = "Lỗi khi kiểm tra thuộc tính của Medicine";
+        public static final String ORIGIN_NOT_FOUND = "Suất xứ không tồn tại";
+        public static final String FAIL_VALIDATION_ORIGIN = "Lỗi khi kiểm tra thuộc tính của Origin";
+    }
 }

@@ -1,7 +1,6 @@
 package dev.examinationresult.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
-
 import dev.common.client.WorkingScheduleClient;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
@@ -57,6 +56,7 @@ public class ExaminationResultService {
                                                         .orElseThrow(() ->
                                                                 new NotFoundException(EXAMINATION_RESULT_EXCEPTION.RESULT_NOT_FOUND));
 
+        //Todo: Kiểm tra nếu người đã thanh toàn thì sẽ không thể chinh sửa kết quả khám bệnh nữa
         UUID employeeId = ((AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         if(!employeeId.equals(findToUpdate.getEmployeeId()))
             throw new NotPermissionException(EXAMINATION_RESULT_EXCEPTION.NOT_RESULT_OWNER);
