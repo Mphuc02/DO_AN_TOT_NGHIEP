@@ -1,6 +1,6 @@
-package dev.common.validator;
+package dev.medicine.validator;
 
-import dev.common.validator.impl.PatientAddressValidatorImpl;
+import dev.medicine.validator.impl.AddressValidatorImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PatientAddressValidatorImpl.class)
-public @interface PatientAddressValidator {
+@Constraint(validatedBy = AddressValidatorImpl.class)
+public @interface AddressValidator {
     String message() default "Địa chỉ không hợp lệ";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

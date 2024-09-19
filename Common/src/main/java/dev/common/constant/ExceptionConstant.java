@@ -13,6 +13,7 @@ public class ExceptionConstant {
 
         public static final String DISEASE_NOT_FOUND = "Bệnh với id không tồn tại";
         public static final String FAIL_VALIDATION_DISEASE = "Lỗi khi kiểm tra thuộc tính DISEASE";
+        public static final String FAIL_CHECK_ADDRESS = "Lỗi khi kiểm tra địa chỉ";
     }
     public static final class FACULTY_EXCEPTION{
         public static final String FAIL_VALIDATION_FACULTY = "Lỗi khi kiểm tra thuộc tính của Faculty";
@@ -54,5 +55,7 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_MEDICINE = "Lỗi khi kiểm tra thuộc tính của Medicine";
         public static final String ORIGIN_NOT_FOUND = "Suất xứ không tồn tại";
         public static final String FAIL_VALIDATION_ORIGIN = "Lỗi khi kiểm tra thuộc tính của Origin";
+        public static final String SUPPLIER_NOT_FOUND = "Không tồn tại nhà cung cấp";
+        public static final String FAIL_VALIDATION_SUPPLIER = "Lỗi khi kiểm tra Supplier";
     }
 }

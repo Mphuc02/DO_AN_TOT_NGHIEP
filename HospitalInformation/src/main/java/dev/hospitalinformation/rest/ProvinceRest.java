@@ -1,13 +1,15 @@
 package dev.hospitalinformation.rest;
 
 import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
-
+import static dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.request.CheckAddressRequest;
+import dev.common.exception.ObjectIllegalArgumentException;
 import dev.hospitalinformation.service.ProvinceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
 @RestController
@@ -27,7 +29,11 @@ public class ProvinceRest {
     }
 
     @PostMapping(CHECK_ADDRESS)
-    public ResponseEntity<Boolean> checkAddress(@RequestBody CheckAddressRequest request){
+    public ResponseEntity<Boolean> checkAddress(@Valid @RequestBody CheckAddressRequest request,
+                                                BindingResult result){
+        if(result.hasErrors()){
+            throw new ObjectIllegalArgumentException(result.getAllErrors(), HOSPITAL_INFORMATION_EXCEPTION.FAIL_CHECK_ADDRESS);
+        }
         return ResponseEntity.ok(provinceService.checkAddress(request));
     }
 
