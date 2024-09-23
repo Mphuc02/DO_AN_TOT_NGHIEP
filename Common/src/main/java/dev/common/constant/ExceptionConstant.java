@@ -57,5 +57,6 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_ORIGIN = "Lỗi khi kiểm tra thuộc tính của Origin";
         public static final String SUPPLIER_NOT_FOUND = "Không tồn tại nhà cung cấp";
         public static final String FAIL_VALIDATION_SUPPLIER = "Lỗi khi kiểm tra Supplier";
+        public static final String FAIL_VALIDATION_INVOICE = "Lỗi khi kiểm tra hóa đơn";
     }
 }

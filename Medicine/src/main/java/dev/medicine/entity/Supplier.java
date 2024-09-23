@@ -2,6 +2,8 @@ package dev.medicine.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,4 +25,11 @@ public class Supplier {
 
     @OneToOne(mappedBy = "supplier", cascade = CascadeType.ALL)
     private Address address;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "supplier")
+    private List<ImportInvoice> invoices;
+
+    public Supplier(UUID id) {
+        this.id = id;
+    }
 }

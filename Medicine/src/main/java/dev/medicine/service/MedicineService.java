@@ -2,8 +2,8 @@ package dev.medicine.service;
 
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.NotFoundException;
-import dev.medicine.dto.request.CreateMedicineRequest;
-import dev.medicine.dto.request.UpdateMedicineRequest;
+import dev.medicine.dto.request.create.CreateMedicineRequest;
+import dev.medicine.dto.request.update.UpdateMedicineRequest;
 import dev.medicine.dto.response.MedicineResponse;
 import dev.medicine.entity.Medicine;
 import dev.medicine.repository.MedicineRepository;

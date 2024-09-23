@@ -1,7 +1,7 @@
 package dev.medicine.util;
 
-import dev.medicine.dto.request.CreateSupplierRequest;
-import dev.medicine.dto.request.UpdateSupplierRequest;
+import dev.medicine.dto.request.create.CreateSupplierRequest;
+import dev.medicine.dto.request.update.UpdateSupplierRequest;
 import dev.medicine.dto.response.SupplierResponse;
 import dev.medicine.entity.Supplier;
 import org.mapstruct.Mapper;

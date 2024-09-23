@@ -1,4 +1,4 @@
-package dev.medicine.dto.request;
+package dev.medicine.dto.request.create;
 
 import dev.medicine.validator.ExistedOriginValidator;
 import jakarta.validation.constraints.NotEmpty;

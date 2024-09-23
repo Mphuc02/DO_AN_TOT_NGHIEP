@@ -1,6 +1,6 @@
 package dev.medicine.util;
 
-import dev.medicine.dto.request.SaveAddressRequest;
+import dev.medicine.dto.request.save.SaveAddressRequest;
 import dev.medicine.dto.response.AddressResponse;
 import dev.medicine.entity.Address;
 import org.mapstruct.Mapper;

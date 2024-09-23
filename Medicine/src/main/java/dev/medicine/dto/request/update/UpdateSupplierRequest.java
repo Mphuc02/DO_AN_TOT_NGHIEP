@@ -1,5 +1,6 @@
-package dev.medicine.dto.request;
+package dev.medicine.dto.request.update;
 
+import dev.medicine.dto.request.save.SaveAddressRequest;
 import dev.medicine.validator.AddressValidator;
 import jakarta.validation.Valid;
 import lombok.*;

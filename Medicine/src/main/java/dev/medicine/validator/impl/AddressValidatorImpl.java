@@ -2,7 +2,7 @@ package dev.medicine.validator.impl;
 
 import dev.common.client.AddressClient;
 import dev.common.dto.request.CheckAddressRequest;
-import dev.medicine.dto.request.SaveAddressRequest;
+import dev.medicine.dto.request.save.SaveAddressRequest;
 import dev.medicine.validator.AddressValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

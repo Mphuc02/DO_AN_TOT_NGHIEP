@@ -63,5 +63,6 @@ public class ApiConstant {
         public static final String CHECK_MEDICINES_EXIST = "/check";
         public static final String ORIGIN_URL = "/api/v1/origins";
         public static final String SUPPLIER_URL = "/api/v1/suppliers";
+        public static final String IMPORT_INVOICE_URL = "/api/v1/import-invoices";
     }
 }

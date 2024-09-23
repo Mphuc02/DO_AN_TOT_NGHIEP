@@ -1,4 +1,4 @@
-package dev.medicine.dto.request;
+package dev.medicine.dto.request.update;
 
 import lombok.*;
 

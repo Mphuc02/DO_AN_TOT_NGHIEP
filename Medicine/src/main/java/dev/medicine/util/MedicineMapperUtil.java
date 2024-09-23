@@ -1,7 +1,7 @@
 package dev.medicine.util;
 
-import dev.medicine.dto.request.CreateMedicineRequest;
-import dev.medicine.dto.request.UpdateMedicineRequest;
+import dev.medicine.dto.request.create.CreateMedicineRequest;
+import dev.medicine.dto.request.update.UpdateMedicineRequest;
 import dev.medicine.dto.response.MedicineResponse;
 import dev.medicine.entity.Medicine;
 import dev.medicine.entity.Origin;

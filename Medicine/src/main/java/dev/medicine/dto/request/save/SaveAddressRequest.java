@@ -1,4 +1,4 @@
-package dev.medicine.dto.request;
+package dev.medicine.dto.request.save;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
