@@ -20,6 +20,12 @@ public class MedicineService {
     private final MedicineRepository medicineRepository;
     private final MedicineMapperUtil medicineMapperUtil;
 
+    public MedicineResponse getByID(UUID id){
+        Medicine medicine = medicineRepository.findById(id)
+                            .orElseThrow(() -> new NotFoundException(MEDICINE_EXCEPTION.MEDICINE_NOT_FOUND));
+        return medicineMapperUtil.mapEntityToResponse(medicine);
+    }
+
     public List<MedicineResponse> getAll(){
         return medicineMapperUtil.mapEntitiesFromResponses(medicineRepository.findAll());
     }

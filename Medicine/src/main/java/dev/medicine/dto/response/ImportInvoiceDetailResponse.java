@@ -1,8 +1,7 @@
 package dev.medicine.dto.response;
 
-import dev.medicine.entity.Medicine;
 import lombok.*;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Builder
 public class ImportInvoiceDetailResponse {
     private UUID id;
-    private Medicine medicine;
-    private BigInteger price;
+    private MedicineResponse medicine;
+    private BigDecimal price;
     private Integer quantity;
 }

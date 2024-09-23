@@ -13,6 +13,6 @@ public class ExistedSupplierValidatorImpl implements ConstraintValidator<Existed
 
     @Override
     public boolean isValid(UUID id, ConstraintValidatorContext constraintValidatorContext) {
-        return id != null && repository.existsById(id);
+        return id == null || repository.existsById(id);
     }
 }

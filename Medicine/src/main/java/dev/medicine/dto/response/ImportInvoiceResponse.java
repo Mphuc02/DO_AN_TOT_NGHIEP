@@ -15,4 +15,5 @@ public class ImportInvoiceResponse {
     private UUID employeeId;
     private LocalDateTime createdAt;
     private List<ImportInvoiceDetailResponse> details;
+    private SupplierResponse supplier;
 }

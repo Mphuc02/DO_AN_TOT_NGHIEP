@@ -2,7 +2,7 @@ package dev.medicine.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +20,7 @@ public class ImportInvoiceDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     private Medicine medicine;
 
-    private BigInteger price;
+    private BigDecimal price;
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -3,6 +3,7 @@ package dev.medicine.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class Medicine {
 
     private String name;
     private String description;
+    private BigDecimal price;
 
     private Boolean active = true;
 

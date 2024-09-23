@@ -17,6 +17,7 @@ import java.util.UUID;
 public interface MedicineMapperUtil {
     @Mapping(target = "origin", source = "request.originId", qualifiedByName = "mapOriginFromId")
     Medicine mapCreateRequestToEntity(CreateMedicineRequest request);
+
     @Mapping(target = "origin", source = "request.originId", qualifiedByName = "mapOriginFromId")
     void mapUpdateRequestToEntity(UpdateMedicineRequest request, @MappingTarget Medicine medicine);
 

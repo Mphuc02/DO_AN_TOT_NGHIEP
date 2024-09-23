@@ -1,6 +1,8 @@
 package dev.medicine.dto.response;
 
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -13,4 +15,5 @@ public class MedicineResponse {
     private String name;
     private String description;
     private OriginResponse origin;
+    private BigDecimal price;
 }
