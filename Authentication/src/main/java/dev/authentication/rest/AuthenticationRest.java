@@ -5,11 +5,13 @@ import dev.authentication.dto.request.CreateEmployeeRequest;
 import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.authentication.service.AccountService;
 import dev.common.constant.ApiConstant.*;
+import dev.common.constant.AuthorizationConstrant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +48,10 @@ public class AuthenticationRest {
         return ResponseEntity.ok(accountService.authenticationForEmployee(request));
     }
 
+    @PreAuthorize(AuthorizationConstrant.ADMIN)
     @PostMapping(AUTHENTICATION_URL.EMPLOYEE)
-    public void registerEmployee(@Valid @RequestBody CreateEmployeeRequest request, BindingResult result){
+    public void registerEmployee(@Valid @RequestBody CreateEmployeeRequest request,
+                                BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), EMPLOYEE_EXCEPTION.FAIL_VALIDATION_EMPLOYEE);
         }

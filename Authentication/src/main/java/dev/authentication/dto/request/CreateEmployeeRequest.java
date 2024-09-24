@@ -31,6 +31,7 @@ public class CreateEmployeeRequest {
     @DateOfBirthValidator(minimumAge = 18, message = "Tuổi phải ít nhất 18 tuổi")
     private Date dateOfBirth;
 
+    @NotNull(message = "Họ và tên không được bỏ trống")
     @Valid
     private CreateFullNameRequest fullName;
 

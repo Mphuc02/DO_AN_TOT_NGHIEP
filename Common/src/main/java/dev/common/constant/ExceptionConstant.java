@@ -48,6 +48,9 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_RESULT = "Lỗi khi kiểm tra thuộc tính ExaminationResult";
         public static final String NOT_RESULT_OWNER = "Bạn không có quyền chỉnh sửa với kết quả khám này";
         public static final String FINISHED_RESULT = "Kết quả khám đã được hoàn thành, không thể chỉnh sửa thêm";
+        public static final String FAIL_VALIDATION_CONSULTATION_DETAIL = "Lỗi khi kiểm tra chi tiết phiếu tư vấn thuốc";
+        public static final String CONSULTATION_FORM_NOT_FOUND = "Không tìm thấy phiếu tư vấn với id này";
+        public static final String NOT_CONSULTATION_FORM_OWNER = "Bạn không có quyền chỉnh sửa nội dung phiếu tư vấn này";
     }
 
     public static final class MEDICINE_EXCEPTION {

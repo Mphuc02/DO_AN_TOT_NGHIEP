@@ -3,7 +3,7 @@ package dev.common.validator.impl;
 import dev.common.client.DiseaseClient;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.NotFoundException;
-import dev.common.validator.DiseasesExistValidator;
+import dev.common.validator.ExistedDiseasesValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class DiseasesExistValidatorImpl implements ConstraintValidator<DiseasesExistValidator, List<UUID>> {
+public class ExistedDiseasesValidatorImpl implements ConstraintValidator<ExistedDiseasesValidator, List<UUID>> {
     private final DiseaseClient diseaseClient;
 
     @Override

@@ -12,7 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,11 +32,11 @@ public class MedicineService {
         return medicineMapperUtil.mapEntitiesFromResponses(medicineRepository.findAll());
     }
 
-    public List<UUID> checkMedicinesExist(List<UUID> ids){
+    public Set<UUID> checkMedicinesExist(List<UUID> ids){
         return medicineRepository.findAllById(ids)
                             .stream()
                             .map(Medicine::getId)
-                            .toList();
+                            .collect(Collectors.toSet());
     }
 
     @Transactional

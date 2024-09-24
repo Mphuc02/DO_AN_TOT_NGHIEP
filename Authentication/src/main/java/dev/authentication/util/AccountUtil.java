@@ -29,6 +29,7 @@ public class AccountUtil {
 
     public Account mapFromRegisterEmployeeRequest(CreateEmployeeRequest request){
         return Account.builder()
+                .id(UUID.randomUUID())
                 .userName(request.getEmail())
                 .passWord(passwordEncoder.encode(request.getEmail()))
                 .numberPhone(request.getNumberPhone())

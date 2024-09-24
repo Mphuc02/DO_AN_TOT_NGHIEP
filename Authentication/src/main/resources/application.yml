@@ -36,7 +36,6 @@ spring:
 
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
-#    access-token=expiration: 300000
     access-token=expiration: 3000000
     
 kafka:

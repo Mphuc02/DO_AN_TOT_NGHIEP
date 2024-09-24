@@ -65,7 +65,7 @@ public class AccountService {
                                                                                                 request.getNumberPhone());
         Account entity = accountUtil.mapFromRegisterRequest(request);
         if(!accountsMatchedConditions.isEmpty()){
-            Map<String, String> existedFields = new HashMap<>();
+            Map<Object, Object> existedFields = new HashMap<>();
             accountsMatchedConditions.forEach(account -> {
                 if(account.getUsername().equals(entity.getUsername()))
                     existedFields.put("userName", "Tài khoản đã tồn tại");
@@ -108,8 +108,11 @@ public class AccountService {
 
     @Transactional
     public void saveEmployee(CreateEmployeeRequest request){
+        //Todo: nên cải thiện chỗ này
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new DuplicateException(String.format("Đã tồn tại tài khoản với email: %s", request.getEmail()));
+        if(accountRepository.existsByNumberPhone(request.getNumberPhone()))
+            throw new DuplicateException(String.format("Đã tồn tại tài khoản với số điện thoại: %s", request.getNumberPhone()));
 
         Account entity = accountUtil.mapFromRegisterEmployeeRequest(request);
         entity = accountRepository.save(entity);

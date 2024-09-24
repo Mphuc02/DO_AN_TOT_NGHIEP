@@ -12,6 +12,9 @@ import java.util.List;
 @Setter
 @Builder
 public class UpdateExaminationResultRequest {
+    @NotEmpty(message = "Lời khuyên không được bỏ trống")
+    private String treatment;
+
     @Valid
     @NotEmpty(message = "Chi tiết khám không đươc bỏ trống")
     @DiseasesExistValidator

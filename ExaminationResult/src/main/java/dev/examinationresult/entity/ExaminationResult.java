@@ -29,6 +29,9 @@ public class ExaminationResult {
 
     private UUID employeeId;
 
+    @Column(columnDefinition = "TEXT")
+    private String treatment;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

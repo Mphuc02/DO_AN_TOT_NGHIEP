@@ -44,12 +44,6 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String requestPath = request.getServletPath();
-        if(requestPath.startsWith(ApiConstant.AUTHENTICATION_URL.URL)){
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         final String jwt = this.getJwtFromHeader(request);
         if(ObjectUtils.isEmpty(jwt)){
             filterChain.doFilter(request, response);

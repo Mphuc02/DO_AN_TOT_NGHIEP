@@ -19,6 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @EnableConfigurationProperties
@@ -43,6 +44,7 @@ public class AuthenticationApplication implements CommandLineRunner {
             return;
 
         Account admin = Account.builder()
+                .id(UUID.randomUUID())
                 .createdAt(new Date(new java.util.Date().getTime()))
                 .userName("admin")
                 .email("admin@gmail.com")

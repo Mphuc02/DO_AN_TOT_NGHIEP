@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -27,7 +28,7 @@ public class MedicineRest {
     }
 
     @PostMapping(CHECK_MEDICINES_EXIST)
-    public ResponseEntity<List<UUID>> checkMedicinesExist(@RequestBody List<UUID> ids){
+    public ResponseEntity<Set<UUID>> checkMedicinesExist(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(medicineService.checkMedicinesExist(ids));
     }
 

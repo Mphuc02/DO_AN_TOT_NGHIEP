@@ -15,6 +15,7 @@ public class ExaminationResultResponse {
     private UUID patientId;
     private UUID workingScheduleId;
     private LocalDateTime createdAt;
+    private String treatment;
     private LocalDateTime examinatedAt;
     private Integer orderNumber;
     private List<ExaminationResultDetailResponse> details;

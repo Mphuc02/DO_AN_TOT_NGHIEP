@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(URL)
+@RequestMapping(RESULT_URL)
 @RequiredArgsConstructor
 public class ExaminationResultRest {
     private final ExaminationResultService examinationResultService;

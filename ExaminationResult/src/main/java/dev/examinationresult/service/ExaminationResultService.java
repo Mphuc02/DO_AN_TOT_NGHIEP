@@ -70,6 +70,7 @@ public class ExaminationResultService {
 
         findToUpdate.setDetails(details);
         findToUpdate.setExaminatedAt(LocalDateTime.now());
+        findToUpdate.setTreatment(request.getTreatment());
         findToUpdate = examinationResultRepository.save(findToUpdate);
         return resultUtil.mapEntityToResponse(findToUpdate);
     }
