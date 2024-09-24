@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,5 +19,5 @@ public interface WorkingScheduleRepository extends JpaRepository<WorkingSchedule
             (:employeeId is null or ws.employeeId = :employeeId)
         """)
     List<WorkingSchedule> searchWorkingSchedule(Date startDate, Date endDate, UUID roomId, UUID employeeId);
-    boolean existsByRoomIdAndDate(UUID roomId, Date date);
+    boolean existsByRoomIdAndDate(UUID roomId, LocalDate date);
 }

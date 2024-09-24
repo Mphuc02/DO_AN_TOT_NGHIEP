@@ -2,7 +2,7 @@ package dev.common.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -15,5 +15,5 @@ public class WorkingScheduleCommonResponse {
     private UUID id;
     private UUID roomId;
     private UUID employeeId;
-    private Date date;
+    private LocalDate date;
 }

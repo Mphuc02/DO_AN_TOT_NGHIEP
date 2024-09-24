@@ -4,7 +4,7 @@ import dev.common.validator.DateAfterTodayValidator;
 import dev.common.validator.ExistedExaminationRoomValidator;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -19,5 +19,5 @@ public class CreateWorkingScheduleRequest {
 
     @DateAfterTodayValidator
     @NotNull(message = "Ngày làm việc không được bỏ trống")
-    private Date date;
+    private LocalDate date;
 }

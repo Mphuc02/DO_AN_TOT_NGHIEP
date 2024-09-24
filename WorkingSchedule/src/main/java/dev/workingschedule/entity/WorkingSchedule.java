@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -24,5 +23,5 @@ public class WorkingSchedule {
 
     private UUID employeeId;
 
-    private Date date;
+    private LocalDate date;
 }

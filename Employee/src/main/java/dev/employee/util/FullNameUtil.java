@@ -2,7 +2,7 @@ package dev.employee.util;
 
 import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.dto.request.UpdateFullNameRequest;
-import dev.common.dto.response.FullNameResponse;
+import dev.common.dto.response.FullNameCommonResponse;
 import dev.employee.entity.Employee;
 import dev.employee.entity.FullName;
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ public class FullNameUtil {
                 .build();
     }
 
-    public FullNameResponse entityToResponse(FullName entity){
-        return FullNameResponse.builder()
+    public FullNameCommonResponse entityToResponse(FullName entity){
+        return FullNameCommonResponse.builder()
                 .id(entity.getId())
                 .firstName(entity.getFirstName())
                 .middleName(entity.getMiddleName())

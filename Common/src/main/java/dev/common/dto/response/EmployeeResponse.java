@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 public class EmployeeResponse {
     private UUID id;
-    private FullNameResponse fullName;
+    private FullNameCommonResponse fullName;
     private String introduce;
     private Date date;
     private Set<Permission> permissions;

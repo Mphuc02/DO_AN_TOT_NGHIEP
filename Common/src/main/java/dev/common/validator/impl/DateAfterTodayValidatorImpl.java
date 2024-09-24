@@ -5,18 +5,18 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-public class DateAfterTodayValidatorImpl implements ConstraintValidator<DateAfterTodayValidator, Date> {
+public class DateAfterTodayValidatorImpl implements ConstraintValidator<DateAfterTodayValidator, LocalDate> {
     @Override
-    public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(LocalDate date, ConstraintValidatorContext constraintValidatorContext) {
         if(ObjectUtils.isEmpty(date))
             return true;
 
-        Date today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        return date.after(today);
+        //Todo: Chỉnh lại sau hôm nay mới chuẩn
+        LocalDate today = LocalDate.now().minusDays(1);
+        return date.isAfter(today);
     }
 }

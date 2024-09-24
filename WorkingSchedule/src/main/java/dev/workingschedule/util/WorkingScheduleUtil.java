@@ -2,13 +2,11 @@ package dev.workingschedule.util;
 
 import dev.common.dto.response.WorkingScheduleCommonResponse;
 import dev.common.util.AuditingUtil;
-import dev.common.util.DateUtil;
 import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
 import dev.workingschedule.entity.WorkingSchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -17,12 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WorkingScheduleUtil {
     private final AuditingUtil auditingUtil;
-    private final DateUtil dateUtil;
 
     public WorkingSchedule mapCreateRequestToEntity(CreateWorkingScheduleRequest request){
         return WorkingSchedule.builder()
                 .id(UUID.randomUUID())
-                .date(dateUtil.formatDateToDD_MM_YYYY(request.getDate()))
+                .date(request.getDate())
                 .employeeId(auditingUtil.getUserLogged().getId())
                 .roomId(request.getRoomId())
                 .build();
@@ -30,7 +27,7 @@ public class WorkingScheduleUtil {
 
     public void mapUpdateRequestToEntity(CreateWorkingScheduleRequest request, WorkingSchedule entity){
         if(!ObjectUtils.isEmpty(request.getDate()))
-            entity.setDate(dateUtil.formatDateToDD_MM_YYYY(request.getDate()));
+            entity.setDate(request.getDate());
 
         if(!ObjectUtils.isEmpty(request.getRoomId()))
             entity.setRoomId(request.getRoomId());

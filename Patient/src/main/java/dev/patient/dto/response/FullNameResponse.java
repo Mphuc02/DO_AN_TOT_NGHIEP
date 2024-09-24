@@ -1,8 +1,6 @@
-package dev.common.dto.response;
+package dev.patient.dto.response;
 
 import lombok.*;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,7 +8,6 @@ import java.util.UUID;
 @Setter
 @Builder
 public class FullNameResponse {
-    private UUID id;
     private String firstName;
     private String middleName;
     private String lastName;

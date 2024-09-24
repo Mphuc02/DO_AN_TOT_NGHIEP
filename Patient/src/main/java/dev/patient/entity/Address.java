@@ -21,14 +21,8 @@ public class Address {
     private UUID id;
 
     private String street;
-
-    @JdbcType(VarcharJdbcType.class)
     private UUID provinceId;
-
-    @JdbcType(VarcharJdbcType.class)
     private UUID districtId;
-
-    @JdbcType(VarcharJdbcType.class)
     private UUID communeId;
 
     @OneToOne
