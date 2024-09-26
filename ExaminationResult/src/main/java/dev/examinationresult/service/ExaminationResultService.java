@@ -13,8 +13,8 @@ import dev.examinationresult.dto.response.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
 import dev.examinationresult.entity.ExaminationResultDetail;
 import dev.examinationresult.repository.ExaminationResultRepository;
-import dev.examinationresult.util.ExaminationResultDetailUtil;
-import dev.examinationresult.util.ExaminationResultUtil;
+import dev.examinationresult.util.ExaminationResultDetailMapperUtil;
+import dev.examinationresult.util.ExaminationResultMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ExaminationResultService {
-    private final ExaminationResultUtil resultUtil;
+    private final ExaminationResultMapperUtil resultUtil;
     private final ExaminationResultRepository examinationResultRepository;
-    private final ExaminationResultDetailUtil resultDetailUtil;
+    private final ExaminationResultDetailMapperUtil resultDetailUtil;
     private final WorkingScheduleClient workingScheduleClient;
 
     public ExaminationResultResponse getById(UUID id){

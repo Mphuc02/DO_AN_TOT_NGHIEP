@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ExaminationResultDetailUtil {
-    ExaminationResultUtil INSTANCE = Mappers.getMapper(ExaminationResultUtil.class);
+public interface ExaminationResultDetailMapperUtil {
+    ExaminationResultMapperUtil INSTANCE = Mappers.getMapper(ExaminationResultMapperUtil.class);
     ExaminationResultDetail mapCreateRequestToDetail(CreateExaminationResultDetailRequest request);
 }

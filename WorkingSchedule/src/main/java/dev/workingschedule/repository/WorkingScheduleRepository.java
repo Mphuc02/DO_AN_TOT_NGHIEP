@@ -19,5 +19,6 @@ public interface WorkingScheduleRepository extends JpaRepository<WorkingSchedule
             (:employeeId is null or ws.employeeId = :employeeId)
         """)
     List<WorkingSchedule> searchWorkingSchedule(Date startDate, Date endDate, UUID roomId, UUID employeeId);
+    WorkingSchedule findByEmployeeIdAndDate(UUID employeeId, LocalDate date);
     boolean existsByRoomIdAndDate(UUID roomId, LocalDate date);
 }

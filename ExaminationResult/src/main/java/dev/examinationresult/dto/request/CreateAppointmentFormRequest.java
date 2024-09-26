@@ -1,6 +1,7 @@
 package dev.examinationresult.dto.request;
 
 import dev.common.validator.DateAfterTodayValidator;
+import dev.common.validator.ExistedPatientValidator;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class CreateAppointmentFormRequest {
+    @ExistedPatientValidator
     @NotNull(message = "Bệnh nhân không được bỏ trống")
     private UUID patientId;
 

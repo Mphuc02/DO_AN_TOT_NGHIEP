@@ -20,6 +20,11 @@ import java.util.UUID;
 public class WorkingScheduleRest {
     private final WorkingScheduleService workingScheduleService;
 
+    @GetMapping(WORKING_SCHEDULE_URL.GET_SCHEDULE_TODAY_OF_EMPLOYEE)
+    public ResponseEntity<WorkingScheduleCommonResponse> getScheduleTodayOfEmployee(@PathVariable UUID id){
+        return ResponseEntity.ok(workingScheduleService.getScheduleTodayOfEmployee(id));
+    }
+
     @GetMapping(WORKING_SCHEDULE_URL.ID)
     public ResponseEntity<WorkingScheduleCommonResponse> getById(@PathVariable UUID id){
         return ResponseEntity.ok(workingScheduleService.getById(id));

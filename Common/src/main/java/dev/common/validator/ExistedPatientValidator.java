@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ExistedPatientValidatorImpl.class)
 public @interface ExistedPatientValidator {
-    String message() default "Các thuốc sau đây không tồn tại";
+    String message() default "Bệnh nhân không tồn tại";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

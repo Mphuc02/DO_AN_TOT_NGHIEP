@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ExaminationResultUtil {
-    ExaminationResultUtil INSTANCE = Mappers.getMapper(ExaminationResultUtil.class);
+public interface ExaminationResultMapperUtil {
+    ExaminationResultMapperUtil INSTANCE = Mappers.getMapper(ExaminationResultMapperUtil.class);
     ExaminationResult mapCreateRequestToEntity(CreateExaminationResultCommonRequest request);
     ExaminationResultResponse mapEntityToResponse(ExaminationResult result);
 }

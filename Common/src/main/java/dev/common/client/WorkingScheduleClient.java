@@ -9,8 +9,12 @@ import java.util.UUID;
 
 @FeignClient(name = SERVICE_NAME, path = URL)
 public interface WorkingScheduleClient {
+    @GetMapping(GET_SCHEDULE_TODAY_OF_EMPLOYEE)
+    WorkingScheduleCommonResponse getScheduleTodayOfEmployee(@PathVariable UUID id);
+
     @GetMapping(ID)
     WorkingScheduleCommonResponse getById(@PathVariable UUID id);
+
     @GetMapping(CHECk_SCHEDULE_TODAY)
     boolean checkScheduleIsToday(@PathVariable UUID id);
 }

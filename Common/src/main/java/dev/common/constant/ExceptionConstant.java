@@ -51,6 +51,11 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_CONSULTATION_DETAIL = "Lỗi khi kiểm tra chi tiết phiếu tư vấn thuốc";
         public static final String CONSULTATION_FORM_NOT_FOUND = "Không tìm thấy phiếu tư vấn với id này";
         public static final String NOT_CONSULTATION_FORM_OWNER = "Bạn không có quyền chỉnh sửa nội dung phiếu tư vấn này";
+        public static final String NOT_HAVE_SCHEDULE_TODAY = "Không thể hoàn thành do hôm nay không có lịch làm việc của bạn";
+        public static final String APPOINTMENT_FORM_NOT_FOUND = "Không tìm thấy lịch hẹn này";
+        public static final String OUT_OF_TIME_DELETE_APPOINTMENT_FORM = "Hết thời gian xóa lịch khám lại";
+        public static final String NOT_OWN_APPOINTMENT_FORM = "Không thể thao tác với lịch hẹn khám lại này";
+        public static final String FAIL_VALIDATION_APPOINTMENT_FORM = "Lỗi khi kiểm tra thuộc tính Appointment form";
     }
 
     public static final class MEDICINE_EXCEPTION {
