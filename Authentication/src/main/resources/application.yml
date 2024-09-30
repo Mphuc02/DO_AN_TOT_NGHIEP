@@ -41,7 +41,8 @@ jwt:
 kafka:
     topics:
         create-employee-topic: create_employee
-        create-patient-from-greeting: create_patient_from_greeting
+        create-patient-account-from-greeting: create_patient_from_greeting
+        created-patient-account-from-greeting-success: created_patient_from_greeting_success
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
     group-id:
         authentication: authentication

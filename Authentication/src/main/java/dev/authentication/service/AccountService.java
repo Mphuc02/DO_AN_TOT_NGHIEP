@@ -55,6 +55,9 @@ public class AccountService {
     @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
 
+    @Value(KafkaTopicsConstrant.CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC)
+    private String CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC;
+
     @Value(KafkaTopicsConstrant.FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC)
     private String FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC;
 
@@ -133,7 +136,7 @@ public class AccountService {
         return true;
     }
 
-    @KafkaListener(topics = KafkaTopicsConstrant.CREATE_PATIENT_FROM_GREETING_TOPIC,
+    @KafkaListener(topics = KafkaTopicsConstrant.CREATE_PATIENT_ACCOUNT_FROM_GREETING_TOPIC,
                     groupId = KafkaTopicsConstrant.AUTHENTICATION_GROUP)
     public void saveAccountFromGreeting(CreateNewPatientRequest request){
         UUID userId = (UUID) redisService.getValue(USER_PHONE_PREFIX(request.getNumberPhone()), UUID.class);
@@ -149,6 +152,8 @@ public class AccountService {
                 .numberPhone(request.getNumberPhone())
                 .build();
         accountRepository.save(account);
+
+        kafkaTemplate.send(CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC, request);
         redisService.deleteValue(USER_PHONE_PREFIX(request.getNumberPhone()));
     }
 }

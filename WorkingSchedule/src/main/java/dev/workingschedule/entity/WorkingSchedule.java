@@ -16,6 +16,7 @@ import java.util.UUID;
 @Builder
 public class WorkingSchedule {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcType(VarcharJdbcType.class)
     private UUID id;
 

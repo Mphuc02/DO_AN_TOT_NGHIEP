@@ -3,8 +3,6 @@ package dev.workingschedule.repository;
 import dev.workingschedule.entity.WorkingSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +16,7 @@ public interface WorkingScheduleRepository extends JpaRepository<WorkingSchedule
             (:roomId is null or ws.roomId = :roomId) and
             (:employeeId is null or ws.employeeId = :employeeId)
         """)
-    List<WorkingSchedule> searchWorkingSchedule(Date startDate, Date endDate, UUID roomId, UUID employeeId);
+    List<WorkingSchedule> searchWorkingSchedule(LocalDate startDate, LocalDate endDate, UUID roomId, UUID employeeId);
     WorkingSchedule findByEmployeeIdAndDate(UUID employeeId, LocalDate date);
     boolean existsByRoomIdAndDate(UUID roomId, LocalDate date);
 }

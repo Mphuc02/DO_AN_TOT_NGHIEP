@@ -3,7 +3,9 @@ package dev.examinationresult.service;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.client.WorkingScheduleClient;
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
+import dev.common.dto.request.CreateInvoiceCommonRequest;
 import dev.common.dto.response.WorkingScheduleCommonResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
@@ -17,7 +19,9 @@ import dev.examinationresult.util.ExaminationResultDetailMapperUtil;
 import dev.examinationresult.util.ExaminationResultMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -28,26 +32,33 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ExaminationResultService {
-    private final ExaminationResultMapperUtil resultUtil;
+    private final ExaminationResultMapperUtil resultMapperUtil;
     private final ExaminationResultRepository examinationResultRepository;
     private final ExaminationResultDetailMapperUtil resultDetailUtil;
     private final WorkingScheduleClient workingScheduleClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Value(KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS)
+    private String CREATED_EXAMINATION_RESULT_SUCCESS;
 
     public ExaminationResultResponse getById(UUID id){
         ExaminationResult findById = examinationResultRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(EXAMINATION_RESULT_EXCEPTION.RESULT_NOT_FOUND));
-        return resultUtil.mapEntityToResponse(findById);
+        return resultMapperUtil.mapEntityToResponse(findById);
     }
 
     @KafkaListener(topics = CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC,
                     groupId = EXAMINATION_RESULT_GROUP)
     public void create(CreateExaminationResultCommonRequest request){
-        ExaminationResult result = resultUtil.mapCreateRequestToEntity(request);
+        ExaminationResult result = resultMapperUtil.mapCreateRequestToEntity(request);
         result.setCreatedAt(LocalDateTime.now());
         WorkingScheduleCommonResponse schedule = workingScheduleClient.getById(request.getWorkingScheduleId());
         result.setEmployeeId(schedule.getEmployeeId());
-        examinationResultRepository.save(result);
+        result = examinationResultRepository.save(result);
+
+        CreateInvoiceCommonRequest createInvoiceRequest = resultMapperUtil.mapEntityToCreateInvoiceRequest(result);
+        kafkaTemplate.send(CREATED_EXAMINATION_RESULT_SUCCESS, createInvoiceRequest);
     }
 
     @Transactional
@@ -72,6 +83,6 @@ public class ExaminationResultService {
         findToUpdate.setExaminatedAt(LocalDateTime.now());
         findToUpdate.setTreatment(request.getTreatment());
         findToUpdate = examinationResultRepository.save(findToUpdate);
-        return resultUtil.mapEntityToResponse(findToUpdate);
+        return resultMapperUtil.mapEntityToResponse(findToUpdate);
     }
 }

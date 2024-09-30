@@ -40,12 +40,13 @@ jwt:
 kafka:
     topics:
         greeting-topic: greeting
-        
-        create-patient-from-greeting: create_patient_from_greeting
+        create-patient-account-from-greeting: create_patient_from_greeting
+        created-patient-information-topic: created_patient_information
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
-        
         create-examination-topic: create_examination_result_from_greeting
-        
+    
+    group-id:
+        greeting: greeting
 eureka:
     client:
         service-url:

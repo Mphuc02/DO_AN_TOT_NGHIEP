@@ -32,6 +32,7 @@ public class ExceptionConstant {
     }
 
     public static final class GREETING_EXCEPTION{
+        public static final String FORM_NOT_FOUND = "Không tìm thấy ExaminationForm với id";
         public static final String FAIL_VALIDATION_FORM = "Lôi khi kiểm tra thuộc tính của Form";
     }
 
@@ -67,5 +68,12 @@ public class ExceptionConstant {
         public static final String FAIL_VALIDATION_SUPPLIER = "Lỗi khi kiểm tra Supplier";
         public static final String FAIL_VALIDATION_INVOICE = "Lỗi khi kiểm tra hóa đơn";
         public static final String INVOICE_NOT_FOUND = "Không tìm thấy hóa đơn với id này";
+    }
+
+    public static final class PAYMENT_EXCEPTION {
+        public static final String EXAMINATION_COST_NOT_FOUND = "Không tìm thấy chi phí khám bệnh";
+        public static final String APPLIED_DAY_MUST_AFTER_TODAY = "Ngày áp dụng phải sau hôm nay";
+        public static final String APPLIED_DAY_PASSED = "Đã quá thời gian chỉnh sửa";
+        public static final String FAIL_VALIDATION_EXAMINATION_COST = "Lỗi khi kiểm tra thuộc tính ExaminationCost";
     }
 }

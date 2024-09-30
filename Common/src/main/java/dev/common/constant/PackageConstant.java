@@ -11,4 +11,5 @@ public class PackageConstant {
     public static final String WORKING_SCHEDULE_PACKAGE = "dev.workingschedule";
     public static final String EXAMINATION_RESULT_PACKAGE = "dev.examinationresult";
     public static final String MEDICINE_PACKAGE = "dev.medicine";
+    public static final String PAYMENT_PACKAGE = "dev.payment";
 }

@@ -1,6 +1,7 @@
 package dev.examinationresult.util;
 
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
+import dev.common.dto.request.CreateInvoiceCommonRequest;
 import dev.examinationresult.dto.response.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
 import org.mapstruct.Mapper;
@@ -14,5 +15,6 @@ import org.springframework.stereotype.Component;
 public interface ExaminationResultMapperUtil {
     ExaminationResultMapperUtil INSTANCE = Mappers.getMapper(ExaminationResultMapperUtil.class);
     ExaminationResult mapCreateRequestToEntity(CreateExaminationResultCommonRequest request);
+    CreateInvoiceCommonRequest mapEntityToCreateInvoiceRequest(ExaminationResult result);
     ExaminationResultResponse mapEntityToResponse(ExaminationResult result);
 }

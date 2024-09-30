@@ -40,6 +40,8 @@ jwt:
 kafka:
     topics:
         create-examination-topic: create_examination_result_from_greeting
+        created-examination-result-success: created_examination_result_success
+
     group-id:
         examination-result: examination_result
 

@@ -52,4 +52,10 @@ public class ExceptionAdvice {
         log.error("Exception when validate jwt", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handler(BadRequestException ex){
+        log.error("Bad request exception", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

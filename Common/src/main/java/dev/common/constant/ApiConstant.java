@@ -75,4 +75,9 @@ public class ApiConstant {
         public static final String ID = "/{id}";
         public static final String CHECK_EXIST_PATIENT = "/check/{id}";
     }
+
+    public static final class PAYMENT{
+        public static final String EXAMINATION_COST_URL = "/api/v1/examination-costs";
+        public static final String ID = "/{id}";
+    }
 }

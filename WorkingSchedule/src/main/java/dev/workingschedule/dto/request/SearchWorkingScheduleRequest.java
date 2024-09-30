@@ -1,8 +1,7 @@
 package dev.workingschedule.dto.request;
 
 import lombok.*;
-
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -11,8 +10,8 @@ import java.util.UUID;
 @Setter
 @Builder
 public class SearchWorkingScheduleRequest {
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private UUID roomId;
     private UUID employeeId;
 }

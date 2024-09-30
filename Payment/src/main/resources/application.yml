@@ -1,13 +1,13 @@
 server:
-    port: 8086
+    port: 8089
 
 spring:
     application:
-        name: Patient
+        name: Payment
     
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/patient
+        url: jdbc:mysql://localhost:3306/payment
         username: root
         password: 123456
     
@@ -18,7 +18,7 @@ spring:
         properties:
             hibernate:
                 format_sql: true
-                
+    
     kafka:
         bootstrap-servers:
             - localhost:9092
@@ -30,13 +30,13 @@ spring:
             value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
             properties:
                 spring.json.trusted.packages: "*"
-                
+    
     main:
         allow-bean-definition-overriding: true
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
     access-token=expiration: 300000
-    
+
 eureka:
     client:
         service-url:
@@ -48,11 +48,9 @@ eureka:
         lease-renewal-interval-in-seconds: 5
         lease-expiration-duration-in-seconds: 5
         hostname: localhost
-        
+    
 kafka:
     topics:
-        created-patient-account-from-greeting-success: created_patient_from_greeting_success
-        created-patient-information-topic: created_patient_information
-        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+        created-examination-result-success: created_examination_result_success
     group-id:
-        patient: patient
+        payment-group: payment_group
