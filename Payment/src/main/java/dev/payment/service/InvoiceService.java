@@ -3,6 +3,7 @@ package dev.payment.service;
 import com.google.gson.Gson;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
+import dev.payment.dto.response.InvoiceResponse;
 import dev.payment.entity.ExaminationCost;
 import dev.payment.entity.Invoice;
 import dev.payment.repository.ExaminationCostRepository;
@@ -12,9 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,6 +25,10 @@ public class InvoiceService {
     private final Gson gson;
     private final InvoiceMapperUtil invoiceMapperUtil;
     private final ExaminationCostRepository costRepository;
+
+    public List<InvoiceResponse> findAll(){
+       return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
+    }
 
     @KafkaListener(topics = KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)
     public void handleCreateInvoice(CreateInvoiceCommonRequest request){
@@ -35,4 +40,6 @@ public class InvoiceService {
 
         invoiceRepository.save(invoice);
     }
+
+
 }

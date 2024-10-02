@@ -53,4 +53,4 @@ kafka:
     group-id:
         patient: patient
 server:
-    port: 8090
+    port: 8089

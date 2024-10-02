@@ -24,6 +24,8 @@ public class Medicine {
     private String description;
     private BigDecimal price;
 
+    private Integer quantity = 0;
+
     private Boolean active = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,5 +49,12 @@ public class Medicine {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void subtractQuantity(int quantity){
+        this.quantity -= quantity;
+    }
+    public void increaseQuantity(int quantity){
+        this.quantity += quantity;
     }
 }

@@ -62,6 +62,7 @@ public class ApiConstant {
     public static final class MEDICINE_URL{
         public static final String SERVICE_NAME = "MEDICINE";
         public static final String MEDICINE_URL = "/api/v1/medicines";
+        public static final String CREATE_PATIENT_MEDICINE_INVOICE = "/create-patient-medicine-invoice";
         public static final String ID = "/{id}";
         public static final String CHECK_MEDICINES_EXIST = "/check";
         public static final String ORIGIN_URL = "/api/v1/origins";
@@ -77,7 +78,9 @@ public class ApiConstant {
     }
 
     public static final class PAYMENT{
-        public static final String EXAMINATION_COST_URL = "/api/v1/examination-costs";
+        public static final String EXAMINATION_COST_URL = "/api/examination-costs";
         public static final String ID = "/{id}";
+
+        public static final String INVOICE_URL = "/api/invoices";
     }
 }

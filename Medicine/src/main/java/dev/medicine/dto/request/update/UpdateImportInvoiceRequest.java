@@ -2,7 +2,6 @@ package dev.medicine.dto.request.update;
 
 import dev.medicine.dto.request.save.SaveImportInvoiceDetailRequest;
 import dev.medicine.validator.ExistedSupplierValidator;
-import dev.medicine.validator.ImportInvoiceDetailsValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class UpdateImportInvoiceRequest {
     @NotEmpty(message = "Chi tiết hóa đơn không được bỏ trống")
     @Valid
-    @ImportInvoiceDetailsValidator
     private List<SaveImportInvoiceDetailRequest> details;
 
     @ExistedSupplierValidator

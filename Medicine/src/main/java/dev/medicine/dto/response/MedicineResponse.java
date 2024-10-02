@@ -14,6 +14,7 @@ public class MedicineResponse {
     private UUID id;
     private String name;
     private String description;
+    private Integer quantity;
     private OriginResponse origin;
     private BigDecimal price;
 }

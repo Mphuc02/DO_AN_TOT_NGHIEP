@@ -6,16 +6,17 @@ import dev.medicine.dto.request.create.CreateImportInvoiceRequest;
 import dev.medicine.dto.request.save.SaveImportInvoiceDetailRequest;
 import dev.medicine.dto.request.update.UpdateImportInvoiceRequest;
 import dev.medicine.dto.response.ImportInvoiceResponse;
-import dev.medicine.dto.response.MedicineResponse;
 import dev.medicine.entity.ImportInvoice;
 import dev.medicine.entity.ImportInvoiceDetail;
 import dev.medicine.entity.Medicine;
 import dev.medicine.repository.ImportInvoiceDetailRepository;
 import dev.medicine.repository.ImportInvoiceRepository;
+import dev.medicine.repository.MedicineRepository;
 import dev.medicine.util.ImportInvoiceMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class ImportInvoiceService {
     private final ImportInvoiceRepository invoiceRepository;
     private final ImportInvoiceMapperUtil invoiceMapperUtil;
     private final ImportInvoiceDetailRepository detailRepository;
-    private final MedicineService medicineService;
+    private final MedicineRepository medicineRepository;
 
     public List<ImportInvoiceResponse> getAll(){
         return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
@@ -57,22 +58,26 @@ public class ImportInvoiceService {
     @Transactional
     public void handleSaveInvoiceDetail(List<SaveImportInvoiceDetailRequest> requests, ImportInvoice invoice){
         HashMap<UUID, ImportInvoiceDetail> details = new HashMap<>();
+        List<Medicine> medicines = new ArrayList<>();
         requests.forEach(request -> {
             ImportInvoiceDetail get = details.get(request.getMedicineId());
             if(get != null){
                 get.setQuantity(get.getQuantity() + request.getQuantity());
             }else {
-                MedicineResponse medicine = medicineService.getByID(request.getMedicineId());
+                Medicine medicine = medicineRepository.findById(request.getMedicineId()).get();
+                medicine.increaseQuantity(request.getQuantity());
+                medicines.add(medicine);
 
                 ImportInvoiceDetail detail = ImportInvoiceDetail.builder()
                         .invoice(invoice)
-                        .medicine(new Medicine(request.getMedicineId()))
+                        .medicine(medicine)
                         .quantity(request.getQuantity())
-                        .price(medicine.getPrice())
+                        .price(request.getPrice())
                         .build();
                 details.put(request.getMedicineId(), detail);
             }
         });
         detailRepository.saveAll(details.values());
+        medicineRepository.saveAll(medicines);
     }
 }
