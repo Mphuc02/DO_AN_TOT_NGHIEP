@@ -16,6 +16,11 @@ import java.util.UUID;
 public class RoleRest {
     private final EmployeeRoleService employeeRoleService;
 
+    @GetMapping()
+    public ResponseEntity<Object> getRoles(){
+        return ResponseEntity.ok(employeeRoleService.getAll());
+    }
+
     @GetMapping(EMPLOYEE_URL.ID)
     public ResponseEntity<Object> getAllRolesOfEmployee(@PathVariable UUID id){
         return ResponseEntity.ok(employeeRoleService.getAllRolesOfEmployeeById(id));

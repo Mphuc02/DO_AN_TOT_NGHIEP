@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,6 +22,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeRoleService {
     private final RoleRepository roleRepository;
+
+    public List<Permission> getAll(){
+        return Arrays.asList(Permission.DOCTOR, Permission.RECEPTION_STAFF, Permission.MEDICINE_DISPENSER);
+    }
 
     public List<Permission> getAllRolesOfEmployeeById(UUID employeeId){
         return roleRepository.getAllByEmployeeId(employeeId)

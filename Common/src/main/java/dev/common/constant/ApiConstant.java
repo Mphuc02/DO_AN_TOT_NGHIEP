@@ -7,7 +7,7 @@ public class ApiConstant {
         public static final String REGISTER = "/register";
         public static final String AUTHENTICATE = "/authenticate";
         public static final String EMPLOYEE_AUTHENTICATION = "/authentication-employee";
-        public static final String EMPLOYEE = "/employee";
+        public static final String EMPLOYEE = "/create-employee";
         public static final String EXCHANGE_TOKEN = "/exchange-token";
         public static final String LOGOUT = "/logout";
         public static final class INTERNAL_URL{
