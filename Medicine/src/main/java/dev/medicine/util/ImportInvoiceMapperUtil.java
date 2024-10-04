@@ -16,9 +16,11 @@ import java.util.UUID;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ImportInvoiceMapperUtil {
     @Mapping(target = "supplier", source = "request.supplierId", qualifiedByName = "mapSupplierFromId")
+    @Mapping(target = "details", ignore = true)
     ImportInvoice mapCreateRequestToEntity(CreateImportInvoiceRequest request);
 
     @Mapping(target = "supplier", source = "request.supplierId", qualifiedByName = "mapSupplierFromId")
+    @Mapping(target = "details", ignore = true)
     void mapUpdateRequestToEntity(UpdateImportInvoiceRequest request, @MappingTarget ImportInvoice invoice);
 
     ImportInvoiceResponse mapEntityToResponse(ImportInvoice invoice);

@@ -1,10 +1,7 @@
 package dev.medicine.service;
 
-import dev.common.constant.ExceptionConstant.*;
-import dev.common.exception.NotFoundException;
 import dev.medicine.dto.request.create.CreateImportInvoiceRequest;
 import dev.medicine.dto.request.save.SaveImportInvoiceDetailRequest;
-import dev.medicine.dto.request.update.UpdateImportInvoiceRequest;
 import dev.medicine.dto.response.ImportInvoiceResponse;
 import dev.medicine.entity.ImportInvoice;
 import dev.medicine.entity.ImportInvoiceDetail;
@@ -42,27 +39,14 @@ public class ImportInvoiceService {
     }
 
     @Transactional
-    public ImportInvoiceResponse update(UpdateImportInvoiceRequest request, UUID id){
-        ImportInvoice invoice = invoiceRepository.findById(id)
-                                .orElseThrow(() -> new NotFoundException(MEDICINE_EXCEPTION.INVOICE_NOT_FOUND));
-
-        List<ImportInvoiceDetail> oldDetails = invoice.getDetails();
-        detailRepository.deleteAll(oldDetails);
-
-        invoiceMapperUtil.mapUpdateRequestToEntity(request, invoice);
-        invoice = invoiceRepository.save(invoice);
-        handleSaveInvoiceDetail(request.getDetails(), invoice);
-        return invoiceMapperUtil.mapEntityToResponse(invoice);
-    }
-
-    @Transactional
     public void handleSaveInvoiceDetail(List<SaveImportInvoiceDetailRequest> requests, ImportInvoice invoice){
-        HashMap<UUID, ImportInvoiceDetail> details = new HashMap<>();
+        HashMap<UUID, ImportInvoiceDetail> detailsMap = new HashMap<>();
         List<Medicine> medicines = new ArrayList<>();
         requests.forEach(request -> {
-            ImportInvoiceDetail get = details.get(request.getMedicineId());
+            ImportInvoiceDetail get = detailsMap.get(request.getMedicineId());
             if(get != null){
                 get.setQuantity(get.getQuantity() + request.getQuantity());
+                get.getMedicine().increaseQuantity(request.getQuantity());
             }else {
                 Medicine medicine = medicineRepository.findById(request.getMedicineId()).get();
                 medicine.increaseQuantity(request.getQuantity());
@@ -74,10 +58,11 @@ public class ImportInvoiceService {
                         .quantity(request.getQuantity())
                         .price(request.getPrice())
                         .build();
-                details.put(request.getMedicineId(), detail);
+                detailsMap.put(request.getMedicineId(), detail);
             }
         });
-        detailRepository.saveAll(details.values());
+        List<ImportInvoiceDetail> details = detailRepository.saveAll(detailsMap.values());
+        invoice.setDetails(details);
         medicineRepository.saveAll(medicines);
     }
 }

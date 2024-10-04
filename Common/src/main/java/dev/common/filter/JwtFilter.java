@@ -1,18 +1,19 @@
 package dev.common.filter;
 
-import dev.common.constant.ApiConstant;
 import dev.common.constant.JwtConstant;
-import dev.common.exception.NotFoundException;
+import dev.common.constant.RedisKeyConstrant;
 import dev.common.model.AuthenticatedUser;
+import dev.common.model.TokenType;
+import dev.common.service.RedisService;
 import dev.common.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,12 +23,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final RedisService redisService;
 
     private String getJwtFromHeader(HttpServletRequest request){
         final String authHeader = request.getHeader(JwtConstant.AUTH_HEADER);
@@ -51,23 +55,25 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         try {
-            jwtUtil.validateToken(jwt);
+            UUID tokenId = jwtUtil.getTokenId(jwt);
+            String findInvalidToken = (String) redisService.getValue(RedisKeyConstrant.INVALID_TOKEN_KEY(tokenId),
+                    String.class);
+            if(!ObjectUtils.isEmpty(findInvalidToken))
+                throw new JwtException("Jwt has been revoked");
+
+            AuthenticatedUser user = jwtUtil.getUserFromJwt(jwt, TokenType.ACCESS_TOKEN);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
+                    null,
+                    user.getPermissions().stream().map(permission -> new SimpleGrantedAuthority("ROLE_" + permission)).collect(Collectors.toList()));
+
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+            filterChain.doFilter(request, response);
         } catch (JwtException ex) {
+            log.error("Exception when extra User from Jwt", ex);
+            response.setCharacterEncoding("utf-8");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write(ex.getMessage());
-            return;
         }
-
-        AuthenticatedUser user = jwtUtil.getUserFromJWT(jwt);
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
-                null,
-                user.getPermissions()
-                        .stream()
-                        .map(permission -> new SimpleGrantedAuthority(permission.toString()))
-                        .toList());
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        filterChain.doFilter(request, response);
     }
 }

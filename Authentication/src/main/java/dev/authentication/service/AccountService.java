@@ -2,12 +2,12 @@ package dev.authentication.service;
 
 import dev.authentication.client.EmployeeRoleOpenClient;
 import static dev.common.constant.RedisPrefixConstant.*;
+import dev.authentication.dto.request.*;
+import dev.authentication.entity.InvalidToken;
+import dev.authentication.repository.InvalidateTokenRepository;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.constant.ValueConstant;
-import dev.authentication.dto.request.CreateEmployeeRequest;
+import dev.common.constant.RedisKeyConstrant;
 import dev.authentication.entity.Account;
-import dev.authentication.dto.request.AuthenticationRequest;
-import dev.authentication.dto.request.RegisterAccountRequest;
 import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
@@ -18,7 +18,11 @@ import dev.common.exception.DuplicateException;
 import dev.common.exception.FailAuthenticationException;
 import dev.common.exception.NotPermissionException;
 import dev.common.exception.ObjectIllegalArgumentException;
+import dev.common.model.AuthenticatedUser;
 import dev.common.model.Permission;
+import dev.common.model.TokenType;
+import dev.common.service.RedisService;
+import dev.common.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +33,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import static dev.common.constant.RedisKeyConstrant.*;
 
 @Slf4j
 @Service
@@ -48,9 +55,8 @@ public class AccountService {
     private final EmployeeRoleOpenClient employeeRoleOpenClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final RedisService redisService;
-
-    @Value(ValueConstant.JWT.ACCESS_TOKEN_EXPIRATION)
-    public int ACCESS_TOKEN_EXPIRATION;
+    private final JwtUtil jwtUtil;
+    private final InvalidateTokenRepository invalidateTokenRepository;
 
     @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
@@ -83,21 +89,21 @@ public class AccountService {
     }
 
     public AuthenticationResponse authenticateUser(AuthenticationRequest request){
-        //Todo: Trả về thêm refresh token
         Account account = authenticate(request);
-        String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION, null);
-        return new AuthenticationResponse(accessToken, "");
+        String accessToken = jwtService.generateAccessToken(account, null);
+        String refreshToken = jwtService.generateRefreshToken(account, null);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     public AuthenticationResponse authenticationForEmployee(AuthenticationRequest request){
-        //Todo: Trả về thêm refresh token
         Account account = authenticate(request);
         List<Permission> permissions = employeeRoleOpenClient.getAllRolesOfEmployee(account.getId());
         if(ObjectUtils.isEmpty(permissions))
             throw new NotPermissionException(EMPLOYEE_EXCEPTION.NOT_PERMISSION);
 
-        String accessToken = jwtService.generateToken(account, ACCESS_TOKEN_EXPIRATION, permissions);
-        return new AuthenticationResponse(accessToken, "");
+        String accessToken = jwtService.generateAccessToken(account, permissions);
+        String refreshToken = jwtService.generateRefreshToken(account, permissions);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     private Account authenticate(AuthenticationRequest request){
@@ -134,6 +140,37 @@ public class AccountService {
 
         redisService.setValue(USER_PHONE_PREFIX(phoneNumber), userId);
         return true;
+    }
+
+    public String exchangeToken(ExchangeTokenRequest request){
+        UUID refreshTokenId = jwtUtil.getTokenId(request.getToken());
+
+        String checkRevokedToken = (String) redisService.getValue(RedisKeyConstrant.INVALID_TOKEN_KEY(refreshTokenId), String.class);
+        if(!ObjectUtils.isEmpty(checkRevokedToken))
+            throw new NotPermissionException("This token has been revoked");
+
+        AuthenticatedUser user = jwtUtil.getUserFromJwt(request.getToken(), TokenType.REFRESH_TOKEN);
+        return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getPermissions().stream().toList());
+    }
+
+    @Transactional
+    public void logout(LogoutRequest request){
+        String refreshToken = request.getRefreshToken();
+        String accessToken = request.getAccessToken();
+
+        UUID accessTokenId = jwtUtil.getTokenId(accessToken);
+        UUID refreshTokenId = jwtUtil.getTokenId(refreshToken);
+
+        InvalidToken invalidRefreshToken = InvalidToken.builder()
+                .id(refreshTokenId)
+                .time(new Timestamp(new java.util.Date().getTime()))
+                .build();
+
+        invalidateTokenRepository.save(invalidRefreshToken);
+
+        redisService.setValue(INVALID_TOKEN_KEY(refreshTokenId), new java.util.Date());
+        redisService.setValue(INVALID_TOKEN_KEY(accessTokenId), new java.util.Date());
+        SecurityContextHolder.clearContext();
     }
 
     @KafkaListener(topics = KafkaTopicsConstrant.CREATE_PATIENT_ACCOUNT_FROM_GREETING_TOPIC,

@@ -12,7 +12,8 @@ public enum Permission {
     ADMIN_DELETE("Quản trị viên"),
     RECEPTION_STAFF("Nhân viên tiếp đón"),
     DOCTOR("Bác sĩ"),
-    MEDICINE_DISPENSER("Nhân viên phát thuốc");
+    MEDICINE_DISPENSER("Nhân viên kho thuốc"),
+    USER("Người dùng");
 
     private final String position;
 }
