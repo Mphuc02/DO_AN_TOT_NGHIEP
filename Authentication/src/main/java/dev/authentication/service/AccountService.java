@@ -22,6 +22,7 @@ import dev.common.model.AuthenticatedUser;
 import dev.common.model.Permission;
 import dev.common.model.TokenType;
 import dev.common.service.RedisService;
+import dev.common.util.AuditingUtil;
 import dev.common.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,7 @@ public class AccountService {
     private final RedisService redisService;
     private final JwtUtil jwtUtil;
     private final InvalidateTokenRepository invalidateTokenRepository;
+    private final AuditingUtil auditingUtil;
 
     @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
     private String CREATE_EMPLOYEE_TOPIC;
@@ -117,7 +119,6 @@ public class AccountService {
 
     @Transactional
     public void saveEmployee(CreateEmployeeRequest request){
-        //Todo: nên cải thiện chỗ này
         if(accountRepository.existsByEmail(request.getEmail()))
             throw new DuplicateException(String.format("Đã tồn tại tài khoản với email: %s", request.getEmail()));
         if(accountRepository.existsByNumberPhone(request.getNumberPhone()))
@@ -126,6 +127,7 @@ public class AccountService {
         Account entity = accountUtil.mapFromRegisterEmployeeRequest(request);
         entity = accountRepository.save(entity);
         CommonRegisterEmployeeRequest registerRequest = accountUtil.createRegisterEmployeeRequest(request, entity.getId());
+        registerRequest.setOwner(auditingUtil.getUserLogged().getId());
         kafkaTemplate.send(CREATE_EMPLOYEE_TOPIC, registerRequest);
     }
 

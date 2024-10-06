@@ -22,6 +22,18 @@ jwt:
     access-token=expiration: 300000
     refresh-token-expiration: 30000000
 
+kafka:
+    topics:
+        create-employee-topic: create_employee
+        created-employee-topic: created_employee
+        
+        create-patient-account-from-greeting: create_patient_from_greeting
+        created-patient-account-from-greeting-success: created_patient_from_greeting_success
+        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+        
+    group-id:
+        websocket: websocket_group
+
 eureka:
     client:
         service-url:

@@ -2,6 +2,7 @@ package dev.employee.service;
 
 import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.EmployeeResponse;
 import dev.common.exception.NotFoundException;
@@ -12,7 +13,9 @@ import dev.employee.util.EmployeeUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -28,6 +31,10 @@ public class EmployeeService {
     private final Gson gson;
     private final EmployeeRoleService employeeRoleService;
     private final FullNameService fullNameService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Value(KafkaTopicsConstrant.CREATED_EMPLOYEE_TOPIC)
+    private String CREATED_EMPLOYEE_TOPIC;
 
     public List<EmployeeResponse> getAll(){
         return employeeUtil.listEntitiesToResponses(employeeRepository.findAll());
@@ -39,6 +46,7 @@ public class EmployeeService {
         log.info(String.format("Receive request save Employee from Kafka with value: %s", gson.toJson(request)));
         Employee entity = employeeUtil.createRequestToEntity(request);
         employeeRepository.save(entity);
+        kafkaTemplate.send(CREATED_EMPLOYEE_TOPIC, request.getOwner());
     }
 
     @Transactional

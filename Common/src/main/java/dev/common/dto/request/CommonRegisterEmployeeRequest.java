@@ -17,4 +17,5 @@ public class CommonRegisterEmployeeRequest {
     private String introduce;
     private Date dateOfBirth;
     private List<Permission> permissions;
+    private UUID owner;
 }

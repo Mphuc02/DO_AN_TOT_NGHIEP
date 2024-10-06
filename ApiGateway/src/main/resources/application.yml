@@ -20,6 +20,11 @@ spring:
                   predicates:
                     - Path=/api/v1/employees/**, /api/v1/roles/**
                     
+                - id: websocket
+                  uri: lb://Websocket
+                  predicates:
+                    - Path=/hospital_system/**
+                    
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
             globalcors:
