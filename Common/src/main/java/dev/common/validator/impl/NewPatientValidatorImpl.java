@@ -19,7 +19,6 @@ public class NewPatientValidatorImpl implements ConstraintValidator<NewPatientVa
         if(request == null || ObjectUtils.isEmpty(request.getNumberPhone()))
             return true;
 
-        request.setId(UUID.randomUUID());
         return client.checkPhoneNumberNotExist(request.getNumberPhone(), request.getId());
     }
 }

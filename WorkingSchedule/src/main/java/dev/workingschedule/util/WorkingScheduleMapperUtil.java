@@ -1,7 +1,7 @@
 package dev.workingschedule.util;
 
 import dev.common.dto.response.WorkingScheduleCommonResponse;
-import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
+import dev.workingschedule.dto.request.SaveWorkingScheduleRequest;
 import dev.workingschedule.entity.WorkingSchedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface WorkingScheduleMapperUtil {
-    WorkingSchedule mapCreateRequestToEntity(CreateWorkingScheduleRequest request);
+    WorkingSchedule mapCreateRequestToEntity(SaveWorkingScheduleRequest request);
 
-    void mapUpdateRequestToEntity(CreateWorkingScheduleRequest request, @MappingTarget WorkingSchedule entity);
+    void mapUpdateRequestToEntity(SaveWorkingScheduleRequest request, @MappingTarget WorkingSchedule entity);
 
     WorkingScheduleCommonResponse mapEntityToCommonResponse(WorkingSchedule entity);
 

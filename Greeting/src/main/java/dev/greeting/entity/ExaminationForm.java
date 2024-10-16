@@ -2,9 +2,7 @@ package dev.greeting.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -16,16 +14,16 @@ import java.util.UUID;
 @Builder
 public class ExaminationForm {
     @Id
-    @JdbcType(VarcharJdbcType.class)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private UUID patientId;
     private UUID employeeId;
-    private Integer ticketIndex;
+    private Integer numberCall;
 
     private UUID workingScheduleId;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(columnDefinition = "TEXT")
     private String symptom;

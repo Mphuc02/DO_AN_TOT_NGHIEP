@@ -19,9 +19,10 @@ public class ApiConstant {
         public static final String SERVICE_NAME = "HOSPITALINFORMATION";
         public static final String PROVINCE_URL = "/api/v1/provinces";
         public static final String CHECK_ADDRESS = "/check-address";
-        public static final String EXAMINATION_ROOM_URL = "/api/v1/examination-room";
+        public static final String EXAMINATION_ROOM_URL = "/api/v1/examination-rooms";
         public static final String CHECK_ROOM_EXIST = "/check-room/{id}";
         public static final String ID = "{id}";
+        public static final String GET_BY_IDS = "/find-by-ids";
         public static final String CHECK_DISEASES_EXIST = "/check";
         public static final String DISEASE_URL = "/api/v1/diseases";
     }
@@ -44,6 +45,7 @@ public class ApiConstant {
         public static final String EXAMINATION_FORM_URL = "/api/v1/greeting";
         public static final String TICKET_URL = "/api/v1/tickets";
         public static final String PRINT = "/print";
+        public static final String FIRST_TIME = "/first-time";
     }
 
     public static final class WORKING_SCHEDULE_URL{
@@ -51,8 +53,9 @@ public class ApiConstant {
         public static final String SERVICE_NAME = "WORKINGSCHEDULE";
         public static final String ID = "/{id}";
         public static final String SEARCH = "/search";
-        public static final String CHECk_SCHEDULE_TODAY = "/check-schedule-today/{id}";
-        public static final String GET_SCHEDULE_TODAY_OF_EMPLOYEE = "/schedule/today/{id}";
+        public static final String CHECK_SCHEDULE_TODAY = "/check-schedule-today/{id}";
+        public static final String GET_SCHEDULE_TODAY_OF_EMPLOYEE = "/today/{id}";
+        public static final String GET_SCHEDULES_IN_MONTH_OF_EMPLOYEE = "/schedules-in-month";
     }
 
     public static final class EXAMINATION_RESULT_URL{

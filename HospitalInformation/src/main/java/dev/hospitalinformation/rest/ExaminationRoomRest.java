@@ -33,6 +33,11 @@ public class ExaminationRoomRest {
         return ResponseEntity.ok(examinationRoomService.checkRoomExist(id));
     }
 
+    @PostMapping(HOSPITAL_INFORMATION.GET_BY_IDS)
+    public ResponseEntity<List<ExaminationRoomCommonResponse>> findByIds(@RequestBody List<UUID> ids){
+        return ResponseEntity.ok(examinationRoomService.findByIds(ids));
+    }
+
     @PostMapping()
     public ResponseEntity<ExaminationRoomCommonResponse> save(@Valid @RequestBody CreateExaminationRoomRequest request,
                                                               BindingResult result){

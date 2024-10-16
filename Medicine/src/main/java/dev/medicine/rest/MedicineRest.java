@@ -28,6 +28,11 @@ public class MedicineRest {
         return ResponseEntity.ok(medicineService.getAll());
     }
 
+    @GetMapping(ID)
+    public ResponseEntity<MedicineResponse> findById(@PathVariable UUID id){
+        return ResponseEntity.ok(medicineService.getByID(id));
+    }
+
     @PostMapping(CHECK_MEDICINES_EXIST)
     public ResponseEntity<Set<UUID>> checkMedicinesExist(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(medicineService.checkMedicinesExist(ids));

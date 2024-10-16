@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -56,6 +57,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handler(BadRequestException ex){
         log.error("Bad request exception", ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        Map<String, Object> errors = Map.of("message", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

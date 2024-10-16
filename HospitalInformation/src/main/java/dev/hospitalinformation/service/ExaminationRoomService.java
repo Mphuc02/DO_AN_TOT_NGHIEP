@@ -34,6 +34,10 @@ public class ExaminationRoomService {
         return examinationRoomUtil.mapEntityToResponse(entity);
     }
 
+    public List<ExaminationRoomCommonResponse> findByIds(List<UUID> ids){
+        return examinationRoomUtil.mapEntitiesToResponses(examinationRoomRepository.findAllById(ids));
+    }
+
     public ExaminationRoomCommonResponse update(UpdateExaminationRoomRequest request, UUID id){
         ExaminationRoom findToUpdate = examinationRoomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(HOSPITAL_INFORMATION_EXCEPTION.EXAMINATION_ROOM_NOT_FOUND));

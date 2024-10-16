@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CreateWorkingScheduleRequest {
+public class SaveWorkingScheduleRequest {
     @ExistedExaminationRoomValidator
     @NotNull(message = "Phòng làm việc không được bỏ trống")
     private UUID roomId;

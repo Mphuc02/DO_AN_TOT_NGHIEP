@@ -2,11 +2,11 @@ package dev.workingschedule.service;
 
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.response.WorkingScheduleCommonResponse;
-import dev.common.exception.DuplicateException;
+import dev.common.exception.BadRequestException;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
 import dev.common.util.AuditingUtil;
-import dev.workingschedule.dto.request.CreateWorkingScheduleRequest;
+import dev.workingschedule.dto.request.SaveWorkingScheduleRequest;
 import dev.workingschedule.dto.request.SearchWorkingScheduleRequest;
 import dev.workingschedule.entity.WorkingSchedule;
 import dev.workingschedule.repository.WorkingScheduleRepository;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,6 +42,13 @@ public class WorkingScheduleService {
         return scheduleMapperUtil.mapEntityToCommonResponse(scheduleRepository.findByEmployeeIdAndDate(employeeId, today));
     }
 
+    public List<WorkingScheduleCommonResponse> getSchedulesInMonthOfEmployee(int year, int month){
+        UUID employeeId = auditingUtil.getUserLogged().getId();
+        LocalDate thisMonth = LocalDate.of(year, month, 1);
+        LocalDate nextMonth = thisMonth.plusMonths(1);
+        return scheduleMapperUtil.mapEntitiesToCommonResponses(scheduleRepository.findByEmployeeIdAndDateBetweenOrderByDate(employeeId, thisMonth, nextMonth));
+    }
+
     public boolean checkScheduleIsToday(UUID id){
         Optional<WorkingSchedule> optional = scheduleRepository.findById(id);
         if(optional.isEmpty())
@@ -51,13 +59,9 @@ public class WorkingScheduleService {
     }
 
     @Transactional
-    public WorkingScheduleCommonResponse save(CreateWorkingScheduleRequest request){
+    public WorkingScheduleCommonResponse create(SaveWorkingScheduleRequest request){
         WorkingSchedule entity = scheduleMapperUtil.mapCreateRequestToEntity(request);
-
-        LocalDate selectedDate = request.getDate();
-        if(scheduleRepository.existsByRoomIdAndDate(request.getRoomId(), selectedDate)){
-            throw new DuplicateException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
-        }
+        checkScheduleConflict(request);
 
         entity.setEmployeeId(auditingUtil.getUserLogged().getId());
         entity = scheduleRepository.save(entity);
@@ -65,19 +69,16 @@ public class WorkingScheduleService {
     }
 
     @Transactional
-    public WorkingScheduleCommonResponse update(CreateWorkingScheduleRequest request, UUID id){
+    public WorkingScheduleCommonResponse update(SaveWorkingScheduleRequest request, UUID id){
         WorkingSchedule findToUpdate = scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
 
-        LocalDate selectedDate = request.getDate();
-        if(scheduleRepository.existsByRoomIdAndDate(request.getRoomId(), selectedDate)){
-            throw new DuplicateException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
-        }
+        checkScheduleConflict(request);
         scheduleMapperUtil.mapUpdateRequestToEntity(request, findToUpdate);
 
         LocalDate today = LocalDate.now();
-        if(findToUpdate.getDate().isAfter(today))
-            throw new NotPermissionException(WORKING_SCHEDULE_EXCEPTION.CAN_NOT_UPDATE_OLD_SCHEDULE);
+        if(findToUpdate.getDate().isBefore(today))
+            throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.CAN_NOT_UPDATE_OLD_SCHEDULE);
 
         findToUpdate = scheduleRepository.save(findToUpdate);
         return scheduleMapperUtil.mapEntityToCommonResponse(findToUpdate);
@@ -92,8 +93,23 @@ public class WorkingScheduleService {
             throw new NotPermissionException(WORKING_SCHEDULE_EXCEPTION.NOT_PERMISSION_WITH_SCHEDULE);
 
         LocalDate today = LocalDate.now();
-        if(findToDelete.getDate().isAfter(today))
+        if(findToDelete.getDate().isBefore(today))
             throw new NotPermissionException(WORKING_SCHEDULE_EXCEPTION.CAN_NOT_UPDATE_OLD_SCHEDULE);
         scheduleRepository.deleteById(id);
+    }
+
+    private void checkScheduleConflict(SaveWorkingScheduleRequest request){
+        List<WorkingSchedule> schedulesInDay = scheduleRepository.getByDate(request.getDate());
+        schedulesInDay.forEach(schedule -> {
+            UUID employeeId = auditingUtil.getUserLogged().getId();
+
+            if(Objects.equals(schedule.getRoomId(), request.getRoomId())){
+                throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
+            }
+
+            if(Objects.equals(schedule.getEmployeeId(), employeeId)){
+                throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_CONFLICT);
+            }
+        });
     }
 }

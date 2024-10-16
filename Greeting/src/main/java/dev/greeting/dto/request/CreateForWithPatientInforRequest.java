@@ -1,14 +1,11 @@
 package dev.greeting.dto.request;
 
-import dev.common.dto.request.CreateNewPatientRequest;
-import dev.common.validator.NewPatientValidator;
+import dev.common.validator.ExistedPatientValidator;
 import dev.common.validator.TodayWorkingScheduleValidator;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -16,11 +13,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CreateFormWithoutAppointmentRequest {
-    @NotNull(message = "Thông tin bệnh nhân không được bỏ trống")
-    @Valid
-    @NewPatientValidator(message = "Số điện thoại đã được đăng ký")
-    private CreateNewPatientRequest patient;
+public class CreateForWithPatientInforRequest {
+    @NotNull(message = "Bệnh nhân không được bỏ trống")
+    @ExistedPatientValidator
+    private UUID patientId;
 
     @NotNull(message = "Số thứ tự không được bỏ trống")
     @Min(value = 1, message = "Số thứ tự phải bắt đầu từ 1")

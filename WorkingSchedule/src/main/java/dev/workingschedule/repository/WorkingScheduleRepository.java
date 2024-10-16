@@ -10,13 +10,26 @@ import java.util.UUID;
 public interface WorkingScheduleRepository extends JpaRepository<WorkingSchedule, UUID> {
     @Query("""
             Select ws from WorkingSchedule ws
-            where 
+            where
             (:startDate is null or ws.date >= :startDate) and
             (:endDate is null or ws.date <= :endDate) and
             (:roomId is null or ws.roomId = :roomId) and
             (:employeeId is null or ws.employeeId = :employeeId)
         """)
     List<WorkingSchedule> searchWorkingSchedule(LocalDate startDate, LocalDate endDate, UUID roomId, UUID employeeId);
+
+    List<WorkingSchedule> findByEmployeeIdAndDateBetweenOrderByDate(UUID employeeId, LocalDate thisMonth, LocalDate nextMonth);
     WorkingSchedule findByEmployeeIdAndDate(UUID employeeId, LocalDate date);
-    boolean existsByRoomIdAndDate(UUID roomId, LocalDate date);
+
+    List<WorkingSchedule> getByDate(LocalDate localDate);
+
+    @Query(value = """
+                        Select
+                            exists
+                            (select id from tbl_working_schedule
+                            where (room_id = :roomId and date = :date)
+                            or (date = :date and employee_id = :employeeId)
+                            or (date = :date and room_id = :roomId))
+                """, nativeQuery = true)
+    int checkScheduleConflict(UUID roomId, LocalDate date, UUID employeeId);
 }

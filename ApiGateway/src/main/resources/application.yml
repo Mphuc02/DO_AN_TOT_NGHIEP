@@ -24,6 +24,21 @@ spring:
                   uri: lb://Websocket
                   predicates:
                     - Path=/hospital_system/**
+                
+                - id: medicine
+                  uri: lb://MEDICINE
+                  predicates:
+                    - Path=/api/v1/medicines/** , /api/v1/origins/** , /api/v1/import-invoices/** , /api/v1/suppliers/**
+                
+                - id: hospital_information
+                  uri: lb://HOSPITALINFORMATION
+                  predicates:
+                    - Path=/api/v1/examination-rooms/**, /api/v1/provinces/**, /api/v1/diseases/**
+                   
+                - id: working_schedule
+                  uri: lb://WORKINGSCHEDULE
+                  predicates:
+                    - Path=/api/v1/working-schedules/**
                     
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
@@ -35,6 +50,8 @@ spring:
                         allowedMethods:
                             - GET
                             - POST
+                            - PUT
+                            - DELETE
             
 
 eureka:

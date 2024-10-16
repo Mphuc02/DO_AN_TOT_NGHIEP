@@ -15,6 +15,6 @@ public interface WorkingScheduleClient {
     @GetMapping(ID)
     WorkingScheduleCommonResponse getById(@PathVariable UUID id);
 
-    @GetMapping(CHECk_SCHEDULE_TODAY)
+    @GetMapping(CHECK_SCHEDULE_TODAY)
     boolean checkScheduleIsToday(@PathVariable UUID id);
 }

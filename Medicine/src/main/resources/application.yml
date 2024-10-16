@@ -33,6 +33,7 @@ spring:
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
     access-token=expiration: 300000
+    refresh-token-expiration: 30000000
 
 eureka:
     client:

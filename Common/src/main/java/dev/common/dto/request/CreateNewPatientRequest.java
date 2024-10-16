@@ -13,7 +13,8 @@ import java.util.UUID;
 @Setter
 @Builder
 public class CreateNewPatientRequest {
-    private UUID id;
+    @Setter(AccessLevel.NONE)
+    private UUID id = UUID.randomUUID();
 
     @NotNull(message = "Họ và tên không được bỏ trống")
     @Valid

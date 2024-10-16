@@ -87,6 +87,7 @@ public class MedicineService {
     @Transactional
     public MedicineResponse save(CreateMedicineRequest request){
         Medicine medicine = medicineMapperUtil.mapCreateRequestToEntity(request);
+        medicine.setQuantity(0);
         medicine = medicineRepository.save(medicine);
         return medicineMapperUtil.mapEntityToResponse(medicine);
     }

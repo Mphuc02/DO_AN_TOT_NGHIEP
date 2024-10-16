@@ -1,7 +1,7 @@
 package dev.common.dto.response;
 
 import lombok.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,6 +14,6 @@ public class ExaminationFormResponse {
     private UUID patientId;
     private UUID employeeId;
     private Integer ticketIndex;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private String symptom;
 }
