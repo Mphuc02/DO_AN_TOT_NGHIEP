@@ -2,6 +2,7 @@ package dev.websocket.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.model.ProcessedImageData;
 import dev.websocket.constant.WebsocketConstant.*;
 import dev.websocket.model.Message;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,12 @@ public class SendMessageService {
         log.info("Received message from topic: created-employee-topic with owner: " + ownerId);
         Message message = Message.buildOkMessage(MESSAGE.CREATED_EMPLOYEE);
         this.messagingTemplate.convertAndSend(TOPIC.CREATED_EMPLOYEE_TOPIC(ownerId), message);
+    }
+
+    @KafkaListener(topics = "processed-image", groupId = WEBSOCKET_GROUP)
+    public void handle(ProcessedImageData data){
+        log.info("Received message from topic: processed-image with owner:" + data.getOwner());
+        Message message = Message.buildOkMessage("Kết quả chuẩn đoán", data);
+        messagingTemplate.convertAndSend(TOPIC., message);
     }
 }
