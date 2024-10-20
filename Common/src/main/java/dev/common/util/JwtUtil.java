@@ -58,7 +58,7 @@ public class JwtUtil {
             throw new JwtException("Jwt không hợp lệ");
 
         List<String> roles = (List<String>) claims.get("roles");
-        Set<Permission> permissions = roles.stream().map(role -> Permission.valueOf(role)).collect(Collectors.toSet());
+        Set<Permission> permissions = roles == null ? null : roles.stream().map(Permission::valueOf).collect(Collectors.toSet());
         UUID id = UUID.fromString(String.valueOf(claims.get("userId")));
         return AuthenticatedUser.builder()
                 .id(id)

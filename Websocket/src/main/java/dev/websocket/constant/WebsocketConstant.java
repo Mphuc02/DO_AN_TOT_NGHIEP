@@ -11,10 +11,12 @@ public class WebsocketConstant {
         public static String CREATED_EMPLOYEE_TOPIC(UUID id){
             return String.format("/topic/created-employee/%s", id);
         }
+        public static String PROCESSED_IMAGE(UUID id) {return String.format("/topic/processed-image/%s", id);}
     }
 
     public static final class MESSAGE{
         public static final String CREATED_EMPLOYEE_ACCOUNT = "Đã tạo thành công tài khoản nhân viên";
         public static final String CREATED_EMPLOYEE = "Đã tạo thành công thông tin nhân viên";
+        public static final String PROCESSED_IMAGE = "Kết qủa chuẩn đoán";
     }
 }

@@ -39,6 +39,11 @@ spring:
                   uri: lb://WORKINGSCHEDULE
                   predicates:
                     - Path=/api/v1/working-schedules/**
+                
+                - id: ai_service
+                  uri: lb://AISERVICE
+                  predicates:
+                    - Path=/api/v1/ai/**
                     
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE

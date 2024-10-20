@@ -27,6 +27,8 @@ kafka:
         create-employee-topic: create_employee
         created-employee-topic: created_employee
         
+        processed-image: processed-image
+        
         create-patient-account-from-greeting: create_patient_from_greeting
         created-patient-account-from-greeting-success: created_patient_from_greeting_success
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting

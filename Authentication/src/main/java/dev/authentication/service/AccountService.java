@@ -152,7 +152,7 @@ public class AccountService {
             throw new NotPermissionException("This token has been revoked");
 
         AuthenticatedUser user = jwtUtil.getUserFromJwt(request.getToken(), TokenType.REFRESH_TOKEN);
-        return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getPermissions().stream().toList());
+        return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getPermissions() == null ? null : user.getPermissions().stream().toList());
     }
 
     @Transactional

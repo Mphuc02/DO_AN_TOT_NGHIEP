@@ -33,10 +33,10 @@ public class SendMessageService {
         this.messagingTemplate.convertAndSend(TOPIC.CREATED_EMPLOYEE_TOPIC(ownerId), message);
     }
 
-    @KafkaListener(topics = "processed-image", groupId = WEBSOCKET_GROUP)
+    @KafkaListener(topics = PROCESSED_IMAGE, groupId = WEBSOCKET_GROUP)
     public void handle(ProcessedImageData data){
         log.info("Received message from topic: processed-image with owner:" + data.getOwner());
-        Message message = Message.buildOkMessage("Kết quả chuẩn đoán", data);
-        messagingTemplate.convertAndSend(TOPIC., message);
+        Message message = Message.buildOkMessage(MESSAGE.PROCESSED_IMAGE, data);
+        messagingTemplate.convertAndSend(TOPIC.PROCESSED_IMAGE(data.getOwner()), message);
     }
 }

@@ -9,6 +9,7 @@ public class KafkaTopicsConstrant {
 
     public static final String CREATE_EMPLOYEE_TOPIC = "${kafka.topics.create-employee-topic}";
     public static final String CREATED_EMPLOYEE_TOPIC = "${kafka.topics.created-employee-topic}";
+    public static final String PROCESSED_IMAGE = "${kafka.topics.processed-image}";
 
     public static final String PATIENT_GROUP = "${kafka.group-id.patient}";
     public static final String AUTHENTICATION_GROUP = "${kafka.group-id.authentication}";
