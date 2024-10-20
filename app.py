@@ -39,7 +39,7 @@ CORS(app, resources={r"/api/v1/ai/upload": {"origins": "http://localhost:8081"}}
 def index():
     return render_template('index.html')
 
-@app.route('/api/v1/ai/upload', methods=['POST'])
+@app.route('/api/v1/ai/diagnostic', methods=['POST'])
 @is_authenticated
 def upload_image(user_id):
     if 'image' not in request.files:
@@ -88,12 +88,12 @@ def upload_image(user_id):
         "owner": user_id
     }
 
-    # Gửi thông điệp tới Kafka topic
-    print('response:', response)
-    headers = [('__TypeId__', b'dev.common.model.ProcessedImageData')]
-    producer.send('processed-image', value=response, headers=headers)  
-    producer.flush() 
-    return img_base64
+    # # Gửi thông điệp tới Kafka topic
+    # print('response:', response)
+    # headers = [('__TypeId__', b'dev.common.model.ProcessedImageData')]
+    # producer.send('processed-image', value=response, headers=headers)  
+    # producer.flush() 
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0' , debug=True)

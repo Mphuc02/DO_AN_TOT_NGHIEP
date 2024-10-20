@@ -1,18 +1,5 @@
 import jwt
-import datetime
+import base64
 
-# SECRET_KEY là khóa bí mật của bạn
 SECRET_KEY = "PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002"
-
-# Dữ liệu mà bạn muốn đưa vào token
-payload = {
-    "sub": "user_id_123",  # Subject, có thể là ID người dùng hoặc thông tin khác
-    "iat": datetime.datetime.utcnow(),  # Thời gian token được phát hành
-    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=5)  # Thời gian hết hạn (5 phút sau)
-}
-
-# Ký token
-token = jwt.encode(payload, SECRET_KEY, algorithm="HS512")
-
-# In ra token
-print("Generated JWT Token:", token)
+data = jwt.decode('eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwMzQ4ZmNmNS00M2VjLTQxNDctOTIxNS04ODBjNGM5NDg3ZTQiLCJ1c2VySWQiOiIxYjFlNzAzOC0wZWY5LTRjNmUtOTM0MC02MDY3ZTFiMjZlYzciLCJpYXQiOjE3MjkzMTE3NzQsImV4cCI6MTcyOTMxMjA3NH0.B6oIH3zasPV5JXY_NiyeQr1RVbCf6PbRxAEHCuH6WKGyBSAyWHVp7wlGY_ibIktzVPlE5vQJWyNaAQexim1pXQ', base64.b64decode(SECRET_KEY), algorithms=["HS512"])
