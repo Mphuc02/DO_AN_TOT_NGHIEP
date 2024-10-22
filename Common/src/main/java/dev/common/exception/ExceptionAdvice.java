@@ -1,11 +1,14 @@
 package dev.common.exception;
 
+import dev.common.dto.response.ErrorResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,5 +62,21 @@ public class ExceptionAdvice {
         log.error("Bad request exception", ex);
         Map<String, Object> errors = Map.of("message", ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handler(MethodArgumentNotValidException ex){
+        log.error("Exception when validate object: " + ex.getObjectName());
+        HashMap<String, String> errors = new HashMap<>();
+        for(ObjectError error: ex.getAllErrors()){
+            errors.put(((FieldError) error).getField(), error.getDefaultMessage());
+        }
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<Object> handle(BaseException ex){
+        log.error("Exception with base Exception", ex);
+        return new ResponseEntity<>(ErrorResponseDTO.buildFromBaseException(ex), ex.getHttpStatus());
     }
 }

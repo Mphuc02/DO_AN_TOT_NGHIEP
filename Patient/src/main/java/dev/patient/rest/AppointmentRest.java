@@ -1,0 +1,46 @@
+package dev.patient.rest;
+
+import static dev.common.constant.ApiConstant.PATIENT.*;
+import dev.common.constant.AuthorizationConstrant;
+import dev.patient.dto.request.CreateAppointmentRequest;
+import dev.patient.dto.request.UpdateAppointmentRequest;
+import dev.patient.dto.response.AppointmentResponseDTO;
+import dev.patient.service.AppointmentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(APPOINTMENT_URL)
+@RequiredArgsConstructor
+public class AppointmentRest {
+    private final AppointmentService appointmentService;
+
+    @GetMapping(GET_APPOINTMENT_OF_TODAY)
+    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsOfToday(){
+        return ResponseEntity.ok(appointmentService.getAppointmentsOfToday());
+    }
+
+    @PreAuthorize(AuthorizationConstrant.USER)
+    @PostMapping()
+    public ResponseEntity<AppointmentResponseDTO> create(@Validated @RequestBody CreateAppointmentRequest request){
+        return ResponseEntity.ok(appointmentService.create(request));
+    }
+
+    @PreAuthorize(AuthorizationConstrant.USER)
+    @PutMapping(ID)
+    public ResponseEntity<AppointmentResponseDTO> update(@PathVariable UUID id, @Validated @RequestBody UpdateAppointmentRequest request){
+        return ResponseEntity.ok(appointmentService.update(id, request));
+    }
+
+    @PreAuthorize(AuthorizationConstrant.USER)
+    @DeleteMapping(ID)
+    public ResponseEntity<Void> delete(@PathVariable UUID id){
+        appointmentService.delete(id);
+        return null;
+    }
+}

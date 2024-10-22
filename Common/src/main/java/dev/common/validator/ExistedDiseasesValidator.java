@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ExistedDiseasesValidatorImpl.class)
 public @interface ExistedDiseasesValidator {
     String message() default "Các bệnh sau đây không tồn tại";
+    String field() default "";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
