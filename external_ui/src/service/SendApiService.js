@@ -18,12 +18,16 @@ class SendApiService{
             }
         }).then(response => {
             console.log(response)
+            successCallback(response)
         }).catch(async error => {
             console.log(error)
             const result = await JwtService.checkTokenExpired(error)
             if(result){
                 countError++
                 await this.getRequest(url, customHeaders, successCallback, errorCallback)
+            }
+            if(error.status === 400){
+                errorCallback(error)
             }
         })
     }

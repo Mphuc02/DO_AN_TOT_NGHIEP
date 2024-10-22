@@ -11,13 +11,17 @@ const Diagnostics = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const [processedImage, setProcessedImage] = useState('')
-    const [diseases, setDiseases] = useState([])
-    const [detectedDiases, setDetectedDiseases] = useState([])
+    const [diseases, setDiseases] = useState(new Map())
+    const [detectedDisease, setDetectedDiseases] = useState(new Set())
 
     const successSendImage = (response) => {
         const data = response.data
+        console.log(data)
         setProcessedImage('data:image/jpeg;base64,' + data.decodedImg)
-        setDetectedDiseases(data.diseases)
+        data.diseases.forEach(detected => {
+            detectedDisease.add(detected)
+        })
+        setDetectedDiseases(detectedDisease)
     }
 
     const errorSendImage = (error) => {
@@ -60,20 +64,18 @@ const Diagnostics = () => {
 
     const getAllDiseases = async () => {
         await SendApiService.getRequest(HOSPITAL_INFORMATION.DISEASES.getUrl(), {}, (response => {
-            setDiseases(response.data)
+            const tempMap = new Map()
+            response.data.forEach(disease => {
+                tempMap.set(disease.name, disease)
+            })
+            console.log(tempMap)
+            setDiseases(tempMap)
         }), (error) => {
 
         })
     }
 
     useEffect(() => {
-        const webSocket = new WebSocketService()
-        const topics = [WEBSOCKET.processedImage(JwtService.geUserFromToken())]
-
-        webSocket.connectAndSubscribe(topics, (message, index) => {
-            console.log(message)
-        })
-
         getAllDiseases()
     }, [page])
 
@@ -104,6 +106,18 @@ const Diagnostics = () => {
                     )}
                 </div>
             </div>
+
+            {processedImage && (
+                <div>
+                    <div>Dưới đây là danh sách các bệnh phát hiện được</div>
+                    <ul>
+                        {[...detectedDisease].map(key => (
+                            <li key={key}>{diseases.get(key).name}</li>
+                        ))}
+                    </ul>
+
+                    <button>Tạo lịch hẹn khám bệnh</button>
+                </div>)}
         </div>
     )
 }
