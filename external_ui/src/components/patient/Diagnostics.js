@@ -1,27 +1,30 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import styles from '../../layouts/body/style.module.css'
-import WebSocketService from "../../service/WebSocketService";
-import {AI, HOSPITAL_INFORMATION, WEBSOCKET} from "../../Constant";
-import {JwtService} from "../../service/JwtService";
+import {AI, HOSPITAL_INFORMATION} from "../../Constant";
 import {SendApiService} from "../../service/SendApiService";
 
 let page = ''
 const Diagnostics = () => {
     page = 'send-image'
+
+    const fileInputRef = useRef(null)
+    const [imageDetails, setImageDetails] = useState([])
     const [selectedImage, setSelectedImage] = useState(null);
-    const [previewImage, setPreviewImage] = useState('');
-    const [processedImage, setProcessedImage] = useState('')
     const [diseases, setDiseases] = useState(new Map())
-    const [detectedDisease, setDetectedDiseases] = useState(new Set())
+    const [detectedDiseases, setDetectedDiseases] = useState(new Set())
 
     const successSendImage = (response) => {
         const data = response.data
         console.log(data)
-        setProcessedImage('data:image/jpeg;base64,' + data.decodedImg)
+        imageDetails[0].processedImage = 'data:image/jpeg;base64,' + data.decodedImg
+        setImageDetails([...imageDetails])
+
         data.diseases.forEach(detected => {
-            detectedDisease.add(detected)
+            detectedDiseases.add(detected)
         })
-        setDetectedDiseases(detectedDisease)
+        setDetectedDiseases(detectedDiseases)
+        setSelectedImage(null)
+        fileInputRef.current.value = ''
     }
 
     const errorSendImage = (error) => {
@@ -31,26 +34,34 @@ const Diagnostics = () => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
+            const imageDetail = {
+                processedImage: '',
+                previewImage: URL.createObjectURL(file)
+            }
             setSelectedImage(file);
-            setProcessedImage(prev => {
-                if(prev){
-                    URL.revokeObjectURL(prev)
-                }
-                return ''
-            })
-
-            setPreviewImage((prev) => {
-                if(prev){
-                    URL.revokeObjectURL(prev)
-                }
-                return URL.createObjectURL(file)
-            });
+            imageDetails[0] = imageDetail
         } else {
             alert("Please select a valid image file");
             setSelectedImage(null);
-            setPreviewImage('');
         }
     };
+
+    const handleAddImage = () => {
+        console.log('images', imageDetails)
+
+        if(imageDetails.length === 0 || imageDetails[0].processedImage === null || imageDetails[0].processedImage === ''){
+            alert("Lỗi: Ảnh hiện tại chưa được chuẩn đoán, không thể thêm 1 ảnh mới")
+            return;
+        }
+
+        const newImage = {
+            processedImage: '',
+            previewImage: ''
+        }
+        imageDetails.unshift(newImage)
+        setImageDetails([...imageDetails])
+        setSelectedImage(null)
+    }
 
     const handleDiagnosticButton = async () => {
         if(selectedImage === null){
@@ -85,33 +96,61 @@ const Diagnostics = () => {
 
             <input
                 type="file"
+                ref={fileInputRef}
                 accept="image/*"
                 onChange={handleImageChange}
             />
 
-            <button onClick={() => handleDiagnosticButton()}>Chuẩn đoán</button>
+            <button onClick={() => handleDiagnosticButton()}>Chuẩn đoán</button> <br/>
+            <button onClick={() => handleAddImage()}>Thêm ảnh</button>
 
-            <div className={styles.divFlex}>
-                <div>
-                    <p>Ảnh đã chọn</p>
-                    {selectedImage && (
-                        <img className={styles.previewImage} src={previewImage} alt="Ảnh đã chọn"/>
-                    )}
+            {imageDetails.map((image, index) => (
+                <div key={index}>
+                    <div className={styles.divFlex}>
+                        <div>
+                            <p>Ảnh đã chọn</p>
+                            {imageDetails[index].previewImage && (
+                                <img className={styles.previewImage} src={imageDetails[index].previewImage}
+                                     alt="Ảnh đã chọn"/>
+                            )}
+                        </div>
+
+                        <div>
+                            <p>Kết quả chuẩn đoán</p>
+                            {imageDetails[index].processedImage && (
+                                <img className={styles.previewImage} src={imageDetails[index].processedImage}
+                                     alt="Ảnh đã chọn"/>
+                            )}
+                        </div>
+
+                        <button>Xóa ảnh</button>
+                    </div>
                 </div>
+            ))}
 
-                <div>
-                    <p>Kết quả chuẩn đoán</p>
-                    {processedImage && (
-                        <img className={styles.previewImage} src={processedImage} alt="Ảnh đã chọn"/>
-                    )}
-                </div>
-            </div>
+            {/*<div className={styles.divFlex}>*/}
+            {/*    <div>*/}
+            {/*        <p>Ảnh đã chọn</p>*/}
+            {/*        {selectedImage && (*/}
+            {/*            <img className={styles.previewImage} src={previewImage} alt="Ảnh đã chọn"/>*/}
+            {/*        )}*/}
+            {/*    </div>*/}
 
-            {processedImage && (
+            {/*    <div>*/}
+            {/*        <p>Kết quả chuẩn đoán</p>*/}
+            {/*        {processedImage && (*/}
+            {/*            <img className={styles.previewImage} src={processedImage} alt="Ảnh đã chọn"/>*/}
+            {/*        )}*/}
+            {/*    </div>*/}
+
+            {/*    <button>Xóa ảnh</button>*/}
+            {/*</div>*/}
+
+            {detectedDiseases.size > 0 && (
                 <div>
                     <div>Dưới đây là danh sách các bệnh phát hiện được</div>
                     <ul>
-                        {[...detectedDisease].map(key => (
+                        {[...detectedDiseases].map(key => (
                             <li key={key}>{diseases.get(key).name}</li>
                         ))}
                     </ul>
