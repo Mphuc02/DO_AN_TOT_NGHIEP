@@ -3,11 +3,14 @@ package dev.patient.service;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
+import dev.common.model.ErrorField;
 import dev.common.util.AuditingUtil;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
-import dev.patient.dto.response.AppointmentResponseDTO;
+import dev.patient.dto.response.AppointmentResponse;
 import dev.patient.entity.Appointment;
+import dev.patient.entity.AppointmentDetail;
+import dev.patient.entity.AppointmentImageDetail;
 import dev.patient.repository.AppointmentRepository;
 import dev.patient.util.AppointmentMapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +29,30 @@ public class AppointmentService {
     private final AppointmentMapperUtil appointmentMapperUtil;
     private final AuditingUtil auditingUtil;
 
-    public List<AppointmentResponseDTO> getAppointmentsOfToday(){
+    public List<AppointmentResponse> getAppointmentsOfToday(){
         return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDate(LocalDate.now()));
     }
 
     @Transactional
-    public AppointmentResponseDTO create(CreateAppointmentRequest request){
+    public AppointmentResponse create(CreateAppointmentRequest request){
+        if(appointmentRepository.existsByPatientIdAndAppointmentDate(auditingUtil.getUserLogged().getId(), request.getAppointmentDate())){
+            ErrorField error = new ErrorField(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_DATE, CreateAppointmentRequest.Fields.appointmentDate);
+            throw BaseException.buildBadRequest().addField(error).build();
+        }
+
         Appointment appointment = appointmentMapperUtil.mapCreateRequestToEntity(request);
+        if(appointment.getDetails() != null){
+            for (AppointmentDetail detail : appointment.getDetails()) {
+                detail.setAppointment(appointment);
+            }
+        }
+
+        if(appointment.getImages() != null){
+            for (AppointmentImageDetail image : appointment.getImages()) {
+                image.setAppointment(appointment);
+            }
+        }
+
         appointment.setPatientId(auditingUtil.getUserLogged().getId());
         appointment.setCreatedAt(LocalDateTime.now());
         appointment = appointmentRepository.save(appointment);
@@ -40,7 +60,12 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponseDTO update(UUID id, UpdateAppointmentRequest request){
+    public AppointmentResponse update(UUID id, UpdateAppointmentRequest request){
+        if(appointmentRepository.existsByPatientIdAndAppointmentDate(auditingUtil.getUserLogged().getId(), request.getAppointmentDate())){
+            ErrorField error = new ErrorField(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_DATE, CreateAppointmentRequest.Fields.appointmentDate);
+            throw BaseException.buildBadRequest().addField(error).build();
+        }
+
         Appointment appointment = checkPermission(id);
         appointmentMapperUtil.mapUpdateRequestToEntity(request, appointment);
         appointment = appointmentRepository.save(appointment);
@@ -49,12 +74,13 @@ public class AppointmentService {
 
     @Transactional
     public void delete(UUID id){
-        appointmentRepository.deleteById(id);
+        Appointment appointment = checkPermission(id);
+        appointmentRepository.delete(appointment);
     }
 
     private Appointment checkPermission(UUID id){
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new NotFoundException(PATIENT_EXCEPTION.APPOINTMENT_NOT_FOUND));
-        if(Objects.equals(appointment.getPatientId(), auditingUtil.getUserLogged().getId())){
+        if(!Objects.equals(appointment.getPatientId(), auditingUtil.getUserLogged().getId())){
             throw BaseException.buildNotFound().message(PATIENT_EXCEPTION.NOT_PERMISSION_WITH_APPOINTMENT).build();
         }
 

@@ -71,7 +71,7 @@ public class ExceptionAdvice {
         for(ObjectError error: ex.getAllErrors()){
             errors.put(((FieldError) error).getField(), error.getDefaultMessage());
         }
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponseDTO(errors, "Lỗi khi kiểm tra thông tin"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BaseException.class)

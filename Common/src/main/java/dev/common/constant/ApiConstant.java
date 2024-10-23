@@ -80,7 +80,7 @@ public class ApiConstant {
         public static final String PATIENT_URL = "/api/patients";
         public static final String ID = "/{id}";
         public static final String CHECK_EXIST_PATIENT = "/check/{id}";
-        public static final String APPOINTMENT_URL = "/api/v1/appointments";
+        public static final String APPOINTMENT_URL = "/api/appointments";
         public static final String GET_APPOINTMENT_OF_TODAY = "/today";
     }
 

@@ -1,7 +1,10 @@
 package dev.patient.dto.request;
 
+import dev.common.model.Permission;
 import dev.common.validator.DateAfterTodayValidator;
 import dev.common.validator.ExistedDiseasesValidator;
+import dev.common.validator.ExistedEmployeeValidator;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +22,7 @@ import java.util.UUID;
 @Setter
 @FieldNameConstants
 public class CreateAppointmentRequest {
+    @ExistedEmployeeValidator(message = "Bác sĩ không tồn tại", permissions = Permission.DOCTOR)
     private UUID doctorId;
 
     @DateAfterTodayValidator
@@ -30,4 +34,7 @@ public class CreateAppointmentRequest {
 
     @ExistedDiseasesValidator(field = Fields.diseasesIds)
     private List<UUID> diseasesIds;
+
+    @Valid
+    private List<CreateAppointmentImageDetailRequest> images;
 }

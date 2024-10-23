@@ -1,6 +1,8 @@
 package dev.patient.dto.request;
 
+import dev.common.model.Permission;
 import dev.common.validator.DateAfterTodayValidator;
+import dev.common.validator.ExistedEmployeeValidator;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdateAppointmentRequest {
+    @ExistedEmployeeValidator(message = "Bác sĩ không tồn tại", permissions = Permission.DOCTOR)
     private UUID doctorId;
 
     @DateAfterTodayValidator

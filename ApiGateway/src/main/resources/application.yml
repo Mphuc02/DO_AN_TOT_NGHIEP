@@ -44,6 +44,11 @@ spring:
                   uri: lb://AISERVICE
                   predicates:
                     - Path=/api/v1/ai/**
+                
+                - id: patient
+                  uri: lb://PATIENT
+                  predicates:
+                    - Path=/api/patients/**, /api/appointments/**
                     
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE

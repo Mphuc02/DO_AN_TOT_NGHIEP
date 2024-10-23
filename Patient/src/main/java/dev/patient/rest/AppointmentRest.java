@@ -4,7 +4,7 @@ import static dev.common.constant.ApiConstant.PATIENT.*;
 import dev.common.constant.AuthorizationConstrant;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
-import dev.patient.dto.response.AppointmentResponseDTO;
+import dev.patient.dto.response.AppointmentResponse;
 import dev.patient.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +21,19 @@ public class AppointmentRest {
     private final AppointmentService appointmentService;
 
     @GetMapping(GET_APPOINTMENT_OF_TODAY)
-    public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsOfToday(){
+    public ResponseEntity<List<AppointmentResponse>> getAppointmentsOfToday(){
         return ResponseEntity.ok(appointmentService.getAppointmentsOfToday());
     }
 
     @PreAuthorize(AuthorizationConstrant.USER)
     @PostMapping()
-    public ResponseEntity<AppointmentResponseDTO> create(@Validated @RequestBody CreateAppointmentRequest request){
+    public ResponseEntity<AppointmentResponse> create(@Validated @RequestBody CreateAppointmentRequest request){
         return ResponseEntity.ok(appointmentService.create(request));
     }
 
     @PreAuthorize(AuthorizationConstrant.USER)
     @PutMapping(ID)
-    public ResponseEntity<AppointmentResponseDTO> update(@PathVariable UUID id, @Validated @RequestBody UpdateAppointmentRequest request){
+    public ResponseEntity<AppointmentResponse> update(@PathVariable UUID id, @Validated @RequestBody UpdateAppointmentRequest request){
         return ResponseEntity.ok(appointmentService.update(id, request));
     }
 

@@ -26,6 +26,10 @@ public class Appointment {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment", fetch = FetchType.LAZY)
     private List<AppointmentDetail> details;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment", fetch = FetchType.LAZY)
+    private List<AppointmentImageDetail> images;
+
     private LocalDate appointmentDate;
     private LocalDateTime createdAt;
 }
