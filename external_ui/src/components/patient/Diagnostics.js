@@ -1,14 +1,99 @@
 import {useState, useEffect, useRef} from "react";
 import styles from '../../layouts/body/style.module.css'
-import {AI, HOSPITAL_INFORMATION} from "../../Constant";
+import {AI, EMPLOYYEE, HOSPITAL_INFORMATION} from "../../Constant";
 import {SendApiService} from "../../service/SendApiService";
+
+const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const formattedTomorrow = tomorrow.toISOString().split('T')[0];
+
+    const [appointment, setAppointment] = useState({
+        doctorId: '',
+        appointmentDate: formattedTomorrow,
+        description: '',
+        images: '',
+        diseasesIds: []
+    })
+    useEffect(() => {
+        setAppointment({
+            ...appointment,
+            diseasesIds: diseases
+        })
+    }, [diseases]);
+
+    if(!isOpen){
+        return null
+    }
+
+    console.log(doctors)
+
+    const handleCreateAppointment = () => {
+        console.log(appointment)
+    }
+    return (
+        <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+                <button className={styles.closeButton} onClick={onClose}>&times;</button>
+                <h1>Tạo thông tin lịch hẹn</h1>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Chọn bác sĩ:</td>
+                            <td>
+                                <select
+                                    onChange={(e) => setAppointment({...appointment, doctorId: e.target.value})}>
+                                    <option value={""}>-----------</option>
+                                    {doctors.map((doctor, index) => (
+                                        <option key={index} value={doctor.id}>
+                                            {doctor.fullName.firstName + " " + doctor.fullName.middleName + " " + doctor.fullName.lastName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Ngày đặt lịch(Định dạng: tháng-ngày-năm):</td>
+                            <td><input value={appointment.appointmentDate}
+                                       onChange={(e) => setAppointment({...appointment, appointmentDate: e.target.value})}
+                                       type={"date"} min={formattedTomorrow}/></td>
+                        </tr>
+
+                        <tr>
+                            <td>Triệu chứng</td>
+                            <td><textarea /></td>
+                        </tr>
+
+                        <tr>
+                            <td>Danh sách các bệnh được chuẩn đoán</td>
+                            <td>
+                                {diseases.map()}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button onClick={() => handleCreateAppointment()}>Tạo lịch hẹn</button>
+            </div>
+        </div>
+    );
+}
 
 let page = ''
 const Diagnostics = () => {
     page = 'send-image'
 
     const fileInputRef = useRef(null)
-    const [imageDetails, setImageDetails] = useState([])
+    const [imageDetails, setImageDetails] = useState([{
+        processedImage: '',
+        previewImage: '',
+        detectedDiseases: []
+    }])
+
+    const [doctors, setDoctors] = useState([])
+    const [isCreateModalOpen, setIsCreateModelOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [diseases, setDiseases] = useState(new Map())
     const [detectedDiseases, setDetectedDiseases] = useState(new Set())
@@ -17,6 +102,7 @@ const Diagnostics = () => {
         const data = response.data
         console.log(data)
         imageDetails[0].processedImage = 'data:image/jpeg;base64,' + data.decodedImg
+        imageDetails[0].detectedDiseases = data.diseases
         setImageDetails([...imageDetails])
 
         data.diseases.forEach(detected => {
@@ -36,7 +122,8 @@ const Diagnostics = () => {
         if (file && file.type.startsWith('image/')) {
             const imageDetail = {
                 processedImage: '',
-                previewImage: URL.createObjectURL(file)
+                previewImage: URL.createObjectURL(file),
+                detectedDiseases: []
             }
             setSelectedImage(file);
             imageDetails[0] = imageDetail
@@ -56,7 +143,8 @@ const Diagnostics = () => {
 
         const newImage = {
             processedImage: '',
-            previewImage: ''
+            previewImage: '',
+            detectedDiseases: []
         }
         imageDetails.unshift(newImage)
         setImageDetails([...imageDetails])
@@ -86,26 +174,74 @@ const Diagnostics = () => {
         })
     }
 
+    const getAllDoctor = async () => {
+        await SendApiService.getRequest(EMPLOYYEE.getUrl('DOCTOR'), {}, (response) => {
+            setDoctors(response.data)
+        }, (error) => {
+
+        })
+    }
+
+    const handleDeleteImageClick = (index) => {
+        const newDetectedDiseases = new Set()
+        const temp = imageDetails.filter((image, imageIndex) => {
+            if(index === imageIndex){
+                return false;
+            }
+
+            image.detectedDiseases.forEach(disease => {
+                newDetectedDiseases.add(disease)
+            })
+            return true;
+        })
+        if(temp.length === 0){
+            temp.push({
+                processedImage: '',
+                previewImage: '',
+                detectedDiseases: []
+            })
+        }
+
+        setImageDetails(temp)
+        setDetectedDiseases(newDetectedDiseases)
+    }
+
     useEffect(() => {
         getAllDiseases()
+        getAllDoctor()
     }, [page])
+
+    const openCreateModal = () => {
+        setIsCreateModelOpen(true);
+    };
+
+    const closeCreateModal = () => {
+        setIsCreateModelOpen(false);
+    };
 
     return (
         <div>
             <h2>Chuẩn đoán bệnh thông qua hình ảnh</h2>
 
-            <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleImageChange}
-            />
-
-            <button onClick={() => handleDiagnosticButton()}>Chuẩn đoán</button> <br/>
-            <button onClick={() => handleAddImage()}>Thêm ảnh</button>
-
             {imageDetails.map((image, index) => (
                 <div key={index}>
+                    {index === 0 && (
+                        <div className={styles.divFlex}>
+                            <div>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />
+
+                                <button onClick={() => handleDiagnosticButton()}>Chuẩn đoán</button>
+                            </div>
+
+                            <button onClick={() => handleAddImage()}>Thêm ảnh</button>
+                        </div>
+                    )}
+
                     <div className={styles.divFlex}>
                         <div>
                             <p>Ảnh đã chọn</p>
@@ -123,28 +259,10 @@ const Diagnostics = () => {
                             )}
                         </div>
 
-                        <button>Xóa ảnh</button>
+                        <button onClick={() => handleDeleteImageClick(index)}>Xóa ảnh</button>
                     </div>
                 </div>
             ))}
-
-            {/*<div className={styles.divFlex}>*/}
-            {/*    <div>*/}
-            {/*        <p>Ảnh đã chọn</p>*/}
-            {/*        {selectedImage && (*/}
-            {/*            <img className={styles.previewImage} src={previewImage} alt="Ảnh đã chọn"/>*/}
-            {/*        )}*/}
-            {/*    </div>*/}
-
-            {/*    <div>*/}
-            {/*        <p>Kết quả chuẩn đoán</p>*/}
-            {/*        {processedImage && (*/}
-            {/*            <img className={styles.previewImage} src={processedImage} alt="Ảnh đã chọn"/>*/}
-            {/*        )}*/}
-            {/*    </div>*/}
-
-            {/*    <button>Xóa ảnh</button>*/}
-            {/*</div>*/}
 
             {detectedDiseases.size > 0 && (
                 <div>
@@ -154,9 +272,10 @@ const Diagnostics = () => {
                             <li key={key}>{diseases.get(key).name}</li>
                         ))}
                     </ul>
-
-                    <button>Tạo lịch hẹn khám bệnh</button>
                 </div>)}
+
+            <button onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
+            <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseases} doctors={doctors}/>
         </div>
     )
 }

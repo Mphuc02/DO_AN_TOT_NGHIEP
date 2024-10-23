@@ -27,8 +27,8 @@ class AUTHENTICATION{
 }
 
 class EMPLOYYEE{
-    static getUrl = () => {
-        return HOST.getHost() + "/api/v1/employees"
+    static getUrl = (permission) => {
+        return HOST.getHost() + `/api/v1/employees?permission=${permission}`
     }
 
     static id = (id) => {
