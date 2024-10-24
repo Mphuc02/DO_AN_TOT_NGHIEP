@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {AUTHENTICATION} from "../../Constant";
+import {AUTHENTICATION} from "../../ApiConstant";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import RoutesConstant from "../../RoutesConstant";

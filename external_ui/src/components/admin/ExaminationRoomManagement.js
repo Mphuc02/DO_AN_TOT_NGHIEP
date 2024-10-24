@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import styles from "../../layouts/body/style.module.css";
 import iconUpdate from "../../imgs/update.png";
 import {useEffect, useState} from "react";
-import {HOSPITAL_INFORMATION} from '../../Constant'
+import {HOSPITAL_INFORMATION} from '../../ApiConstant'
 import axios from "axios";
 import {JwtService} from "../../service/JwtService";
 

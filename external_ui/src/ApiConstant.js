@@ -1,4 +1,3 @@
-import {get} from "axios";
 
 class HOST{
     static getHost = () => { return "http://localhost:9000"}
@@ -133,4 +132,12 @@ class AI{
     }
 }
 
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI}
+class PATIENT{
+    static APPOINTMENT = class {
+        static getUrl = () => {
+            return HOST.getHost() + "/api/appointments"
+        }
+    }
+}
+
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT}

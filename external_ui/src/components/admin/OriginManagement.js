@@ -3,7 +3,7 @@ import styles from "../../layouts/body/style.module.css";
 import iconUpdate from "../../imgs/update.png";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {MEDICINE} from "../../Constant";
+import {MEDICINE} from "../../ApiConstant";
 import {JwtService} from "../../service/JwtService";
 
 let countError = 0

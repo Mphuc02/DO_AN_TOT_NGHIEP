@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AUTHENTICATION} from '../Constant'
+import {AUTHENTICATION} from '../ApiConstant'
 import header from "../layouts/header/admin/Header";
 
 class JwtService{

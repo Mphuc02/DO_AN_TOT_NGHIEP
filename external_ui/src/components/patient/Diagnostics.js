@@ -1,13 +1,21 @@
 import {useState, useEffect, useRef} from "react";
 import styles from '../../layouts/body/style.module.css'
-import {AI, EMPLOYYEE, HOSPITAL_INFORMATION} from "../../Constant";
+import {AI, EMPLOYYEE, HOSPITAL_INFORMATION, PATIENT} from "../../ApiConstant";
 import {SendApiService} from "../../service/SendApiService";
+import {ConvertBlobUrlToBase64} from '../../service/BlobService'
 
-const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
+const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors, imageDetails }) => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     const formattedTomorrow = tomorrow.toISOString().split('T')[0];
 
+    const [errorAppointment, setErrorAppointment] = useState({
+        doctorId: '',
+        appointmentDate: '',
+        description: '',
+        images: '',
+        diseasesIds: ''
+    })
     const [appointment, setAppointment] = useState({
         doctorId: '',
         appointmentDate: formattedTomorrow,
@@ -15,6 +23,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
         images: '',
         diseasesIds: []
     })
+
     useEffect(() => {
         setAppointment({
             ...appointment,
@@ -26,11 +35,45 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
         return null
     }
 
-    console.log(doctors)
+    const handleCreateAppointment = async () => {
+        appointment.diseasesIds = [...diseases.keys()];
+        appointment.images = [imageDetails];
 
-    const handleCreateAppointment = () => {
-        console.log(appointment)
-    }
+        const images = [];
+        for (const detail of imageDetails) {
+            let image = '';
+            try {
+                image = await ConvertBlobUrlToBase64(detail.previewImage);
+            } catch (error) {
+                console.error("Lỗi:", error);
+            }
+
+            images.push({
+                image: image,
+                processedImage: detail.processedImage
+            });
+        }
+
+        appointment.images = images;
+        SendApiService.postRequest(
+            PATIENT.APPOINTMENT.getUrl(),
+            JSON.stringify(appointment),
+            { 'Content-type': 'application/json' },
+            (response) => {
+                alert("Thêm lịch hẹn thành công");
+            },
+            (error) => {
+                if(error.status === 400){
+                    console.log(error.response.data.fields)
+                    setErrorAppointment(error.response.data.fields)
+                    if(error.response.data.message !== null){
+                        alert("Lỗi: " + error.response.data.message)
+                    }
+                }
+            }
+        );
+    };
+
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -39,6 +82,11 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
 
                 <table>
                     <tbody>
+                        <tr>
+                            <td></td>
+                            <td>{errorAppointment.doctorId}</td>
+                        </tr>
+
                         <tr>
                             <td>Chọn bác sĩ:</td>
                             <td>
@@ -55,6 +103,10 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
                         </tr>
 
                         <tr>
+                            <td></td>
+                            <td>{errorAppointment.appointmentDate}</td>
+                        </tr>
+                        <tr>
                             <td>Ngày đặt lịch(Định dạng: tháng-ngày-năm):</td>
                             <td><input value={appointment.appointmentDate}
                                        onChange={(e) => setAppointment({...appointment, appointmentDate: e.target.value})}
@@ -62,14 +114,24 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors }) => {
                         </tr>
 
                         <tr>
+                            <td></td>
+                            <td>{errorAppointment.description}</td>
+                        </tr>
+                        <tr>
                             <td>Triệu chứng</td>
-                            <td><textarea /></td>
+                            <td><textarea value={appointment.description} onChange={(e) => setAppointment({...appointment, description: e.target.value})}/></td>
                         </tr>
 
                         <tr>
+                            <td></td>
+                            <td>{errorAppointment.diseasesIds}</td>
+                        </tr>
+                        <tr>
                             <td>Danh sách các bệnh được chuẩn đoán</td>
                             <td>
-                                {diseases.map()}
+                                {[...diseases].map(([key, value]) => (
+                                    <div key={key}>{value}</div>
+                                ))}
                             </td>
                         </tr>
                     </tbody>
@@ -96,7 +158,7 @@ const Diagnostics = () => {
     const [isCreateModalOpen, setIsCreateModelOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [diseases, setDiseases] = useState(new Map())
-    const [detectedDiseases, setDetectedDiseases] = useState(new Set())
+    const [detectedDiseasesMap, setDetectedDiseasesMap] = useState(new Set())
 
     const successSendImage = (response) => {
         const data = response.data
@@ -105,10 +167,11 @@ const Diagnostics = () => {
         imageDetails[0].detectedDiseases = data.diseases
         setImageDetails([...imageDetails])
 
+        const tempMap = new Map(detectedDiseasesMap)
         data.diseases.forEach(detected => {
-            detectedDiseases.add(detected)
+            tempMap.set(diseases.get(detected).id, detected)
         })
-        setDetectedDiseases(detectedDiseases)
+        setDetectedDiseasesMap(tempMap)
         setSelectedImage(null)
         fileInputRef.current.value = ''
     }
@@ -125,8 +188,13 @@ const Diagnostics = () => {
                 previewImage: URL.createObjectURL(file),
                 detectedDiseases: []
             }
+
+            if(imageDetails[0].processedImage != null && imageDetails[0].processedImage != ''){
+                imageDetails.unshift(imageDetail)
+            }else{
+                imageDetails[0] = imageDetail
+            }
             setSelectedImage(file);
-            imageDetails[0] = imageDetail
         } else {
             alert("Please select a valid image file");
             setSelectedImage(null);
@@ -183,14 +251,14 @@ const Diagnostics = () => {
     }
 
     const handleDeleteImageClick = (index) => {
-        const newDetectedDiseases = new Set()
+        const newDetectedDiseases = new Map()
         const temp = imageDetails.filter((image, imageIndex) => {
             if(index === imageIndex){
                 return false;
             }
 
             image.detectedDiseases.forEach(disease => {
-                newDetectedDiseases.add(disease)
+                newDetectedDiseases.set(diseases.get(disease).id, disease)
             })
             return true;
         })
@@ -203,7 +271,7 @@ const Diagnostics = () => {
         }
 
         setImageDetails(temp)
-        setDetectedDiseases(newDetectedDiseases)
+        setDetectedDiseasesMap(newDetectedDiseases)
     }
 
     useEffect(() => {
@@ -264,18 +332,19 @@ const Diagnostics = () => {
                 </div>
             ))}
 
-            {detectedDiseases.size > 0 && (
+            {detectedDiseasesMap.size > 0 && (
                 <div>
                     <div>Dưới đây là danh sách các bệnh phát hiện được</div>
                     <ul>
-                        {[...detectedDiseases].map(key => (
-                            <li key={key}>{diseases.get(key).name}</li>
+
+                        {[...detectedDiseasesMap].map(([key, value]) => (
+                            <li key={key}>{value}</li>
                         ))}
                     </ul>
                 </div>)}
 
             <button onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
-            <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseases} doctors={doctors}/>
+            <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseasesMap} doctors={doctors} imageDetails={imageDetails}/>
         </div>
     )
 }

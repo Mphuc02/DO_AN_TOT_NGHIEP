@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {MEDICINE} from "../../Constant";
+import {MEDICINE} from "../../ApiConstant";
 import {JwtService} from "../../service/JwtService";
 import iconUpdate from '../../imgs/update.png'
 import styles from '../../layouts/body/style.module.css'

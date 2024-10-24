@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef } from "react";
-import {AUTHENTICATION, EMPLOYYEE, HOSPITAL_INFORMATION, ROLE, WEBSOCKET, WORKING_SCHEDULE} from "../../Constant";
+import {AUTHENTICATION, EMPLOYYEE, HOSPITAL_INFORMATION, ROLE, WEBSOCKET, WORKING_SCHEDULE} from "../../ApiConstant";
 import axios, {get} from "axios";
 import {JwtService} from "../../service/JwtService";
 import {Link} from "react-router-dom";
