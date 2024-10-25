@@ -110,7 +110,7 @@ public class WorkingScheduleService {
                 throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
             }
 
-            if(Objects.equals(schedule.getEmployeeId(), employeeId)){
+            if(Objects.equals(schedule.getEmployeeId(), employeeId) && Objects.equals(request.getRoomId(), schedule.getRoomId())){
                 throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_CONFLICT);
             }
         });

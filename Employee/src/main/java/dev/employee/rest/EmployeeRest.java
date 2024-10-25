@@ -21,7 +21,7 @@ public class EmployeeRest {
     private final EmployeeService employeeService;
 
     @GetMapping()
-    public ResponseEntity<Object> getAll(@RequestParam(value = "permission") Permission permission){
+    public ResponseEntity<Object> getAll(@RequestParam(value = "permission", required = false) Permission permission){
         return ResponseEntity.ok(employeeService.getByPermisstion(permission));
     }
 

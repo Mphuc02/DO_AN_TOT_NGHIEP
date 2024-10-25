@@ -34,7 +34,7 @@ public class WorkingScheduleRest {
     }
 
     @GetMapping(GET_SCHEDULES_BY_DATE)
-    public ResponseEntity<List<WorkingScheduleResponse>> getScheduleByDate(@RequestParam("date")LocalDate date){
+    public ResponseEntity<List<WorkingScheduleResponse>> getSchedulesByDate(@RequestParam("date")LocalDate date){
         return ResponseEntity.ok(workingScheduleService.getSchedulesByDate(date));
     }
 

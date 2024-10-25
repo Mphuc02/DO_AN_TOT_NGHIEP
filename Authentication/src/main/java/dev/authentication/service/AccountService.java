@@ -34,8 +34,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -63,13 +61,13 @@ public class AccountService {
     private final AuditingUtil auditingUtil;
 
     @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
-    private String CREATE_EMPLOYEE_TOPIC;
+    private String createEmployeeTopic;
 
     @Value(KafkaTopicsConstrant.CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC)
-    private String CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC;
+    private String createdPatientAccountSuccessTopic;
 
     @Value(KafkaTopicsConstrant.FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC)
-    private String FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC;
+    private String failCreatePatientFromGreetingTopic;
 
     @Transactional
     public void register(RegisterAccountRequest request){
@@ -131,7 +129,7 @@ public class AccountService {
         entity = accountRepository.save(entity);
         CommonRegisterEmployeeRequest registerRequest = accountUtil.createRegisterEmployeeRequest(request, entity.getId());
         registerRequest.setOwner(auditingUtil.getUserLogged().getId());
-        kafkaTemplate.send(CREATE_EMPLOYEE_TOPIC, registerRequest);
+        kafkaTemplate.send(createEmployeeTopic, registerRequest);
     }
 
     public boolean checkPhoneNumberNotExist(String phoneNumber, UUID userId){
@@ -184,7 +182,7 @@ public class AccountService {
         UUID userId = (UUID) redisService.getValue(USER_PHONE_PREFIX(request.getNumberPhone()), UUID.class);
         if(ObjectUtils.isEmpty(userId) ||
             !userId.equals(request.getId())){
-            kafkaTemplate.send(FAIL_CREATE_PATIENT_FROM_GREETING_TOPIC, request.getId());
+            kafkaTemplate.send(failCreatePatientFromGreetingTopic, request.getId());
             return;
         }
 
@@ -195,7 +193,7 @@ public class AccountService {
                 .build();
         accountRepository.save(account);
 
-        kafkaTemplate.send(CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC, request);
+        kafkaTemplate.send(createdPatientAccountSuccessTopic, request);
         redisService.deleteValue(USER_PHONE_PREFIX(request.getNumberPhone()));
     }
 }

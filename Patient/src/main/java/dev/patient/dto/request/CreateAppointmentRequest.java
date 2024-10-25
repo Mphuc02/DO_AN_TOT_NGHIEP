@@ -5,6 +5,7 @@ import dev.common.validator.DateAfterTodayValidator;
 import dev.common.validator.ExistedDiseasesValidator;
 import dev.common.validator.ExistedEmployeeValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class CreateAppointmentRequest {
     @NotNull(message = "Ngày hẹn khám không được bỏ trống")
     private LocalDate appointmentDate;
 
-    @NotNull(message = "Ghi chú không được bỏ trống")
+    @NotEmpty(message = "Ghi chú không được bỏ trống")
     private String description;
 
     @ExistedDiseasesValidator(field = Fields.diseasesIds)

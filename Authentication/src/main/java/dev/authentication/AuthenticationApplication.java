@@ -36,20 +36,22 @@ public class AuthenticationApplication implements CommandLineRunner {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value(KafkaTopicsConstrant.CREATE_EMPLOYEE_TOPIC)
-    private String CREATE_EMPLOYEE_TOPIC;
+    private String createEmployeeTopic;
+
+    private static final String ADMIN_STRING = "admin";
 
     @Override
-    public void run(String... args) throws Exception {
-        if(accountRepository.existsByUserName("admin"))
+    public void run(String... args){
+        if(accountRepository.existsByUserName(ADMIN_STRING))
             return;
 
         Account admin = Account.builder()
                 .id(UUID.randomUUID())
                 .createdAt(new Date(new java.util.Date().getTime()))
-                .userName("admin")
+                .userName(ADMIN_STRING)
                 .email("admin@gmail.com")
                 .numberPhone("0123456789")
-                .passWord(encoder.encode("admin"))
+                .passWord(encoder.encode(ADMIN_STRING))
                 .build();
 
         List<Permission> permissions = List.of(Permission.ADMIN_READ,
@@ -69,6 +71,6 @@ public class AuthenticationApplication implements CommandLineRunner {
                         .dateOfBirth(new Date(new java.util.Date().getTime()))
                         .permissions(permissions)
                         .build();
-        kafkaTemplate.send(CREATE_EMPLOYEE_TOPIC, registerRequest);
+        kafkaTemplate.send(createEmployeeTopic, registerRequest);
     }
 }

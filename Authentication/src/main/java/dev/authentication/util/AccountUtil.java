@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class AccountUtil {
                 .introduce(request.getIntroduce())
                 .permissions(request.getPermissions().stream()
                                     .map(CreatePermissionRequest::getPermission)
-                                    .collect(Collectors.toList()))
+                                    .toList())
                 .build();
     }
 }
