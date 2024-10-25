@@ -17,6 +17,10 @@ import {DashBoard as PatientDashBoard} from '../components/patient/DashBoard'
 import {Login as PatientLogin} from '../components/patient/Login'
 import {PatientLoginLayout} from '../layouts/body/patient/PatientLoginLayout'
 import {Diagnostics} from "../components/patient/Diagnostics";
+import ReceiptPatient from "../components/receipt/ReceiptPatient";
+import ReceiptLayout from "../layouts/body/receipt/ReceiptLayout";
+import {Login as ReceiptLogin} from '../components/receipt/Login'
+import {ReceiptLoginLayout} from "../layouts/body/receipt/ReceiptLoginLayout";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -46,7 +50,11 @@ const publicRoutes = [
 
     {path: RoutesConstant.PATIENT.DASHBOARD, component: PatientDashBoard, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.LOGIN, component: PatientLogin, layout: PatientLoginLayout},
-    {path: RoutesConstant.PATIENT.DIAGNOSTICS, component: Diagnostics, layout: PatientLayout}
+    {path: RoutesConstant.PATIENT.DIAGNOSTICS, component: Diagnostics, layout: PatientLayout},
+
+    //Receipt staff
+    {path: RoutesConstant.RECEIPT.LOGIN, component: ReceiptLogin, layout: ReceiptLoginLayout},
+    {path: RoutesConstant.RECEIPT.RECEIPT_PATIENT, component: ReceiptPatient, layout: ReceiptLayout},
 ]
 
 export {publicRoutes}

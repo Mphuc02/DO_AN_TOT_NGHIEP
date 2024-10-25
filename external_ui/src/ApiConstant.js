@@ -143,6 +143,16 @@ class PATIENT{
         static getUrl = () => {
             return HOST.getHost() + "/api/appointments"
         }
+
+        static getAppointmentsOfToday = () => {
+            return this.getUrl() + "/today"
+        }
+    }
+
+    static PATIENT_API = class {
+        static getUrl = () => {
+            return HOST.getHost() + "/api/patients"
+        }
     }
 }
 

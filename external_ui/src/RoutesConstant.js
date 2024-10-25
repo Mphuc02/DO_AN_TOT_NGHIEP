@@ -25,6 +25,12 @@ class RoutesConstant{
         static LOGIN = '/patient/login'
         static DIAGNOSTICS = '/patient/diagnostics'
     }
+
+    static RECEIPT = class {
+        static LOGIN = '/employee/receipt/login'
+        static RECEIPT_PATIENT = '/employee/receipt'
+        static PAYMENT = "/employee/receipt/payment"
+    }
 }
 
 export default RoutesConstant
