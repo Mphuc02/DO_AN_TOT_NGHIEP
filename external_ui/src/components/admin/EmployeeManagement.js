@@ -1,49 +1,29 @@
 import {useState, useEffect, useRef } from "react";
 import {AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET} from "../../ApiConstant";
-import axios from "axios";
 import {JwtService} from "../../service/JwtService";
 import {Link} from "react-router-dom";
 import WebSocketService from "../../service/WebSocketService";
 import StatusBar from "../common/StatusBar";
 import styles from '../../layouts/body/style.module.css'
 import update from '../../imgs/update.png'
+import {SendApiService} from "../../service/SendApiService";
 
 let page
 function EmployeeManagement(){
     page = 'list'
     const [data, setData] = useState([]);
-    const [error, setError] = useState(null);
-    let countErrorTime = 0;
 
     const getEmployees = async () => {
-        if(countErrorTime === 5)
-            return
+        await SendApiService.getRequest(EMPLOYYEE.getUrl(''),  {}, (response) => {
+            setData(response.data)
+        }, (error) => {
 
-        const token = await JwtService.getAccessToken()
-        axios.get(EMPLOYYEE.getUrl(), {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
         })
-            .then(response => {
-                setData(response.data);
-            })
-            .catch(async error => {
-                setError('Error fetching data');
-                const result = await JwtService.checkTokenExpired(error)
-                if(result){
-                    await getEmployees()
-                }
-            });
     }
 
     useEffect(() => {
         getEmployees()
     }, []);
-
-    if (error) {
-        return <div>{error}</div>;
-    }
 
     return (
         <div>
@@ -68,7 +48,7 @@ function EmployeeManagement(){
                             <td>{user.introduce}</td>
                             <td>{user.date}</td>
                             <td>{user.permissions.reduce((total, cur) => {
-                                    return total  + ROLE.getRole(cur) + ", "
+                                    return total + ROLE.getRole(cur) + ", "
                                 }, '')}</td>
                             <td>
                                 <Link className={styles.updateLink} to={'update/' + user.id}>
@@ -91,26 +71,11 @@ function CreateEmployee() {
 
     //Call api get all ROLES
     const getRoles = async () => {
-        if (countError == 5)
-            return
+        await SendApiService.getRequest(ROLE.getUrl(), {}, (response) => {
+            setRoles(response.data);
+        }, (error) => {
 
-        const token = await JwtService.getAccessToken()
-        axios.get(ROLE.getUrl(), {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            }).then(response => {
-                countError = 0;
-                setRoles(response.data);
-            })
-            .catch(async error => {
-                console.error('API Error:', error);
-                const result = await JwtService.checkTokenExpired(error)
-                if(result){
-                    await getRoles()
-                }
-                countError++
-            });
+        })
     }
 
     useEffect(() => {
@@ -164,9 +129,6 @@ function CreateEmployee() {
         //Refresh statusbar
         setKey(prevKey => prevKey + 1)
 
-        if(countError == 5)
-            return
-
         const employee = {
             introduce: description,
             numberPhone: phone,
@@ -185,50 +147,37 @@ function CreateEmployee() {
         }
         console.log(employee)
 
-        const token = await JwtService.getAccessToken()
-        axios.post(AUTHENTICATION.createEmployee(), employee, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            }
-            }).then(response => {
-                setFirstNameError('')
-                setMiddleNameError('')
-                setLastNameError('')
-                setPhoneError('')
-                setDateError('')
-                setEmailError('')
-                setDescriptionError('')
-                setPermisstionError('')
-                countError = 0;
-            })
-            .catch(async error => {
-                console.error('API Error:', error);
-                const result = await JwtService.checkTokenExpired(error)
-                if(result){
-                    await createEmployee()
-                }
-                if(error.response.status === 400){
-                    const data = error.response.data
-                    console.log(data)
-                    setFirstNameError(data['fullName.firstName'])
-                    setMiddleNameError(data['fullName.middleName'])
-                    setLastNameError(data['fullName.lastName'])
-                    setPhoneError(data.numberPhone)
-                    setDateError(data.dateOfBirth)
-                    setEmailError(data.email)
-                    setDescriptionError(data.introduce)
-                    setPermisstionError(data.permissions)
+        await SendApiService.postRequest(AUTHENTICATION.createEmployee(), employee, {}, (response) => {
+            setFirstNameError('')
+            setMiddleNameError('')
+            setLastNameError('')
+            setPhoneError('')
+            setDateError('')
+            setEmailError('')
+            setDescriptionError('')
+            setPermisstionError('')
+        }, (error) => {
+            if(error.response.status === 400){
+                const data = error.response.data
+                console.log(data)
+                setFirstNameError(data['fullName.firstName'])
+                setMiddleNameError(data['fullName.middleName'])
+                setLastNameError(data['fullName.lastName'])
+                setPhoneError(data.numberPhone)
+                setDateError(data.dateOfBirth)
+                setEmailError(data.email)
+                setDescriptionError(data.introduce)
+                setPermisstionError(data.permissions)
 
-                    if(data.message != null){
-                        const errorMessage = {
-                            message: data.message,
-                            status: 'ERROR'
-                        }
-                        sendMessageToStatusBar(errorMessage, 0)
+                if(data.message != null){
+                    const errorMessage = {
+                        message: data.message,
+                        status: 'ERROR'
                     }
+                    sendMessageToStatusBar(errorMessage, 0)
                 }
-                countError++
-            });
+            }
+        })
     }
 
     const [firstName, setFirstName] = useState('')

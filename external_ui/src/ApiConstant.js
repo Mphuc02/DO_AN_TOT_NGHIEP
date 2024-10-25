@@ -27,9 +27,9 @@ class AUTHENTICATION{
 
 class EMPLOYYEE{
     static getUrl = (permission) => {
-        if(permission !== '')
-            return HOST.getHost() + `/api/v1/employees?permission=${permission}`
-        return HOST.getHost() + '/api/v1/employees'
+        if(permission === null || permission === '')
+            return HOST.getHost() + '/api/v1/employees'
+        return HOST.getHost() + `/api/v1/employees?permission=${permission}`
     }
 
     static id = (id) => {
@@ -57,10 +57,7 @@ class MEDICINE{
 
 class ROLE{
     static role = new Map([
-        ['ADMIN_UPDATE', "Quản trị viên"],
-        ['ADMIN_READ', "Quản trị viên"],
-        ['ADMIN_CREATE', "Quản trị viên"],
-        ['ADMIN_DELETE', "Quản trị viên"],
+        ['ADMIN', "Quản trị viên"],
         ['DOCTOR', "Bác sĩ"],
         ['RECEPTION_STAFF', "Nhân viên tiếp đón"],
         ['MEDICINE_DISPENSER', "Nhân viên kho thuốc"]

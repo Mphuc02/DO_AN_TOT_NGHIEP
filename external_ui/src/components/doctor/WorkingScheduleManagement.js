@@ -1,12 +1,8 @@
 import {useState, useEffect, useRef } from "react";
-import {AUTHENTICATION, EMPLOYYEE, HOSPITAL_INFORMATION, ROLE, WEBSOCKET, WORKING_SCHEDULE} from "../../ApiConstant";
-import axios, {get} from "axios";
+import {EMPLOYYEE, HOSPITAL_INFORMATION, WORKING_SCHEDULE} from "../../ApiConstant";
+import axios from "axios";
 import {JwtService} from "../../service/JwtService";
-import {Link} from "react-router-dom";
-import WebSocketService from "../../service/WebSocketService";
-import StatusBar from "../common/StatusBar";
 import styles from '../../layouts/body/style.module.css'
-import update from '../../imgs/update.png'
 
 
 const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
