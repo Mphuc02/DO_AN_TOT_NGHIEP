@@ -6,7 +6,7 @@ import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateMedicineRequest;
 import dev.medicine.dto.request.create.CreatePatientMedicineInvoiceRequest;
 import dev.medicine.dto.request.update.UpdateMedicineRequest;
-import dev.medicine.dto.response.MedicineResponse;
+import dev.common.dto.response.medicine.MedicineResponse;
 import dev.medicine.service.MedicineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

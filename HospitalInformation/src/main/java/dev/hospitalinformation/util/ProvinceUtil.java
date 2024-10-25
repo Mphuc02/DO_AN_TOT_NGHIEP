@@ -1,7 +1,7 @@
 package dev.hospitalinformation.util;
 
 import dev.hospitalinformation.entity.Province;
-import dev.common.dto.response.ProvinceResponse;
+import dev.common.dto.response.address.ProvinceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

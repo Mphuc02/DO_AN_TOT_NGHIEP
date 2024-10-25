@@ -1,6 +1,6 @@
 package dev.hospitalinformation.util;
 
-import dev.common.dto.response.DiseaseCommonResponse;
+import dev.common.dto.response.insformation.DiseaseResponse;
 import dev.hospitalinformation.dto.request.CreateDiseaseRequest;
 import dev.hospitalinformation.dto.request.UpdateDiseaseRequest;
 import dev.hospitalinformation.entity.Disease;
@@ -17,7 +17,7 @@ import java.util.List;
 public interface DiseaseUtil {
     DiseaseUtil INSTANCE = Mappers.getMapper(DiseaseUtil.class);
     Disease mapCreateRequestToEntity(CreateDiseaseRequest request);
-    DiseaseCommonResponse mapEntityToResponse(Disease disease);
-    List<DiseaseCommonResponse> mapEntitiesToResponses(List<Disease> diseases);
+    DiseaseResponse mapEntityToResponse(Disease disease);
+    List<DiseaseResponse> mapEntitiesToResponses(List<Disease> diseases);
     void mapUpdateRequestToEntity(UpdateDiseaseRequest request, @MappingTarget Disease disease);
 }

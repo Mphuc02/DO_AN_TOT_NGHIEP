@@ -1,7 +1,7 @@
 package dev.workingschedule.service;
 
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.BadRequestException;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
@@ -27,26 +27,30 @@ public class WorkingScheduleService {
     private final WorkingScheduleMapperUtil scheduleMapperUtil;
     private final AuditingUtil auditingUtil;
 
-    public WorkingScheduleCommonResponse getById(UUID id){
+    public WorkingScheduleResponse getById(UUID id){
         WorkingSchedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
-        return scheduleMapperUtil.mapEntityToCommonResponse(schedule);
+        return scheduleMapperUtil.mapEntityToResponse(schedule);
     }
 
-    public List<WorkingScheduleCommonResponse> searchWorkingSchedule(SearchWorkingScheduleRequest request){
-        return scheduleMapperUtil.mapEntitiesToCommonResponses(scheduleRepository.searchWorkingSchedule(request.getStartDate(), request.getEndDate(), request.getRoomId(), request.getEmployeeId()));
+    public List<WorkingScheduleResponse> searchWorkingSchedule(SearchWorkingScheduleRequest request){
+        return scheduleMapperUtil.mapEntitiesToResponses(scheduleRepository.searchWorkingSchedule(request.getStartDate(), request.getEndDate(), request.getRoomId(), request.getEmployeeId()));
     }
 
-    public WorkingScheduleCommonResponse getScheduleTodayOfEmployee(UUID employeeId){
+    public List<WorkingScheduleResponse> getSchedulesByDate(LocalDate date){
+        return scheduleMapperUtil.mapEntitiesToResponses(scheduleRepository.getByDate(date));
+    }
+
+    public WorkingScheduleResponse getScheduleTodayOfEmployee(UUID employeeId){
         LocalDate today = LocalDate.now();
-        return scheduleMapperUtil.mapEntityToCommonResponse(scheduleRepository.findByEmployeeIdAndDate(employeeId, today));
+        return scheduleMapperUtil.mapEntityToResponse(scheduleRepository.findByEmployeeIdAndDate(employeeId, today));
     }
 
-    public List<WorkingScheduleCommonResponse> getSchedulesInMonthOfEmployee(int year, int month){
+    public List<WorkingScheduleResponse> getSchedulesInMonthOfEmployee(int year, int month){
         UUID employeeId = auditingUtil.getUserLogged().getId();
         LocalDate thisMonth = LocalDate.of(year, month, 1);
         LocalDate nextMonth = thisMonth.plusMonths(1);
-        return scheduleMapperUtil.mapEntitiesToCommonResponses(scheduleRepository.findByEmployeeIdAndDateBetweenOrderByDate(employeeId, thisMonth, nextMonth));
+        return scheduleMapperUtil.mapEntitiesToResponses(scheduleRepository.findByEmployeeIdAndDateBetweenOrderByDate(employeeId, thisMonth, nextMonth));
     }
 
     public boolean checkScheduleIsToday(UUID id){
@@ -59,17 +63,17 @@ public class WorkingScheduleService {
     }
 
     @Transactional
-    public WorkingScheduleCommonResponse create(SaveWorkingScheduleRequest request){
+    public WorkingScheduleResponse create(SaveWorkingScheduleRequest request){
         WorkingSchedule entity = scheduleMapperUtil.mapCreateRequestToEntity(request);
         checkScheduleConflict(request);
 
         entity.setEmployeeId(auditingUtil.getUserLogged().getId());
         entity = scheduleRepository.save(entity);
-        return scheduleMapperUtil.mapEntityToCommonResponse(entity);
+        return scheduleMapperUtil.mapEntityToResponse(entity);
     }
 
     @Transactional
-    public WorkingScheduleCommonResponse update(SaveWorkingScheduleRequest request, UUID id){
+    public WorkingScheduleResponse update(SaveWorkingScheduleRequest request, UUID id){
         WorkingSchedule findToUpdate = scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_NOT_FOUND));
 
@@ -81,7 +85,7 @@ public class WorkingScheduleService {
             throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.CAN_NOT_UPDATE_OLD_SCHEDULE);
 
         findToUpdate = scheduleRepository.save(findToUpdate);
-        return scheduleMapperUtil.mapEntityToCommonResponse(findToUpdate);
+        return scheduleMapperUtil.mapEntityToResponse(findToUpdate);
     }
 
     @Transactional
@@ -100,9 +104,8 @@ public class WorkingScheduleService {
 
     private void checkScheduleConflict(SaveWorkingScheduleRequest request){
         List<WorkingSchedule> schedulesInDay = scheduleRepository.getByDate(request.getDate());
+        UUID employeeId = auditingUtil.getUserLogged().getId();
         schedulesInDay.forEach(schedule -> {
-            UUID employeeId = auditingUtil.getUserLogged().getId();
-
             if(Objects.equals(schedule.getRoomId(), request.getRoomId())){
                 throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
             }

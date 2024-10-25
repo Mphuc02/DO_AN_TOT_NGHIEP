@@ -4,7 +4,7 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.NotFoundException;
 import dev.medicine.dto.request.create.CreateSupplierRequest;
 import dev.medicine.dto.request.update.UpdateSupplierRequest;
-import dev.medicine.dto.response.SupplierResponse;
+import dev.common.dto.response.medicine.SupplierResponse;
 import dev.medicine.entity.Supplier;
 import dev.medicine.repository.SupplierRepository;
 import dev.medicine.util.SupplierMapperUtil;

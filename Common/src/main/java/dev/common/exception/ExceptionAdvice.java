@@ -1,6 +1,6 @@
 package dev.common.exception;
 
-import dev.common.dto.response.ErrorResponseDTO;
+import dev.common.dto.response.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,12 +71,12 @@ public class ExceptionAdvice {
         for(ObjectError error: ex.getAllErrors()){
             errors.put(((FieldError) error).getField(), error.getDefaultMessage());
         }
-        return new ResponseEntity<>(new ErrorResponseDTO(errors, "Lỗi khi kiểm tra thông tin"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(errors, "Lỗi khi kiểm tra thông tin"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Object> handle(BaseException ex){
         log.error("Exception with base Exception", ex);
-        return new ResponseEntity<>(ErrorResponseDTO.buildFromBaseException(ex), ex.getHttpStatus());
+        return new ResponseEntity<>(ErrorResponse.buildFromBaseException(ex), ex.getHttpStatus());
     }
 }

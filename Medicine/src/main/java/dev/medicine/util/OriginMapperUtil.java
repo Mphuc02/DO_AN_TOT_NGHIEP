@@ -2,7 +2,7 @@ package dev.medicine.util;
 
 import dev.medicine.dto.request.create.CreateOriginRequest;
 import dev.medicine.dto.request.update.UpdateOriginRequest;
-import dev.medicine.dto.response.OriginResponse;
+import dev.common.dto.response.medicine.OriginResponse;
 import dev.medicine.entity.Origin;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

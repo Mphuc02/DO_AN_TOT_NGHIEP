@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
-import dev.common.dto.response.EmployeeResponse;
+import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.exception.NotFoundException;
+import dev.common.model.Permission;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.repository.EmployeeRepository;
@@ -36,8 +37,8 @@ public class EmployeeService {
     @Value(KafkaTopicsConstrant.CREATED_EMPLOYEE_TOPIC)
     private String CREATED_EMPLOYEE_TOPIC;
 
-    public List<EmployeeResponse> getAll(){
-        return employeeUtil.listEntitiesToResponses(employeeRepository.findAll());
+    public List<EmployeeResponse> getByPermisstion(Permission permission){
+        return employeeUtil.listEntitiesToResponses(employeeRepository.getByPermission(permission));
     }
 
     @KafkaListener(topics = "${kafka.topics.create-employee-topic}", groupId = "${kafka.group-id.account}")

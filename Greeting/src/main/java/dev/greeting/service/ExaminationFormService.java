@@ -4,7 +4,7 @@ import static dev.common.constant.KafkaTopicsConstrant.*;
 
 import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.GREETING_EXCEPTION;
-import dev.common.dto.response.ExaminationFormResponse;
+import dev.common.dto.response.appointment.ExaminationFormResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.model.AuthenticatedUser;
 import dev.greeting.dto.request.CreateForWithPatientInforRequest;

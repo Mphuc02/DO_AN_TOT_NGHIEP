@@ -7,7 +7,7 @@ import dev.common.model.ErrorField;
 import dev.common.util.AuditingUtil;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
-import dev.patient.dto.response.AppointmentResponse;
+import dev.common.dto.response.patient.AppointmentResponse;
 import dev.patient.entity.Appointment;
 import dev.patient.entity.AppointmentDetail;
 import dev.patient.entity.AppointmentImageDetail;

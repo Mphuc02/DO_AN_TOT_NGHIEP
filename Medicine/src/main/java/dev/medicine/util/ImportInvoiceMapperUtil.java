@@ -2,7 +2,7 @@ package dev.medicine.util;
 
 import dev.medicine.dto.request.create.CreateImportInvoiceRequest;
 import dev.medicine.dto.request.update.UpdateImportInvoiceRequest;
-import dev.medicine.dto.response.ImportInvoiceResponse;
+import dev.common.dto.response.medicine.ImportInvoiceResponse;
 import dev.medicine.entity.ImportInvoice;
 import dev.medicine.entity.Supplier;
 import org.mapstruct.*;

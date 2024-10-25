@@ -2,8 +2,7 @@ package dev.hospitalinformation.rest;
 
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant;
-import dev.common.dto.response.ExaminationFormResponse;
-import dev.common.dto.response.ExaminationRoomCommonResponse;
+import dev.common.dto.response.insformation.ExaminationRoomResponse;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.hospitalinformation.dto.request.CreateExaminationRoomRequest;
 import dev.hospitalinformation.dto.request.UpdateExaminationRoomRequest;
@@ -24,7 +23,7 @@ public class ExaminationRoomRest {
     private final ExaminationRoomService examinationRoomService;
 
     @GetMapping()
-    public ResponseEntity<List<ExaminationRoomCommonResponse>> getAll(){
+    public ResponseEntity<List<ExaminationRoomResponse>> getAll(){
         return ResponseEntity.ok(examinationRoomService.getAll());
     }
 
@@ -34,13 +33,13 @@ public class ExaminationRoomRest {
     }
 
     @PostMapping(HOSPITAL_INFORMATION.GET_BY_IDS)
-    public ResponseEntity<List<ExaminationRoomCommonResponse>> findByIds(@RequestBody List<UUID> ids){
+    public ResponseEntity<List<ExaminationRoomResponse>> findByIds(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(examinationRoomService.findByIds(ids));
     }
 
     @PostMapping()
-    public ResponseEntity<ExaminationRoomCommonResponse> save(@Valid @RequestBody CreateExaminationRoomRequest request,
-                                                              BindingResult result){
+    public ResponseEntity<ExaminationRoomResponse> save(@Valid @RequestBody CreateExaminationRoomRequest request,
+                                                        BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), ExceptionConstant.HOSPITAL_INFORMATION_EXCEPTION.FAIL_VALIDATION_ROOM);
         }
@@ -48,9 +47,9 @@ public class ExaminationRoomRest {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExaminationRoomCommonResponse> update(@Valid @RequestBody UpdateExaminationRoomRequest request,
-                                                                BindingResult result,
-                                                                @PathVariable UUID id){
+    public ResponseEntity<ExaminationRoomResponse> update(@Valid @RequestBody UpdateExaminationRoomRequest request,
+                                                          BindingResult result,
+                                                          @PathVariable UUID id){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), ExceptionConstant.HOSPITAL_INFORMATION_EXCEPTION.FAIL_VALIDATION_ROOM);
         }

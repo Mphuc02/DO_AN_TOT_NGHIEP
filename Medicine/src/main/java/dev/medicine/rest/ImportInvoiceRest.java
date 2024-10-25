@@ -4,7 +4,7 @@ import static dev.common.constant.ApiConstant.MEDICINE_URL.*;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateImportInvoiceRequest;
-import dev.medicine.dto.response.ImportInvoiceResponse;
+import dev.common.dto.response.medicine.ImportInvoiceResponse;
 import dev.medicine.service.ImportInvoiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

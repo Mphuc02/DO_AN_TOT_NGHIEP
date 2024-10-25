@@ -5,7 +5,7 @@ import dev.common.constant.AuthorizationConstrant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormRequest;
-import dev.examinationresult.dto.response.MedicineConsultationFormResponse;
+import dev.common.dto.response.examination_result.MedicineConsultationFormResponse;
 import dev.examinationresult.service.MedicineConsultationFormService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.NotFoundException;
 import dev.medicine.dto.request.create.CreateOriginRequest;
 import dev.medicine.dto.request.update.UpdateOriginRequest;
-import dev.medicine.dto.response.OriginResponse;
+import dev.common.dto.response.medicine.OriginResponse;
 import dev.medicine.entity.Origin;
 import dev.medicine.repository.OriginRepository;
 import dev.medicine.util.OriginMapperUtil;

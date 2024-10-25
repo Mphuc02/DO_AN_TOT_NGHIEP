@@ -2,8 +2,8 @@ package dev.patient.util;
 
 import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.dto.request.UpdateFullNameRequest;
-import dev.common.dto.response.FullNameCommonResponse;
-import dev.patient.dto.response.FullNameResponse;
+import dev.common.dto.response.user.FullNameCommonResponse;
+import dev.common.dto.response.patient.FullNameResponse;
 import dev.patient.entity.FullName;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;

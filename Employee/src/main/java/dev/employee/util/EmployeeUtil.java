@@ -1,7 +1,7 @@
 package dev.employee.util;
 
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
-import dev.common.dto.response.EmployeeResponse;
+import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.model.Permission;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;

@@ -1,8 +1,8 @@
 package dev.workingschedule.rest;
 
-import dev.common.constant.ApiConstant.*;
+import static dev.common.constant.ApiConstant.WORKING_SCHEDULE_URL.*;
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.workingschedule.dto.request.SaveWorkingScheduleRequest;
 import dev.workingschedule.dto.request.SearchWorkingScheduleRequest;
@@ -12,38 +12,43 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(WORKING_SCHEDULE_URL.URL)
+@RequestMapping(URL)
 public class WorkingScheduleRest {
     private final WorkingScheduleService workingScheduleService;
 
-    @GetMapping(WORKING_SCHEDULE_URL.GET_SCHEDULE_TODAY_OF_EMPLOYEE)
-    public ResponseEntity<WorkingScheduleCommonResponse> getScheduleTodayOfEmployee(@PathVariable UUID id){
+    @GetMapping(GET_SCHEDULE_TODAY_OF_EMPLOYEE)
+    public ResponseEntity<WorkingScheduleResponse> getScheduleTodayOfEmployee(@PathVariable UUID id){
         return ResponseEntity.ok(workingScheduleService.getScheduleTodayOfEmployee(id));
     }
 
-    @GetMapping(WORKING_SCHEDULE_URL.GET_SCHEDULES_IN_MONTH_OF_EMPLOYEE)
-    public ResponseEntity<List<WorkingScheduleCommonResponse>> getSchedulesInMonthOfEmployee(@RequestParam(value = "year") Integer year,
-                                                                                             @RequestParam(value = "month") Integer month){
+    @GetMapping(GET_SCHEDULES_IN_MONTH_OF_EMPLOYEE)
+    public ResponseEntity<List<WorkingScheduleResponse>> getSchedulesInMonthOfEmployee(@RequestParam(value = "year") Integer year,
+                                                                                       @RequestParam(value = "month") Integer month){
         return ResponseEntity.ok(workingScheduleService.getSchedulesInMonthOfEmployee(year, month));
     }
 
-    @GetMapping(WORKING_SCHEDULE_URL.ID)
-    public ResponseEntity<WorkingScheduleCommonResponse> getById(@PathVariable UUID id){
+    @GetMapping(GET_SCHEDULES_BY_DATE)
+    public ResponseEntity<List<WorkingScheduleResponse>> getScheduleByDate(@RequestParam("date")LocalDate date){
+        return ResponseEntity.ok(workingScheduleService.getSchedulesByDate(date));
+    }
+
+    @GetMapping(ID)
+    public ResponseEntity<WorkingScheduleResponse> getById(@PathVariable UUID id){
         return ResponseEntity.ok(workingScheduleService.getById(id));
     }
 
-    @GetMapping(WORKING_SCHEDULE_URL.CHECK_SCHEDULE_TODAY)
+    @GetMapping(CHECK_SCHEDULE_TODAY)
     public ResponseEntity<Boolean> checkScheduleIsToday(@PathVariable UUID id){
         return ResponseEntity.ok(workingScheduleService.checkScheduleIsToday(id));
     }
 
-    @PostMapping(WORKING_SCHEDULE_URL.SEARCH)
+    @PostMapping(SEARCH)
     public ResponseEntity<Object> search(@RequestBody SearchWorkingScheduleRequest request){
         return ResponseEntity.ok(workingScheduleService.searchWorkingSchedule(request));
     }
@@ -57,7 +62,7 @@ public class WorkingScheduleRest {
         return ResponseEntity.ok(workingScheduleService.create(request));
     }
 
-    @PutMapping(WORKING_SCHEDULE_URL.ID)
+    @PutMapping(ID)
     public ResponseEntity<Object> update(@PathVariable UUID id,
                                          @Valid @RequestBody SaveWorkingScheduleRequest request,
                                          BindingResult result){
@@ -67,7 +72,7 @@ public class WorkingScheduleRest {
         return ResponseEntity.ok(workingScheduleService.update(request, id));
     }
 
-    @DeleteMapping(WORKING_SCHEDULE_URL.ID)
+    @DeleteMapping(ID)
     public ResponseEntity<Object> delete(@PathVariable UUID id){
         workingScheduleService.delete(id);
         return ResponseEntity.ok("");

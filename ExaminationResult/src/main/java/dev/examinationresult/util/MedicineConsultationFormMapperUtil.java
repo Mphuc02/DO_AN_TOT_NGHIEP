@@ -1,7 +1,7 @@
 package dev.examinationresult.util;
 
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormRequest;
-import dev.examinationresult.dto.response.MedicineConsultationFormResponse;
+import dev.common.dto.response.examination_result.MedicineConsultationFormResponse;
 import dev.examinationresult.entity.MedicineConsultationForm;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

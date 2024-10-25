@@ -2,7 +2,7 @@ package dev.greeting.util;
 
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.CreateNewPatientRequest;
-import dev.common.dto.response.ExaminationFormResponse;
+import dev.common.dto.response.appointment.ExaminationFormResponse;
 import dev.greeting.dto.request.CreateForWithPatientInforRequest;
 import dev.greeting.dto.request.CreateFormForFirstTimePatientRequest;
 import dev.greeting.entity.ExaminationForm;

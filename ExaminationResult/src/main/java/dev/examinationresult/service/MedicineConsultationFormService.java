@@ -6,7 +6,7 @@ import dev.common.exception.NotPermissionException;
 import dev.common.util.AuditingUtil;
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormRequest;
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormDetailRequest;
-import dev.examinationresult.dto.response.MedicineConsultationFormResponse;
+import dev.common.dto.response.examination_result.MedicineConsultationFormResponse;
 import dev.examinationresult.entity.MedicineConsultationForm;
 import dev.examinationresult.entity.MedicineConsultationFormDetail;
 import dev.examinationresult.repository.MedicineConsultationFormDetailRepository;

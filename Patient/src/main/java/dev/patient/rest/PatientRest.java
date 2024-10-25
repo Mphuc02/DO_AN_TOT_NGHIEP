@@ -2,7 +2,7 @@ package dev.patient.rest;
 
 import static dev.common.constant.ApiConstant.PATIENT.*;
 import dev.common.constant.AuthorizationConstrant;
-import dev.patient.dto.response.PatientResponse;
+import dev.common.dto.response.patient.PatientResponse;
 import dev.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

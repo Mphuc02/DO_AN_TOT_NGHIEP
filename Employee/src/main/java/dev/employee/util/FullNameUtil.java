@@ -2,7 +2,7 @@ package dev.employee.util;
 
 import dev.common.dto.request.CreateFullNameRequest;
 import dev.common.dto.request.UpdateFullNameRequest;
-import dev.common.dto.response.FullNameCommonResponse;
+import dev.common.dto.response.user.FullNameCommonResponse;
 import dev.employee.entity.Employee;
 import dev.employee.entity.FullName;
 import org.springframework.stereotype.Component;

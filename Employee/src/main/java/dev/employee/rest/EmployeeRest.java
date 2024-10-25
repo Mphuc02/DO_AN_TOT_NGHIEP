@@ -3,6 +3,7 @@ package dev.employee.rest;
 import dev.common.constant.ApiConstant.*;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
+import dev.common.model.Permission;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.UUID;
 
 @RestController
@@ -19,8 +21,8 @@ public class EmployeeRest {
     private final EmployeeService employeeService;
 
     @GetMapping()
-    public ResponseEntity<Object> getAll(){
-        return ResponseEntity.ok(employeeService.getAll());
+    public ResponseEntity<Object> getAll(@RequestParam(value = "permission") Permission permission){
+        return ResponseEntity.ok(employeeService.getByPermisstion(permission));
     }
 
     @PutMapping(EMPLOYEE_URL.ID)

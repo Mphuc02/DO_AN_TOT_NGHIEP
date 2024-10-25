@@ -22,14 +22,4 @@ public interface WorkingScheduleRepository extends JpaRepository<WorkingSchedule
     WorkingSchedule findByEmployeeIdAndDate(UUID employeeId, LocalDate date);
 
     List<WorkingSchedule> getByDate(LocalDate localDate);
-
-    @Query(value = """
-                        Select
-                            exists
-                            (select id from tbl_working_schedule
-                            where (room_id = :roomId and date = :date)
-                            or (date = :date and employee_id = :employeeId)
-                            or (date = :date and room_id = :roomId))
-                """, nativeQuery = true)
-    int checkScheduleConflict(UUID roomId, LocalDate date, UUID employeeId);
 }

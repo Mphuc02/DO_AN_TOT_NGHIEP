@@ -1,7 +1,7 @@
 package dev.patient.util;
 
 import dev.common.dto.request.CreateNewPatientRequest;
-import dev.patient.dto.response.PatientResponse;
+import dev.common.dto.response.patient.PatientResponse;
 import dev.patient.entity.Patient;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

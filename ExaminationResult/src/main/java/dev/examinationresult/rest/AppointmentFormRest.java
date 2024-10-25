@@ -3,7 +3,7 @@ package dev.examinationresult.rest;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.CreateAppointmentFormRequest;
-import dev.examinationresult.dto.response.AppointmentFormResponse;
+import dev.common.dto.response.examination_result.AppointmentFormResponse;
 import dev.examinationresult.service.AppointmentFormService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

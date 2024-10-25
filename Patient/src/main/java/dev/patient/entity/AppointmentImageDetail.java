@@ -16,10 +16,10 @@ public class AppointmentImageDetail {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "image", columnDefinition = "text")
+    @Column(name = "image", columnDefinition = "mediumtext")
     private String image;
 
-    @Column(name = "processed_image", columnDefinition = "text")
+    @Column(name = "processed_image", columnDefinition = "mediumtext")
     private String processedImage;
 
     @ManyToOne(fetch = FetchType.LAZY)

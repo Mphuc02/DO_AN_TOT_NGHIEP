@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateNewPatientRequest;
 import static dev.common.constant.KafkaTopicsConstrant.*;
-import dev.patient.dto.response.PatientResponse;
+import dev.common.dto.response.patient.PatientResponse;
 import dev.patient.entity.Patient;
 import dev.patient.repository.PatientRepository;
 import dev.patient.util.AddressMapperUtil;

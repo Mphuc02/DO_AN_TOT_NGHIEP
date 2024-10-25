@@ -1,6 +1,6 @@
 package dev.hospitalinformation.util;
 
-import dev.common.dto.response.ExaminationRoomCommonResponse;
+import dev.common.dto.response.insformation.ExaminationRoomResponse;
 import dev.hospitalinformation.dto.request.CreateExaminationRoomRequest;
 import dev.hospitalinformation.dto.request.UpdateExaminationRoomRequest;
 import dev.hospitalinformation.entity.ExaminationRoom;
@@ -25,14 +25,14 @@ public class ExaminationRoomUtil {
             room.setName(request.getName());
     }
 
-    public ExaminationRoomCommonResponse mapEntityToResponse(ExaminationRoom room){
-        return ExaminationRoomCommonResponse.builder()
+    public ExaminationRoomResponse mapEntityToResponse(ExaminationRoom room){
+        return ExaminationRoomResponse.builder()
                 .id(room.getId())
                 .name(room.getName())
                 .build();
     }
 
-    public List<ExaminationRoomCommonResponse> mapEntitiesToResponses(List<ExaminationRoom> rooms){
+    public List<ExaminationRoomResponse> mapEntitiesToResponses(List<ExaminationRoom> rooms){
         return rooms.stream().map(this::mapEntityToResponse).collect(Collectors.toList());
     }
 }

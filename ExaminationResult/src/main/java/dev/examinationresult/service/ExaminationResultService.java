@@ -6,12 +6,12 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
-import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
 import dev.common.model.AuthenticatedUser;
 import dev.examinationresult.dto.request.UpdateExaminationResultRequest;
-import dev.examinationresult.dto.response.ExaminationResultResponse;
+import dev.common.dto.response.examination_result.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
 import dev.examinationresult.entity.ExaminationResultDetail;
 import dev.examinationresult.repository.ExaminationResultRepository;
@@ -53,7 +53,7 @@ public class ExaminationResultService {
     public void create(CreateExaminationResultCommonRequest request){
         ExaminationResult result = resultMapperUtil.mapCreateRequestToEntity(request);
         result.setCreatedAt(LocalDateTime.now());
-        WorkingScheduleCommonResponse schedule = workingScheduleClient.getById(request.getWorkingScheduleId());
+        WorkingScheduleResponse schedule = workingScheduleClient.getById(request.getWorkingScheduleId());
         result.setEmployeeId(schedule.getEmployeeId());
         result = examinationResultRepository.save(result);
 

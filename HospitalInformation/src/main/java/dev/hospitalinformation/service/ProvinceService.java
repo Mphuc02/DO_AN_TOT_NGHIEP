@@ -3,7 +3,7 @@ package dev.hospitalinformation.service;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.request.CheckAddressRequest;
 import dev.common.exception.NotFoundException;
-import dev.common.dto.response.ProvinceResponse;
+import dev.common.dto.response.address.ProvinceResponse;
 import dev.hospitalinformation.repository.ProvinceRepository;
 import dev.hospitalinformation.util.ProvinceUtil;
 import lombok.RequiredArgsConstructor;

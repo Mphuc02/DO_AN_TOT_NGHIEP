@@ -1,7 +1,7 @@
 package dev.examinationresult.util;
 
 import dev.examinationresult.dto.request.CreateAppointmentFormRequest;
-import dev.examinationresult.dto.response.AppointmentFormResponse;
+import dev.common.dto.response.examination_result.AppointmentFormResponse;
 import dev.examinationresult.entity.AppointmentForm;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

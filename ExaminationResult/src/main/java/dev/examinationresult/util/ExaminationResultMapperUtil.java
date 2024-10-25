@@ -2,7 +2,7 @@ package dev.examinationresult.util;
 
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
-import dev.examinationresult.dto.response.ExaminationResultResponse;
+import dev.common.dto.response.examination_result.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

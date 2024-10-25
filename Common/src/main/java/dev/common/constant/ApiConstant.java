@@ -56,6 +56,7 @@ public class ApiConstant {
         public static final String CHECK_SCHEDULE_TODAY = "/check-schedule-today/{id}";
         public static final String GET_SCHEDULE_TODAY_OF_EMPLOYEE = "/today/{id}";
         public static final String GET_SCHEDULES_IN_MONTH_OF_EMPLOYEE = "/schedules-in-month";
+        public static final String GET_SCHEDULES_BY_DATE = "/find/by-date";
     }
 
     public static final class EXAMINATION_RESULT_URL{

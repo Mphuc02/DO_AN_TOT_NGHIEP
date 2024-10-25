@@ -2,12 +2,12 @@ package dev.examinationresult.service;
 
 import dev.common.client.WorkingScheduleClient;
 import dev.common.constant.ExceptionConstant.EXAMINATION_RESULT_EXCEPTION;
-import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
 import dev.common.util.AuditingUtil;
 import dev.examinationresult.dto.request.CreateAppointmentFormRequest;
-import dev.examinationresult.dto.response.AppointmentFormResponse;
+import dev.common.dto.response.examination_result.AppointmentFormResponse;
 import dev.examinationresult.entity.AppointmentForm;
 import dev.examinationresult.repository.AppointmentFormRepository;
 import dev.examinationresult.util.AppointmentFormMapperUtil;
@@ -29,7 +29,7 @@ public class AppointmentFormService {
         AppointmentForm form = appointmentMapperUtil.mapCreateRequestToEntity(request);
 
         UUID employeeId = auditingUtil.getUserLogged().getId();
-        WorkingScheduleCommonResponse schedule = workingScheduleClient.getScheduleTodayOfEmployee(employeeId);
+        WorkingScheduleResponse schedule = workingScheduleClient.getScheduleTodayOfEmployee(employeeId);
         if(schedule == null){
             throw new NotPermissionException(EXAMINATION_RESULT_EXCEPTION.NOT_HAVE_SCHEDULE_TODAY);
         }

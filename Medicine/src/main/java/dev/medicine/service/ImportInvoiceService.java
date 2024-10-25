@@ -2,7 +2,7 @@ package dev.medicine.service;
 
 import dev.medicine.dto.request.create.CreateImportInvoiceRequest;
 import dev.medicine.dto.request.save.SaveImportInvoiceDetailRequest;
-import dev.medicine.dto.response.ImportInvoiceResponse;
+import dev.common.dto.response.medicine.ImportInvoiceResponse;
 import dev.medicine.entity.ImportInvoice;
 import dev.medicine.entity.ImportInvoiceDetail;
 import dev.medicine.entity.Medicine;

@@ -5,7 +5,7 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateSupplierRequest;
 import dev.medicine.dto.request.update.UpdateSupplierRequest;
-import dev.medicine.dto.response.SupplierResponse;
+import dev.common.dto.response.medicine.SupplierResponse;
 import dev.medicine.service.SupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

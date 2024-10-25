@@ -1,7 +1,6 @@
 package dev.patient.util;
 
 import dev.common.dto.request.CreatePatientAddressRequest;
-import dev.patient.dto.response.AddressResponse;
 import dev.patient.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

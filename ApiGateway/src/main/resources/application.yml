@@ -33,7 +33,7 @@ spring:
                 - id: hospital_information
                   uri: lb://HOSPITALINFORMATION
                   predicates:
-                    - Path=/api/v1/examination-rooms/**, /api/v1/provinces/**, /api/v1/diseases/**
+                    - Path=/api/v1/examination-rooms/** , /api/v1/provinces/**, /api/v1/diseases/**
                    
                 - id: working_schedule
                   uri: lb://WORKINGSCHEDULE
@@ -48,13 +48,22 @@ spring:
                 - id: patient
                   uri: lb://PATIENT
                   predicates:
-                    - Path=/api/patients/**, /api/appointments/**
+                    - Path=/api/patients/** , /api/appointments/**
                     
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
             globalcors:
                 cors-configurations:
                     '[/api/v1/**]':
+                        allowedOrigins: "*"
+                        allowedHeaders: "*"
+                        allowedMethods:
+                            - GET
+                            - POST
+                            - PUT
+                            - DELETE
+                    
+                    '[/api/**]':
                         allowedOrigins: "*"
                         allowedHeaders: "*"
                         allowedMethods:

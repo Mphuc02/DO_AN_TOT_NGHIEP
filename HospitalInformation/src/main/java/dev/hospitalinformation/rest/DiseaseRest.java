@@ -2,7 +2,7 @@ package dev.hospitalinformation.rest;
 
 import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
 import static dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.response.DiseaseCommonResponse;
+import dev.common.dto.response.insformation.DiseaseResponse;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.hospitalinformation.dto.request.CreateDiseaseRequest;
 import dev.hospitalinformation.dto.request.UpdateDiseaseRequest;
@@ -22,7 +22,7 @@ public class DiseaseRest {
     private final DiseaseService diseaseService;
 
     @GetMapping()
-    public ResponseEntity<List<DiseaseCommonResponse>> getAll(){
+    public ResponseEntity<List<DiseaseResponse>> getAll(){
         return ResponseEntity.ok(diseaseService.getAll());
     }
 
@@ -32,8 +32,8 @@ public class DiseaseRest {
     }
 
     @PostMapping()
-    public ResponseEntity<DiseaseCommonResponse> save(@Valid @RequestBody CreateDiseaseRequest request,
-                                                      BindingResult result){
+    public ResponseEntity<DiseaseResponse> save(@Valid @RequestBody CreateDiseaseRequest request,
+                                                BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(),
                     HOSPITAL_INFORMATION_EXCEPTION.FAIL_VALIDATION_DISEASE);
@@ -42,9 +42,9 @@ public class DiseaseRest {
     }
 
     @PutMapping(ID)
-    public ResponseEntity<DiseaseCommonResponse> update(@Valid @RequestBody UpdateDiseaseRequest request,
-                                                        BindingResult result,
-                                                        @PathVariable UUID id){
+    public ResponseEntity<DiseaseResponse> update(@Valid @RequestBody UpdateDiseaseRequest request,
+                                                  BindingResult result,
+                                                  @PathVariable UUID id){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(),
                     HOSPITAL_INFORMATION_EXCEPTION.FAIL_VALIDATION_DISEASE);

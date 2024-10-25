@@ -1,7 +1,7 @@
 package dev.hospitalinformation.service;
 
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.response.ExaminationRoomCommonResponse;
+import dev.common.dto.response.insformation.ExaminationRoomResponse;
 import dev.common.exception.NotFoundException;
 import dev.hospitalinformation.dto.request.CreateExaminationRoomRequest;
 import dev.hospitalinformation.dto.request.UpdateExaminationRoomRequest;
@@ -20,7 +20,7 @@ public class ExaminationRoomService {
     private final ExaminationRoomRepository examinationRoomRepository;
     private final ExaminationRoomUtil examinationRoomUtil;
 
-    public List<ExaminationRoomCommonResponse> getAll(){
+    public List<ExaminationRoomResponse> getAll(){
         return examinationRoomUtil.mapEntitiesToResponses(examinationRoomRepository.findAll());
     }
 
@@ -28,17 +28,17 @@ public class ExaminationRoomService {
         return examinationRoomRepository.existsById(id);
     }
 
-    public ExaminationRoomCommonResponse save(CreateExaminationRoomRequest request){
+    public ExaminationRoomResponse save(CreateExaminationRoomRequest request){
         ExaminationRoom entity = examinationRoomUtil.mapCreateRequestToEntity(request);
         entity = examinationRoomRepository.save(entity);
         return examinationRoomUtil.mapEntityToResponse(entity);
     }
 
-    public List<ExaminationRoomCommonResponse> findByIds(List<UUID> ids){
+    public List<ExaminationRoomResponse> findByIds(List<UUID> ids){
         return examinationRoomUtil.mapEntitiesToResponses(examinationRoomRepository.findAllById(ids));
     }
 
-    public ExaminationRoomCommonResponse update(UpdateExaminationRoomRequest request, UUID id){
+    public ExaminationRoomResponse update(UpdateExaminationRoomRequest request, UUID id){
         ExaminationRoom findToUpdate = examinationRoomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(HOSPITAL_INFORMATION_EXCEPTION.EXAMINATION_ROOM_NOT_FOUND));
         examinationRoomUtil.mapUpdateRequestToEntity(request, findToUpdate);

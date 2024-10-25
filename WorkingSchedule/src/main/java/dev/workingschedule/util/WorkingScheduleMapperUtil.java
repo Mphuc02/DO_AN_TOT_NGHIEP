@@ -1,6 +1,6 @@
 package dev.workingschedule.util;
 
-import dev.common.dto.response.WorkingScheduleCommonResponse;
+import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.workingschedule.dto.request.SaveWorkingScheduleRequest;
 import dev.workingschedule.entity.WorkingSchedule;
 import org.mapstruct.Mapper;
@@ -17,7 +17,7 @@ public interface WorkingScheduleMapperUtil {
 
     void mapUpdateRequestToEntity(SaveWorkingScheduleRequest request, @MappingTarget WorkingSchedule entity);
 
-    WorkingScheduleCommonResponse mapEntityToCommonResponse(WorkingSchedule entity);
+    WorkingScheduleResponse mapEntityToResponse(WorkingSchedule entity);
 
-    List<WorkingScheduleCommonResponse> mapEntitiesToCommonResponses(List<WorkingSchedule> schedules);
+    List<WorkingScheduleResponse> mapEntitiesToResponses(List<WorkingSchedule> schedules);
 }

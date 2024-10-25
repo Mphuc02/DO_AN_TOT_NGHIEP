@@ -4,7 +4,7 @@ import static dev.common.constant.ApiConstant.EXAMINATION_RESULT_URL.*;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.UpdateExaminationResultRequest;
-import dev.examinationresult.dto.response.ExaminationResultResponse;
+import dev.common.dto.response.examination_result.ExaminationResultResponse;
 import dev.examinationresult.service.ExaminationResultService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

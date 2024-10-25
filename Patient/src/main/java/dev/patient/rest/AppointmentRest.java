@@ -4,7 +4,7 @@ import static dev.common.constant.ApiConstant.PATIENT.*;
 import dev.common.constant.AuthorizationConstrant;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
-import dev.patient.dto.response.AppointmentResponse;
+import dev.common.dto.response.patient.AppointmentResponse;
 import dev.patient.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
