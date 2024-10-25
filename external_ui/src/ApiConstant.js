@@ -27,7 +27,9 @@ class AUTHENTICATION{
 
 class EMPLOYYEE{
     static getUrl = (permission) => {
-        return HOST.getHost() + `/api/v1/employees?permission=${permission}`
+        if(permission !== '')
+            return HOST.getHost() + `/api/v1/employees?permission=${permission}`
+        return HOST.getHost() + '/api/v1/employees'
     }
 
     static id = (id) => {
@@ -119,6 +121,10 @@ class WORKING_SCHEDULE{
 
     static getUrlById = (id) => {
         return this.getUrl() + "/" + id;
+    }
+
+    static getSchedulesByDate = (date) => {
+        return this.getUrl() + `/find/by-date?date=${date}`
     }
 }
 

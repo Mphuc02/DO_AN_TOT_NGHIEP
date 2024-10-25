@@ -10,7 +10,7 @@ import {DashBoard as DoctorDashboard} from "../components/doctor/Dashboard";
 import DoctorLayout from "../layouts/body/doctor/DoctorLayout";
 import {Login as DoctorLogin} from '../components/doctor/Login'
 import {DoctorLoginLayout} from '../layouts/body/doctor/DoctorLoginLayout'
-import {WorkingScheduleManagement, CreateWorkingSchedule} from "../components/doctor/WorkingScheduleManagement";
+import {WorkingScheduleManagement} from "../components/doctor/WorkingScheduleManagement";
 import RoutesConstant from "../RoutesConstant";
 import PatientLayout from "../layouts/body/patient/PatientLayout";
 import {DashBoard as PatientDashBoard} from '../components/patient/DashBoard'
@@ -43,7 +43,6 @@ const publicRoutes = [
 
     //Doctor working schedule management
     {path: RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT, component: WorkingScheduleManagement, layout: DoctorLayout},
-    {path: RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT_CREATE, component: CreateWorkingSchedule, layout: DoctorLayout },
 
     {path: RoutesConstant.PATIENT.DASHBOARD, component: PatientDashBoard, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.LOGIN, component: PatientLogin, layout: PatientLoginLayout},

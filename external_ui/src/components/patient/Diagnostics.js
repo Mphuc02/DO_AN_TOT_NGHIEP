@@ -1,14 +1,15 @@
 import {useState, useEffect, useRef} from "react";
 import styles from '../../layouts/body/style.module.css'
-import {AI, EMPLOYYEE, HOSPITAL_INFORMATION, PATIENT} from "../../ApiConstant";
+import {AI, EMPLOYYEE, HOSPITAL_INFORMATION, PATIENT, WORKING_SCHEDULE} from "../../ApiConstant";
 import {SendApiService} from "../../service/SendApiService";
 import {ConvertBlobUrlToBase64} from '../../service/BlobService'
 
-const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors, imageDetails }) => {
+const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDetails }) => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     const formattedTomorrow = tomorrow.toISOString().split('T')[0];
 
+    const [doctorsInDay, setDoctorsInDay] = useState([])
     const [errorAppointment, setErrorAppointment] = useState({
         doctorId: '',
         appointmentDate: '',
@@ -20,7 +21,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors, imageDetai
         doctorId: '',
         appointmentDate: formattedTomorrow,
         description: '',
-        images: '',
+        images: [],
         diseasesIds: []
     })
 
@@ -31,36 +32,60 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors, imageDetai
         })
     }, [diseases]);
 
+    useEffect(() => {
+        SendApiService.getRequest(WORKING_SCHEDULE.getSchedulesByDate(appointment.appointmentDate), {}, (response) => {
+            setDoctorsInDay(response.data)
+        }, (error) => {
+        })
+    }, [appointment.appointmentDate])
+
     if(!isOpen){
         return null
     }
 
     const handleCreateAppointment = async () => {
         appointment.diseasesIds = [...diseases.keys()];
-        appointment.images = [imageDetails];
 
-        const images = [];
-        for (const detail of imageDetails) {
-            let image = '';
-            try {
-                image = await ConvertBlobUrlToBase64(detail.previewImage);
-            } catch (error) {
-                console.error("Lỗi:", error);
+        console.log(imageDetails)
+        if(imageDetails[0].processedImage !== null && imageDetails[0].processedImage !== ''){
+            const images = [];
+            for (const detail of imageDetails) {
+                let image = '';
+                try {
+                    image = await ConvertBlobUrlToBase64(detail.previewImage);
+                } catch (error) {
+                    console.error("Lỗi:", error);
+                }
+
+                images.push({
+                    image: image,
+                    processedImage: detail.processedImage
+                });
             }
-
-            images.push({
-                image: image,
-                processedImage: detail.processedImage
-            });
+            appointment.images = images;
         }
 
-        appointment.images = images;
         SendApiService.postRequest(
             PATIENT.APPOINTMENT.getUrl(),
             JSON.stringify(appointment),
             { 'Content-type': 'application/json' },
             (response) => {
                 alert("Thêm lịch hẹn thành công");
+                setErrorAppointment({
+                    doctorId: '',
+                    appointmentDate: '',
+                    description: '',
+                    images: '',
+                    diseasesIds: ''
+                })
+
+                setAppointment({
+                    doctorId: '',
+                    appointmentDate: formattedTomorrow,
+                    description: '',
+                    images: [],
+                    diseasesIds: []
+                })
             },
             (error) => {
                 if(error.status === 400){
@@ -93,9 +118,12 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctors, imageDetai
                                 <select
                                     onChange={(e) => setAppointment({...appointment, doctorId: e.target.value})}>
                                     <option value={""}>-----------</option>
-                                    {doctors.map((doctor, index) => (
-                                        <option key={index} value={doctor.id}>
-                                            {doctor.fullName.firstName + " " + doctor.fullName.middleName + " " + doctor.fullName.lastName}
+                                    {doctorsInDay.map((doctor, index) => (
+                                        <option key={index} value={doctor.employeeId}>
+                                            {(() => {
+                                                const fullName = doctorsMap.get(doctor.employeeId)?.fullName || {};
+                                                return `${fullName.firstName || ''} ${fullName.middleName || ''} ${fullName.lastName || ''}`;
+                                            })()}
                                         </option>
                                     ))}
                                 </select>
@@ -154,7 +182,7 @@ const Diagnostics = () => {
         detectedDiseases: []
     }])
 
-    const [doctors, setDoctors] = useState([])
+    const [doctorsMap, setDoctorsMap] = useState(new Map)
     const [isCreateModalOpen, setIsCreateModelOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [diseases, setDiseases] = useState(new Map())
@@ -244,7 +272,11 @@ const Diagnostics = () => {
 
     const getAllDoctor = async () => {
         await SendApiService.getRequest(EMPLOYYEE.getUrl('DOCTOR'), {}, (response) => {
-            setDoctors(response.data)
+            const tempMap = new Map()
+            for(let doctor of response.data){
+                tempMap.set(doctor.id, doctor)
+            }
+            setDoctorsMap(tempMap)
         }, (error) => {
 
         })
@@ -254,6 +286,7 @@ const Diagnostics = () => {
         const newDetectedDiseases = new Map()
         const temp = imageDetails.filter((image, imageIndex) => {
             if(index === imageIndex){
+                URL.revokeObjectURL(image.previewImage)
                 return false;
             }
 
@@ -344,7 +377,7 @@ const Diagnostics = () => {
                 </div>)}
 
             <button onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
-            <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseasesMap} doctors={doctors} imageDetails={imageDetails}/>
+            <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseasesMap} doctorsMap={doctorsMap} imageDetails={imageDetails}/>
         </div>
     )
 }
