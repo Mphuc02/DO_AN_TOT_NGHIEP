@@ -150,7 +150,12 @@ class PATIENT{
         static getUrl = () => {
             return HOST.getHost() + "/api/patients"
         }
+
+        static getByIds = () => {
+            return this.getUrl() + "/get/by-ids"
+        }
     }
+
 }
 
 export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT}

@@ -5,7 +5,7 @@ let countError = 0
 
 class SendApiService{
     static getRequest = async (url, customHeaders, successCallback, errorCallback) => {
-        if(countError === 5){
+        if (countError === 5) {
             countError = 0
             return
         }
@@ -22,11 +22,11 @@ class SendApiService{
         }).catch(async error => {
             console.log(error)
             const result = await JwtService.checkTokenExpired(error)
-            if(result){
+            if (result) {
                 countError++
                 await this.getRequest(url, customHeaders, successCallback, errorCallback)
             }
-            if(error.status === 400){
+            if (error.status === 400) {
                 errorCallback(error)
             }
         })
@@ -53,7 +53,7 @@ class SendApiService{
             const result = await JwtService.checkTokenExpired(error)
             if(result){
                 countError++
-                await this.postRequest(url, data, successCallback, errorCallback)
+                await this.postRequest(url, data, customHeaders, successCallback, errorCallback)
             }
             errorCallback(error)
         })
