@@ -3,7 +3,7 @@ package dev.authentication.rest;
 import dev.authentication.dto.request.*;
 import dev.authentication.service.AccountService;
 import dev.common.constant.ApiConstant.*;
-import dev.common.constant.AuthorizationConstrant;
+import dev.common.constant.AuthorizationConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import jakarta.validation.Valid;
@@ -46,7 +46,7 @@ public class AuthenticationRest {
         return ResponseEntity.ok(accountService.authenticationForEmployee(request));
     }
 
-    @PreAuthorize(AuthorizationConstrant.ADMIN)
+    @PreAuthorize(AuthorizationConstant.ADMIN)
     @PostMapping(AUTHENTICATION_URL.EMPLOYEE)
     public void registerEmployee(@Valid @RequestBody CreateEmployeeRequest request,
                                 BindingResult result){
@@ -65,7 +65,7 @@ public class AuthenticationRest {
         return ResponseEntity.ok(accountService.exchangeToken(request));
     }
 
-    @PreAuthorize(AuthorizationConstrant.USER)
+    @PreAuthorize(AuthorizationConstant.USER)
     @PostMapping(AUTHENTICATION_URL.LOGOUT)
     public ResponseEntity<String> logout(@Valid @RequestBody LogoutRequest request,
                                          BindingResult result){

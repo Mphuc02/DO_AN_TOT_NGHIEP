@@ -1,7 +1,7 @@
 package dev.patient.rest;
 
 import static dev.common.constant.ApiConstant.PATIENT.*;
-import dev.common.constant.AuthorizationConstrant;
+import dev.common.constant.AuthorizationConstant;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentResponse;
@@ -20,24 +20,25 @@ import java.util.UUID;
 public class AppointmentRest {
     private final AppointmentService appointmentService;
 
+    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN)
     @GetMapping(GET_APPOINTMENT_OF_TODAY)
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsOfToday(){
         return ResponseEntity.ok(appointmentService.getAppointmentsOfToday());
     }
 
-    @PreAuthorize(AuthorizationConstrant.USER)
+    @PreAuthorize(AuthorizationConstant.USER)
     @PostMapping()
     public ResponseEntity<AppointmentResponse> create(@Validated @RequestBody CreateAppointmentRequest request){
         return ResponseEntity.ok(appointmentService.create(request));
     }
 
-    @PreAuthorize(AuthorizationConstrant.USER)
+    @PreAuthorize(AuthorizationConstant.USER)
     @PutMapping(ID)
     public ResponseEntity<AppointmentResponse> update(@PathVariable UUID id, @Validated @RequestBody UpdateAppointmentRequest request){
         return ResponseEntity.ok(appointmentService.update(id, request));
     }
 
-    @PreAuthorize(AuthorizationConstrant.USER)
+    @PreAuthorize(AuthorizationConstant.USER)
     @DeleteMapping(ID)
     public ResponseEntity<Void> delete(@PathVariable UUID id){
         appointmentService.delete(id);

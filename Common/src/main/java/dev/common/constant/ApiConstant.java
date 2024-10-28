@@ -79,6 +79,7 @@ public class ApiConstant {
     public static final class PATIENT{
         public static final String SERVICE_NAME = "PATIENT";
         public static final String PATIENT_URL = "/api/patients";
+        public static final String GET_BY_IDS = "/get/by-ids";
         public static final String ID = "/{id}";
         public static final String CHECK_EXIST_PATIENT = "/check/{id}";
         public static final String APPOINTMENT_URL = "/api/appointments";

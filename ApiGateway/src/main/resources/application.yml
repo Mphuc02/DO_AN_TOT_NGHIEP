@@ -50,6 +50,11 @@ spring:
                   predicates:
                     - Path=/api/patients/** , /api/appointments/**
                     
+                - id: greeting
+                  uri: lb://GREETING
+                  predicates:
+                    - Path=/api/v1/greeting/**
+                    
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
             globalcors:

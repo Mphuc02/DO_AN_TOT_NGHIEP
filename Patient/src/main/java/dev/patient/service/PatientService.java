@@ -37,6 +37,10 @@ public class PatientService {
         return patientUtil.mapEntitiesToResponses(patientRepository.findAll());
     }
 
+    public List<PatientResponse> getByIds(List<UUID> ids){
+        return patientUtil.mapEntitiesToResponses(patientRepository.findAllById(ids));
+    }
+
     public boolean checkPatientExist(UUID id){
         return patientRepository.existsById(id);
     }

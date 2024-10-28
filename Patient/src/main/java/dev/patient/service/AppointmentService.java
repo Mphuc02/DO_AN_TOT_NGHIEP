@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -41,13 +42,16 @@ public class AppointmentService {
         }
 
         Appointment appointment = appointmentMapperUtil.mapCreateRequestToEntity(request);
-        if(appointment.getDetails() != null){
-            for (AppointmentDetail detail : appointment.getDetails()) {
-                detail.setAppointment(appointment);
+        if(request.getDiseasesIds() != null){
+            List<AppointmentDetail> details = new ArrayList<>();
+            for(UUID id: request.getDiseasesIds()){
+                AppointmentDetail detail = AppointmentDetail.builder().appointment(appointment).diseaseId(id).build();
+                details.add(detail);
             }
+            appointment.setDetails(details);
         }
 
-        if(appointment.getImages() != null){
+        if(request.getImages() != null){
             for (AppointmentImageDetail image : appointment.getImages()) {
                 image.setAppointment(appointment);
             }

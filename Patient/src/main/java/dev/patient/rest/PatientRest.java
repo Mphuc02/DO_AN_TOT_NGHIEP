@@ -1,16 +1,13 @@
 package dev.patient.rest;
 
 import static dev.common.constant.ApiConstant.PATIENT.*;
-import dev.common.constant.AuthorizationConstrant;
+import dev.common.constant.AuthorizationConstant;
 import dev.common.dto.response.patient.PatientResponse;
 import dev.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,10 +17,16 @@ import java.util.UUID;
 public class PatientRest {
     private final PatientService patientService;
 
-    @PreAuthorize(AuthorizationConstrant.DOCTOR)
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
     @GetMapping
     public ResponseEntity<List<PatientResponse>> getAll(){
         return ResponseEntity.ok(patientService.getAll());
+    }
+
+    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN)
+    @PostMapping(GET_BY_IDS)
+    public ResponseEntity<List<PatientResponse>> getByIds(@RequestBody List<UUID> ids){
+        return ResponseEntity.ok(patientService.getByIds(ids));
     }
 
     @GetMapping(CHECK_EXIST_PATIENT)

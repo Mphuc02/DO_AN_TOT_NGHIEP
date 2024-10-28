@@ -54,10 +54,7 @@ public class AuthenticationApplication implements CommandLineRunner {
                 .passWord(encoder.encode(ADMIN_STRING))
                 .build();
 
-        List<Permission> permissions = List.of(Permission.ADMIN_READ,
-                                                Permission.ADMIN_UPDATE,
-                                                Permission.ADMIN_CREATE,
-                                                Permission.ADMIN_DELETE);
+        List<Permission> permissions = List.of(Permission.ADMIN);
 
         CreateFullNameRequest request = new CreateFullNameRequest("Phuc",
                                                                 "Minh",

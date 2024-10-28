@@ -2,7 +2,7 @@ package dev.payment.rest;
 
 import static dev.common.constant.ApiConstant.PAYMENT.*;
 
-import dev.common.constant.AuthorizationConstrant;
+import dev.common.constant.AuthorizationConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.payment.dto.request.CreateExaminationCostRequest;
@@ -28,7 +28,7 @@ public class ExaminationCostRest {
         return ResponseEntity.ok(costService.getAll());
     }
 
-    @PreAuthorize(AuthorizationConstrant.ADMIN)
+    @PreAuthorize(AuthorizationConstant.ADMIN)
     @PostMapping()
     public ResponseEntity<ExaminationCostResponse> create(@Valid @RequestBody CreateExaminationCostRequest request,
                                                           BindingResult result){

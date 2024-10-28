@@ -1,7 +1,7 @@
 package dev.examinationresult.rest;
 
 import static dev.common.constant.ApiConstant.EXAMINATION_RESULT_URL.*;
-import dev.common.constant.AuthorizationConstrant;
+import dev.common.constant.AuthorizationConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormRequest;
@@ -27,7 +27,7 @@ public class MedicineConsultationRest {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @PreAuthorize(AuthorizationConstrant.DOCTOR)
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
     @PostMapping()
     public ResponseEntity<MedicineConsultationFormResponse> create(@Valid @RequestBody SaveMedicineConsultationFormRequest request,
                                                                    BindingResult result){
@@ -37,7 +37,7 @@ public class MedicineConsultationRest {
         return ResponseEntity.ok(service.create(request));
     }
 
-    @PreAuthorize(AuthorizationConstrant.DOCTOR)
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
     @PutMapping(ID)
     public ResponseEntity<MedicineConsultationFormResponse> update(@Valid @RequestBody SaveMedicineConsultationFormRequest request,
                                                                    BindingResult result,
