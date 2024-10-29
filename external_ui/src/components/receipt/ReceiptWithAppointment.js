@@ -5,10 +5,13 @@ import styles from '../../layouts/body/style.module.css'
 
 const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
-    console.log(appointment)
 
     if(!isOpen){
         return null
+    }
+
+    const handleCreateExaminationForm = () => {
+        SendApiService.postRequest(EXA)
     }
 
     return (
@@ -69,19 +72,22 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                         </tr>
 
                         <tr>
+                            <td>Hình ảnh</td>
+                            <td>Hình ảnh được chuẩn đoán</td>
                             <td></td>
-                            <td>1</td>
-                            <td>2</td>
                         </tr>
 
-                        <tr>
-                            <td></td>
-                            <td>1</td>
-                            <td>2</td>
-                        </tr>
+                        {appointment.images.map((image, index) => {
+                            return (
+                                <tr>
+                                    <td><img className={styles.previewImage} src={image.image} alt={image.image}/></td>
+                                    <td><img className={styles.previewImage} src={image.processedImage} alt={image.image}/> </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
 
-                    <button>Tạo phiếu khám bệnh</button>
+                    <button onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>
                 </table>
             </div>
         </div>

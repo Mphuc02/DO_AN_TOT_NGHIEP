@@ -146,8 +146,10 @@ button:hover {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    width: 400px;
+    width: 70%;
+    height: 80%;
     position: relative;
+    overflow: scroll;
 }
 
 /* Nút đóng (dấu X) */
