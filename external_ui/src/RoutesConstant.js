@@ -30,6 +30,7 @@ class RoutesConstant{
         static LOGIN = '/employee/receipt/login'
         static RECEIPT_PATIENT = '/employee/receipt'
         static PAYMENT = "/employee/receipt/payment"
+        static PRINT_NUMBER_TICKET = "/employee/receipt/print-number-ticket"
     }
 }
 

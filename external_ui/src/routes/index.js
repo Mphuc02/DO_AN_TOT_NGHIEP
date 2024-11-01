@@ -21,6 +21,7 @@ import ReceiptPatient from "../components/receipt/ReceiptPatient";
 import ReceiptLayout from "../layouts/body/receipt/ReceiptLayout";
 import {Login as ReceiptLogin} from '../components/receipt/Login'
 import {ReceiptLoginLayout} from "../layouts/body/receipt/ReceiptLoginLayout";
+import PrintTicket from "../components/receipt/PrintTicket";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -55,6 +56,7 @@ const publicRoutes = [
     //Receipt staff
     {path: RoutesConstant.RECEIPT.LOGIN, component: ReceiptLogin, layout: ReceiptLoginLayout},
     {path: RoutesConstant.RECEIPT.RECEIPT_PATIENT, component: ReceiptPatient, layout: ReceiptLayout},
+    {path: RoutesConstant.RECEIPT.PRINT_NUMBER_TICKET, component: PrintTicket, layout: ReceiptLayout},
 ]
 
 export {publicRoutes}

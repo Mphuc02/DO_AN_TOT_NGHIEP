@@ -159,7 +159,11 @@ class PATIENT{
 }
 
 
-class ExaminationResult{
-
+class Greeting{
+    static ExaminationForm = class{
+        static getGetUrl = () => {
+            return HOST.getHost() + "/api/v1/greeting"
+        }
+    }
 }
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT}
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting}

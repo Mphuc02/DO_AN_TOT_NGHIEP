@@ -7,6 +7,7 @@ function SideBar(){
     return(
         <ul className={styles.SideBar}>
             <li><Link to={RoutesConstant.RECEIPT.RECEIPT_PATIENT}>Tiếp đón bệnh nhân</Link></li>
+            <li><Link to={RoutesConstant.RECEIPT.PRINT_NUMBER_TICKET}>In số thứ tự</Link></li>
             <li><Link to={RoutesConstant.RECEIPT.PAYMENT}>Thanh toán</Link></li>
         </ul>
     )
