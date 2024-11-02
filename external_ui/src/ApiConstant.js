@@ -164,6 +164,14 @@ class Greeting{
         static getGetUrl = () => {
             return HOST.getHost() + "/api/v1/greeting"
         }
+
+        static withAppointment = () => {
+            return this.getGetUrl() + "/with-appointment"
+        }
+
+        static findReceivedPatientsToday = () => {
+            return this.getGetUrl() + "/find/received-patients-today";
+        }
     }
 }
 export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting}

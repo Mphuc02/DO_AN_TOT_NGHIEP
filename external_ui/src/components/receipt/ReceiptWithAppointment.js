@@ -3,13 +3,17 @@ import {SendApiService} from "../../service/SendApiService";
 import {Greeting, HOSPITAL_INFORMATION, PATIENT} from "../../ApiConstant";
 import styles from '../../layouts/body/style.module.css'
 
-const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap }) => {
+const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
 
-    console.log('appointment', appointment)
-
     useEffect(() => {
-        setCreateExaminationForm({...appointment, symptom: appointment.description})
+        const temp = {...appointment, symptom: appointment.description}
+        for(const [key, value] of workingSchedule){
+            if(value.employeeId === appointment.doctorId){
+                temp.workingScheduleId = value.id
+            }
+        }
+        setCreateExaminationForm(temp)
     },[appointment])
 
     if(!isOpen){
@@ -18,9 +22,10 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
 
     const handleCreateExaminationForm = () => {
         //Todo: Sau bỏ fix cứng số thứ tự
+        createExaminationForm.appointmentId = appointment.id
         createExaminationForm.numberCall = 1
-        SendApiService.postRequest(Greeting.ExaminationForm.getGetUrl(), createExaminationForm, {'Content-type': 'application/json'}, (response) => {
-
+        SendApiService.postRequest(Greeting.ExaminationForm.withAppointment(), createExaminationForm, {'Content-type': 'application/json'}, (response) => {
+            appointmentsMap.delete(appointment.id)
         }, (error) => {
 
         })
@@ -51,18 +56,15 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                         <td>Chọn phòng khám:</td>
                         <td>
                             <select
-                                value={createExaminationForm.workingSchedule || ""}
+                                value={createExaminationForm.workingScheduleId || ""}
                                 onChange={(e) => setCreateExaminationForm({
                                     ...createExaminationForm,
-                                    workingSchedule: e.target.value
+                                    workingScheduleId: e.target.value
                                 })}>
                                 <option value={""}>-----------</option>
                                 {[...workingSchedule].map(([key, value]) => (
                                     <option key={key} value={value.id}>
                                         {(() => {
-                                            if(value && value.employeeId === appointment.doctorId){
-                                                createExaminationForm.workingSchedule = value.id
-                                            }
                                             return roomsMap.get(value.roomId).name
                                         })()}
                                     </option>
@@ -119,7 +121,7 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
 }
 
 const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
-    const [appointments, setAppointments] = useState([])
+    const [appointmentsMap, setAppointmentsMap] = useState(new Map())
     const [patientsMap, setPatientsMap] = useState(new Map())
     const [isCreateModalOpen, setIsCreateModelOpen] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState({})
@@ -139,13 +141,13 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
 
     const getAppointmentByToday = async () => {
         SendApiService.getRequest(PATIENT.APPOINTMENT.getAppointmentsOfToday(), {}, (response) => {
-            setAppointments(response.data)
+            const tempAppointment = new Map()
             const tempPatientSet = new Set()
             for (let appointment of response.data) {
                 tempPatientSet.add(appointment.patientId)
+                tempAppointment.set(appointment.id, appointment)
             }
-            console.log(tempPatientSet)
-            setAppointments(response.data)
+            setAppointmentsMap(tempAppointment)
             getPatientsByIds(tempPatientSet)
         }, (error) => {
 
@@ -193,7 +195,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {appointments.map((appointment, index) => (
+                {[...appointmentsMap].map(([key, appointment]) => (
                     <tr key={appointment.id} className={styles.cursorPointer}
                         onClick={() => handleCreateExaminationForm(appointment)}>
                         <td></td>
@@ -212,7 +214,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
                 </tbody>
             </table>
 
-            <CreateExaminationFormModal isOpen={isCreateModalOpen} onClose={closeCreateModal} appointment={selectedAppointment} roomsMap={workingRoomsMap} workingSchedule={workingScheduleMap} diseasesMap={diseasesMap} />
+            <CreateExaminationFormModal  isOpen={isCreateModalOpen} onClose={closeCreateModal} appointment={selectedAppointment} roomsMap={workingRoomsMap} workingSchedule={workingScheduleMap} diseasesMap={diseasesMap} appointmentsMap={appointmentsMap} />
         </div>
     )
 }
