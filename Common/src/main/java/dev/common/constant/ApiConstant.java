@@ -46,6 +46,8 @@ public class ApiConstant {
         public static final String TICKET_URL = "/api/v1/tickets";
         public static final String PRINT = "/print";
         public static final String FIRST_TIME = "/first-time";
+        public static final String WITH_APPOINTMENT = "/with-appointment";
+        public static final String FIND_RECEIVED_PATIENTS_TODAY = "find/received-patients-today";
     }
 
     public static final class WORKING_SCHEDULE_URL{
@@ -63,6 +65,8 @@ public class ApiConstant {
         public static final String RESULT_URL = "/api/examination-results";
         public static final String ID = "/{id}";
         public static final String CONSULTATION_FORM = "/api/consultation-form";
+
+        public static final String APPOINTMENT_FORM_NEXT_EXAMINATION = "/api/v1/appointment-form-next-examination";
     }
 
     public static final class MEDICINE_URL{
@@ -83,7 +87,8 @@ public class ApiConstant {
         public static final String ID = "/{id}";
         public static final String CHECK_EXIST_PATIENT = "/check/{id}";
         public static final String APPOINTMENT_URL = "/api/appointments";
-        public static final String GET_APPOINTMENT_OF_TODAY = "/today";
+        public static final String GET_APPOINTMENTS_OF_TODAY = "/today";
+        public static final String GET_EXAMINED_APPOINTMENTS_OF_TODAY = "/today/examined";
     }
 
     public static final class PAYMENT{

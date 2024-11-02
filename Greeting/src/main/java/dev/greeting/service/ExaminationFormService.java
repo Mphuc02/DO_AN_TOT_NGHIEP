@@ -1,14 +1,14 @@
 package dev.greeting.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
-
 import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.GREETING_EXCEPTION;
-import dev.common.dto.response.appointment.ExaminationFormResponse;
+import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.model.AuthenticatedUser;
 import dev.greeting.dto.request.CreateForWithPatientInforRequest;
 import dev.greeting.dto.request.CreateFormForFirstTimePatientRequest;
+import dev.greeting.dto.request.CreateFormWithAppointmentRequest;
 import dev.greeting.entity.ExaminationForm;
 import dev.greeting.repository.ExaminationFormRepository;
 import dev.greeting.util.ExaminationFormMapperUtil;
@@ -21,7 +21,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -41,7 +43,7 @@ public class ExaminationFormService {
 
     @Transactional
     public ExaminationFormResponse saveFirstTimePatient(CreateFormForFirstTimePatientRequest request){
-        ExaminationForm entity = examinationFormMapperUtil.createRequestToEntity(request);
+        ExaminationForm entity = examinationFormMapperUtil.createRequestWithFirstTimePatientToEntity(request);
         request.getPatient().setExaminationFormID(entity.getId());
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         entity.setEmployeeId(employee.getId());
@@ -49,17 +51,32 @@ public class ExaminationFormService {
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_PATIENT_TOPIC, request.getPatient());
-        //Todo: Thêm bắn thông tin tới websocket
         return examinationFormMapperUtil.entityToResponse(entity);
+    }
+
+    public List<ExaminationFormResponse> findReceivedPatientsToday(){
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 0, 0);
+        LocalDateTime end = start.plusDays(1);
+        return examinationFormMapperUtil.entitiesToResponses(examinationFormRepository.findByCreatedAtIsBetweenOrderByCreatedAtDesc(start, end));
     }
 
     @Transactional
     public ExaminationFormResponse saveWithPatientInformation(CreateForWithPatientInforRequest request){
-        ExaminationForm entity = examinationFormMapperUtil.createRequestToEntity(request);
+        ExaminationForm entity = examinationFormMapperUtil.createRequestWithPatientInformationToEntity(request);
+        entity.setCreatedAt(LocalDateTime.now());
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
-        //Todo: Thêm bắn thông tin tới websocket
+        return examinationFormMapperUtil.entityToResponse(entity);
+    }
+
+    public ExaminationFormResponse saveWithAppointment(CreateFormWithAppointmentRequest request){
+        ExaminationForm entity = examinationFormMapperUtil.createRequestWithAppointmentToEntity(request);
+        entity.setCreatedAt(LocalDateTime.now());
+        entity = examinationFormRepository.save(entity);
+
+        kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
         return examinationFormMapperUtil.entityToResponse(entity);
     }
 

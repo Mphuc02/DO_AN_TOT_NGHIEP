@@ -21,6 +21,7 @@ public class ExaminationForm {
     private UUID employeeId;
     private Integer numberCall;
 
+    private UUID appointmentId;
     private UUID workingScheduleId;
 
     private LocalDateTime createdAt;

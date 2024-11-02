@@ -18,6 +18,7 @@ public class AppointmentResponse {
     private UUID patientId;
     private UUID doctorId;
     private String description;
+    private Boolean isExamined;
     private List<AppointmentDetailResponse> details;
     private List<AppointmentImageDetailResponse> images;
     private LocalDate appointmentDate;

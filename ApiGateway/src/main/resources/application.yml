@@ -54,6 +54,11 @@ spring:
                   uri: lb://GREETING
                   predicates:
                     - Path=/api/v1/greeting/**
+                
+                - id: examination_result
+                  uri: lb://EXAMINATIONRESULT
+                  predicates:
+                    - Path=/api/v1/appointment-form-next-examination/** , /api/examination-results/** , /api/consultation-form/**
                     
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE

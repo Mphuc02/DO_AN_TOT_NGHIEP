@@ -6,13 +6,15 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 public class CreateForWithPatientInforRequest {
     @NotNull(message = "Bệnh nhân không được bỏ trống")
     @ExistedPatientValidator
@@ -27,5 +29,5 @@ public class CreateForWithPatientInforRequest {
 
     @NotNull(message = "Phòng khám không được bỏ trống")
     @TodayWorkingScheduleValidator
-    private UUID workingSchedule;
+    private UUID workingScheduleId;
 }

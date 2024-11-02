@@ -30,7 +30,7 @@ public class InvoiceService {
        return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
     }
 
-    @KafkaListener(topics = KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)
+    @KafkaListener(topics = KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)
     public void handleCreateInvoice(CreateInvoiceCommonRequest request){
         log.info(String.format("Received createInvoiceRequest from kafka: %s", gson.toJson(request)));
         Invoice invoice = invoiceMapperUtil.mapCreateRequestToEntity(request);

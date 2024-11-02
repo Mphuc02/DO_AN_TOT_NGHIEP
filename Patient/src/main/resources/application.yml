@@ -55,5 +55,7 @@ kafka:
         created-patient-account-from-greeting-success: created_patient_from_greeting_success
         created-patient-information-topic: created_patient_information
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+        appointment-had-been-examined: appointment_had_been_examined
+        
     group-id:
         patient: patient

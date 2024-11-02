@@ -54,6 +54,15 @@ services:
             CONFLUENT_METRICS_TOPIC_REPLICATION: 1
             PORT: 9021
     
+    authentication-database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3307:3306'
+        volumes:
+            - authentication_db:/var/lib/mysql
+    
     redis:
         image: docker.io/bitnami/redis:7.4
         container_name: cache_server
@@ -65,7 +74,34 @@ services:
             - '6379:6379'
         volumes:
             - 'redis_data:/bitnami/redis/data'
-
+    
+    discovery-server:
+        image: discovery-server
+        container_name: discovery-server
+        ports:
+            - '8761:8761'
+    
+    api-gateway:
+        image: api-gateway
+        container_name: api-gateway
+        ports:
+            - '9000:9000'
+        environment:
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+    
+    authentication-service:
+        image: authentication:0.0.1
+        container_name: authentication-service
+        ports:
+            - '8080:8080'
+        environment:
+            spring.datasource.url: jdbc:mysql://authentication-database:3307/authentication
+            spring.kafka.bootstrap-servers: broker:9092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+    
 volumes:
     redis_data:
+        driver: local
+    authentication_db:
         driver: local

@@ -1,5 +1,6 @@
 package dev.examinationresult.rest;
 
+import static dev.common.constant.ApiConstant.EXAMINATION_RESULT_URL.*;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.CreateAppointmentFormRequest;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping(APPOINTMENT_FORM_NEXT_EXAMINATION)
 @RequiredArgsConstructor
-public class AppointmentFormRest {
+public class AppointmentFormNextExaminationRest {
     private final AppointmentFormService appointmentFormService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<AppointmentFormResponse> create(@Valid @RequestBody CreateAppointmentFormRequest request,
                                                           BindingResult result){
         if(result.hasErrors()){

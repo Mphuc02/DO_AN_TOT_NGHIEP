@@ -19,6 +19,7 @@ import dev.examinationresult.util.ExaminationResultDetailMapperUtil;
 import dev.examinationresult.util.ExaminationResultMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExaminationResultService {
@@ -38,8 +40,11 @@ public class ExaminationResultService {
     private final WorkingScheduleClient workingScheduleClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Value(KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS)
+    @Value(KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC)
     private String CREATED_EXAMINATION_RESULT_SUCCESS;
+
+    @Value(KafkaTopicsConstrant.APPOINTMENT_HAD_BEEN_EXAMINED_TOPIC)
+    private String APPOINTMENT_HAD_BEEN_EXAMINED;
 
     public ExaminationResultResponse getById(UUID id){
         ExaminationResult findById = examinationResultRepository.findById(id)
@@ -51,6 +56,7 @@ public class ExaminationResultService {
     @KafkaListener(topics = CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC,
                     groupId = EXAMINATION_RESULT_GROUP)
     public void create(CreateExaminationResultCommonRequest request){
+        log.info("receive request create examination result from kafka");
         ExaminationResult result = resultMapperUtil.mapCreateRequestToEntity(request);
         result.setCreatedAt(LocalDateTime.now());
         WorkingScheduleResponse schedule = workingScheduleClient.getById(request.getWorkingScheduleId());
@@ -59,6 +65,11 @@ public class ExaminationResultService {
 
         CreateInvoiceCommonRequest createInvoiceRequest = resultMapperUtil.mapEntityToCreateInvoiceRequest(result);
         kafkaTemplate.send(CREATED_EXAMINATION_RESULT_SUCCESS, createInvoiceRequest);
+
+        //If has appointment, update isExamined of appointment
+        if(request.getAppointmentId() != null){
+            kafkaTemplate.send(APPOINTMENT_HAD_BEEN_EXAMINED, request.getAppointmentId());
+        }
     }
 
     @Transactional

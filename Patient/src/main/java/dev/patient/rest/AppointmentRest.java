@@ -21,7 +21,7 @@ public class AppointmentRest {
     private final AppointmentService appointmentService;
 
     @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN)
-    @GetMapping(GET_APPOINTMENT_OF_TODAY)
+    @GetMapping(GET_APPOINTMENTS_OF_TODAY)
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsOfToday(){
         return ResponseEntity.ok(appointmentService.getAppointmentsOfToday());
     }

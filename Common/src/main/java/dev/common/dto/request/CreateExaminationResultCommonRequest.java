@@ -14,4 +14,5 @@ public class CreateExaminationResultCommonRequest {
     private UUID patientId;
     private UUID workingScheduleId;
     private Integer orderNumber;
+    private UUID appointmentId;
 }

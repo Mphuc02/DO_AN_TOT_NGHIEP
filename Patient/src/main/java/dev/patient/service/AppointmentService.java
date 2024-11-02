@@ -1,6 +1,7 @@
 package dev.patient.service;
 
 import dev.common.constant.ExceptionConstant.*;
+import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.model.ErrorField;
@@ -14,6 +15,8 @@ import dev.patient.entity.AppointmentImageDetail;
 import dev.patient.repository.AppointmentRepository;
 import dev.patient.util.AppointmentMapperUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -31,7 +35,7 @@ public class AppointmentService {
     private final AuditingUtil auditingUtil;
 
     public List<AppointmentResponse> getAppointmentsOfToday(){
-        return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDate(LocalDate.now()));
+        return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateAndIsExamined(LocalDate.now(), false));
     }
 
     @Transactional
@@ -93,5 +97,14 @@ public class AppointmentService {
             throw BaseException.buildNotFound().message(PATIENT_EXCEPTION.CAN_NOT_UPDATE_PASSED_APPOINTMENT).build();
         }
         return appointment;
+    }
+
+    @Transactional
+    @KafkaListener(topics = APPOINTMENT_HAD_BEEN_EXAMINED_TOPIC, groupId = PATIENT_GROUP)
+    public void updateIsExaminedAppointment(UUID appointmentId){
+        log.info("Received request update isExamined for Appointment from kafka with id: " + appointmentId);
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> BaseException.buildNotFound().message(PATIENT_EXCEPTION.APPOINTMENT_NOT_FOUND).build());
+        appointment.setIsExamined(true);
+        appointmentRepository.save(appointment);
     }
 }

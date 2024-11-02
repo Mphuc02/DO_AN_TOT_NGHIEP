@@ -1,4 +1,4 @@
-package dev.common.dto.response.appointment;
+package dev.common.dto.response.examination_form;
 
 import lombok.*;
 import java.time.LocalDateTime;

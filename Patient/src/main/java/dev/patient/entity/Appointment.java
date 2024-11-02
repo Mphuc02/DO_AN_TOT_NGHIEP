@@ -24,6 +24,8 @@ public class Appointment {
     private UUID doctorId;
     private String description;
 
+    private Boolean isExamined = false;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment", fetch = FetchType.LAZY)
     private List<AppointmentDetail> details;
 
