@@ -1,7 +1,9 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {SendApiService} from "../../service/SendApiService";
-import {Greeting, HOSPITAL_INFORMATION, PATIENT} from "../../ApiConstant";
+import {Greeting, HOSPITAL_INFORMATION, PATIENT, WEBSOCKET} from "../../ApiConstant";
 import styles from '../../layouts/body/style.module.css'
+import WebSocketService from "../../service/WebSocketService";
+import {JwtService} from "../../service/JwtService";
 
 const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
@@ -164,9 +166,39 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
         })
     }
 
+    //Status bar
+    const setStatus = useRef()
+
+    const sendMessageToStatusBar = (message, index) => {
+        console.log(message)
+        if(setStatus.current){
+            if(typeof message === "object"){
+                setStatus.current.triggerChildFunction({...message,
+                    index: index
+                });
+            }
+            else if(typeof message === 'string'){
+                setStatus.current.triggerChildFunction({...JSON.parse(message),
+                    index: index
+                });
+            }
+        }
+    }
+
+    const connectToWebSocket = () => {
+        const webSocket = new WebSocketService()
+        const topics = [WEBSOCKET.topicCreateEmployee(JwtService.geUserFromToken()),
+            WEBSOCKET.topicCreatedEmployee(JwtService.geUserFromToken())]
+        webSocket.connectAndSubscribe(topics, (message, index) => {
+            sendMessageToStatusBar (message, index)
+        })
+    }
+
     useEffect(() => {
         getAppointmentByToday()
         getDiseases()
+        connectToWebSocket()
+
     }, [])
 
     const handleCreateExaminationForm = (appointment) => {
