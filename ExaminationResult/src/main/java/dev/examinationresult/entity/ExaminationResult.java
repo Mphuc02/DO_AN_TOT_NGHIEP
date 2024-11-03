@@ -37,7 +37,7 @@ public class ExaminationResult {
 
     private LocalDateTime examinatedAt;
 
-    private Integer orderNumber;
+    private Integer examinedNumber;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "result")
     private List<ExaminationResultDetail> details;

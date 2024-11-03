@@ -2,6 +2,7 @@ package dev.websocket.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.model.ProcessedImageData;
 import dev.websocket.constant.WebsocketConstant.*;
 import dev.websocket.model.Message;
@@ -38,5 +39,12 @@ public class SendMessageService {
         log.info("Received message from topic: processed-image with owner:" + data.getOwner());
         Message message = Message.buildOkMessage(MESSAGE.PROCESSED_IMAGE, data);
         messagingTemplate.convertAndSend(TOPIC.PROCESSED_IMAGE(data.getOwner()), message);
+    }
+
+    @KafkaListener(topics = UPDATED_NUMBER_EXAMINATION_FORM, groupId = WEBSOCKET_GROUP)
+    public void handle(ExaminationFormResponse data){
+        log.info("Received message from topic: updated_number_examination_form" + data.getEmployeeId());
+        Message message = Message.buildOkMessage(MESSAGE.UPDATED_NUMBER_EXAMINATION_FORM, data);
+        messagingTemplate.convertAndSend(TOPIC.UPDATED_NUMBER_EXAMINATION_FORM(data.getEmployeeId()), message);
     }
 }

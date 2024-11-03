@@ -6,6 +6,7 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
+import dev.common.dto.request.UpdateNumberExaminationFormRequest;
 import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
@@ -25,6 +26,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +48,9 @@ public class ExaminationResultService {
     @Value(KafkaTopicsConstrant.APPOINTMENT_HAD_BEEN_EXAMINED_TOPIC)
     private String APPOINTMENT_HAD_BEEN_EXAMINED;
 
+    @Value(KafkaTopicsConstrant.UPDATE_NUMBER_EXAMINATION_FORM_TOPIC)
+    private String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC;
+
     public ExaminationResultResponse getById(UUID id){
         ExaminationResult findById = examinationResultRepository.findById(id)
                 .orElseThrow(() ->
@@ -61,15 +66,29 @@ public class ExaminationResultService {
         result.setCreatedAt(LocalDateTime.now());
         WorkingScheduleResponse schedule = workingScheduleClient.getById(request.getWorkingScheduleId());
         result.setEmployeeId(schedule.getEmployeeId());
+
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 0, 0);
+        LocalDateTime end = start.plusDays(1);
+        int currentNumberOfThisRoom = examinationResultRepository.countByWorkingScheduleIdAndCreatedAtBetween(request.getWorkingScheduleId(), start, end) + 1;
+        result.setExaminedNumber(currentNumberOfThisRoom);
+
         result = examinationResultRepository.save(result);
 
         CreateInvoiceCommonRequest createInvoiceRequest = resultMapperUtil.mapEntityToCreateInvoiceRequest(result);
         kafkaTemplate.send(CREATED_EXAMINATION_RESULT_SUCCESS, createInvoiceRequest);
 
-        //If has appointment, update isExamined of appointment
+        //If request has appointment, update isExamined of appointment
         if(request.getAppointmentId() != null){
             kafkaTemplate.send(APPOINTMENT_HAD_BEEN_EXAMINED, request.getAppointmentId());
         }
+
+        //Update number in Examination form
+        UpdateNumberExaminationFormRequest updateExaminationFormRequest = UpdateNumberExaminationFormRequest.builder()
+                                                                            .id(request.getId())
+                                                                            .examinedNumber(currentNumberOfThisRoom)
+                                                                            .build();
+        kafkaTemplate.send(UPDATE_NUMBER_EXAMINATION_FORM_TOPIC, updateExaminationFormRequest);
     }
 
     @Transactional

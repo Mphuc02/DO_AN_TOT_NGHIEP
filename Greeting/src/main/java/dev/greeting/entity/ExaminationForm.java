@@ -19,7 +19,7 @@ public class ExaminationForm {
 
     private UUID patientId;
     private UUID employeeId;
-    private Integer numberCall;
+    private Integer examinedNumber;
 
     private UUID appointmentId;
     private UUID workingScheduleId;

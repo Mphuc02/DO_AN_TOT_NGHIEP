@@ -13,7 +13,7 @@ public class ExaminationFormResponse {
     private UUID id;
     private UUID patientId;
     private UUID employeeId;
-    private Integer ticketIndex;
+    private Integer examinedNumber;
     private LocalDateTime createdAt;
     private String symptom;
 }

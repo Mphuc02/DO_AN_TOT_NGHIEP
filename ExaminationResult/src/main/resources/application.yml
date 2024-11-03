@@ -43,6 +43,7 @@ kafka:
         create-examination-topic: create_examination_result_from_greeting
         created-examination-result-success: created_examination_result_success
         appointment-had-been-examined: appointment_had_been_examined
+        update-number-examination-form-topic: update_number_examination_form_topic
 
     group-id:
         examination-result: examination_result

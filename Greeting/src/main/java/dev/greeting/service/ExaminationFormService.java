@@ -1,11 +1,13 @@
 package dev.greeting.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
-import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.GREETING_EXCEPTION;
+import dev.common.dto.request.UpdateNumberExaminationFormRequest;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
+import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.model.AuthenticatedUser;
+import dev.common.util.AuditingUtil;
 import dev.greeting.dto.request.CreateForWithPatientInforRequest;
 import dev.greeting.dto.request.CreateFormForFirstTimePatientRequest;
 import dev.greeting.dto.request.CreateFormWithAppointmentRequest;
@@ -20,7 +22,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,13 +34,16 @@ public class ExaminationFormService {
     private final ExaminationFormRepository examinationFormRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ExaminationFormMapperUtil examinationFormMapperUtil;
-    private final Gson gson;
+    private final AuditingUtil auditingUtil;
 
     @Value(CREATE_PATIENT_ACCOUNT_FROM_GREETING_TOPIC)
     private String CREATE_PATIENT_TOPIC;
 
     @Value(CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC)
     private String CREATE_EXAMINATION_RESULT_TOPIC;
+
+    @Value(UPDATE_NUMBER_EXAMINATION_FORM_TOPIC)
+    private String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC;
 
     @Transactional
     public ExaminationFormResponse saveFirstTimePatient(CreateFormForFirstTimePatientRequest request){
@@ -65,6 +69,7 @@ public class ExaminationFormService {
     public ExaminationFormResponse saveWithPatientInformation(CreateForWithPatientInforRequest request){
         ExaminationForm entity = examinationFormMapperUtil.createRequestWithPatientInformationToEntity(request);
         entity.setCreatedAt(LocalDateTime.now());
+        entity.setEmployeeId(auditingUtil.getUserLogged().getId());
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
@@ -74,16 +79,30 @@ public class ExaminationFormService {
     public ExaminationFormResponse saveWithAppointment(CreateFormWithAppointmentRequest request){
         ExaminationForm entity = examinationFormMapperUtil.createRequestWithAppointmentToEntity(request);
         entity.setCreatedAt(LocalDateTime.now());
+        entity.setEmployeeId(auditingUtil.getUserLogged().getId());
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
         return examinationFormMapperUtil.entityToResponse(entity);
     }
 
+
+
     @KafkaListener(topics = CREATED_PATIENT_INFORMATION_TOPIC, groupId = GREETING_GROUP)
     public void handleCreatedPatientInformation(UUID examinationFormId){
         log.info(String.format("Received request created Patient information from kafka with id: %s", examinationFormId));
         ExaminationForm form = examinationFormRepository.findById(examinationFormId).orElseThrow(() -> new NotFoundException(GREETING_EXCEPTION.FORM_NOT_FOUND));
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(form));
+    }
+
+    @KafkaListener(topics = UPDATE_NUMBER_EXAMINATION_FORM_TOPIC, groupId = GREETING_GROUP)
+    public void handleUpdateNumberExaminationFormTopic(UpdateNumberExaminationFormRequest request){
+        log.info("Received request update number for examination form from kafka for id: " + request.getId());
+        ExaminationForm form = examinationFormRepository.findById(request.getId()).orElseThrow(() -> BaseException.buildNotFound().message(GREETING_EXCEPTION.FORM_NOT_FOUND).build());
+        form.setExaminedNumber(request.getExaminedNumber());
+        examinationFormRepository.save(form);
+
+        ExaminationFormResponse updatedResponse = examinationFormMapperUtil.entityToResponse(form);
+        kafkaTemplate.send(UPDATED_NUMBER_EXAMINATION_FORM_TOPIC, updatedResponse);
     }
 }

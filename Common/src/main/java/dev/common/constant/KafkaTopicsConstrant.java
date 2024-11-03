@@ -13,6 +13,9 @@ public class KafkaTopicsConstrant {
     public static final String CREATED_EMPLOYEE_TOPIC = "${kafka.topics.created-employee-topic}";
     public static final String PROCESSED_IMAGE = "${kafka.topics.processed-image}";
 
+    public static final String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.update-number-examination-form-topic}";
+    public static final String UPDATED_NUMBER_EXAMINATION_FORM = "${kafka.topics.updated-number-examination-form-topic}";
+
     public static final String PATIENT_GROUP = "${kafka.group-id.patient}";
     public static final String AUTHENTICATION_GROUP = "${kafka.group-id.authentication}";
     public static final String EXAMINATION_RESULT_GROUP = "${kafka.group-id.examination-result}";

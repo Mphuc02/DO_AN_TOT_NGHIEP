@@ -33,6 +33,8 @@ kafka:
         created-patient-account-from-greeting-success: created_patient_from_greeting_success
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
         
+        updated-number-examination-form-topic: updated_number_examination_form_topic
+        
     group-id:
         websocket: websocket_group
 

@@ -45,6 +45,8 @@ kafka:
         created-patient-information-topic: created_patient_information
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
         create-examination-topic: create_examination_result_from_greeting
+        update-number-examination-form-topic: update_number_examination_form_topic
+        updated-number-examination-form-topic: updated_number_examination_form_topic
     
     group-id:
         greeting: greeting
