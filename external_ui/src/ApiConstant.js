@@ -88,6 +88,10 @@ class WEBSOCKET{
     static processedImage = (id) => {
         return "/topic/processed-image/" + id
     }
+
+    static updatedNumberExaminationForm = (id) => {
+        return "/topic/updated-number-examination-form/" + id
+    }
 }
 
 class HOSPITAL_INFORMATION{

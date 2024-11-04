@@ -4,8 +4,46 @@ import {Greeting, HOSPITAL_INFORMATION, PATIENT, WEBSOCKET} from "../../ApiConst
 import styles from '../../layouts/body/style.module.css'
 import WebSocketService from "../../service/WebSocketService";
 import {JwtService} from "../../service/JwtService";
+import { jsPDF } from 'jspdf';
 
-const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap }) => {
+const printGreetingForm = (form, appointment) => {
+    const ticketData = {
+        hospitalName: "Benh vien da lieu Minh Phuc",
+        ...form,
+        ...appointment
+    };
+
+    console.log(ticketData)
+
+    const createAndPrintPDF = () => {
+        const doc = new jsPDF();
+
+        // Nội dung PDF
+        doc.setFontSize(20);
+        doc.text(ticketData.hospitalName, 105, 20, { align: 'center' });
+
+        doc.setFontSize(16);
+        doc.text('PHIEU SO THU TU DOI KHAM', 105, 40, { align: 'center' });
+
+        doc.setFontSize(30);
+        doc.text(`So Thu Tu: ${ticketData.examinedNumber}`, 105, 70, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.text(`Ten Benh Nhan: ${ticketData.fullName.firstName + " " + ticketData.fullName.middleName + " " + ticketData.fullName.lastName}`, 20, 100);
+        doc.text(`Phong Kham: ${ticketData.roomName}`, 20, 120);
+
+        doc.setFontSize(12);
+        doc.text('Xin vui long doi den khi so cua ban duoc goi de vao kham.', 105, 140, { align: 'center' });
+
+        // Mở hộp thoại in
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    };
+
+    createAndPrintPDF()
+}
+
+const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap, createdExaminationForm }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
 
     useEffect(() => {
@@ -17,6 +55,10 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
         }
         setCreateExaminationForm(temp)
     },[appointment])
+
+    useEffect(() => {
+
+    }, [appointment.id]);
 
     if(!isOpen){
         return null
@@ -67,7 +109,9 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                                 {[...workingSchedule].map(([key, value]) => (
                                     <option key={key} value={value.id}>
                                         {(() => {
-                                            return roomsMap.get(value.roomId).name
+                                            const roomName = roomsMap.get(value.roomId).name
+                                            appointment.roomName = roomName
+                                            return roomName
                                         })()}
                                     </option>
                                 ))}
@@ -117,6 +161,8 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                     </tbody>
                 </table>
                 <button onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>
+                {createdExaminationForm &&
+                    <button onClick={() => printGreetingForm(createdExaminationForm, appointment)}>In phiếu khám bệnh</button>}
             </div>
         </div>
     )
@@ -128,6 +174,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
     const [isCreateModalOpen, setIsCreateModelOpen] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState({})
     const [diseasesMap, setDiseasesMap] = useState(new Map())
+    const [createdExaminationForm, setCreatedExaminationForm] = useState(null)
 
     const getPatientsByIds = async (ids) => {
         const tempMap = new Map()
@@ -166,31 +213,18 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
         })
     }
 
-    //Status bar
-    const setStatus = useRef()
-
-    const sendMessageToStatusBar = (message, index) => {
-        console.log(message)
-        if(setStatus.current){
-            if(typeof message === "object"){
-                setStatus.current.triggerChildFunction({...message,
-                    index: index
-                });
-            }
-            else if(typeof message === 'string'){
-                setStatus.current.triggerChildFunction({...JSON.parse(message),
-                    index: index
-                });
-            }
-        }
+    const receivedCreatedExaminationForm = (message) => {
+        const data = JSON.parse(message)
+        alert(data.message)
+        console.log(data.data)
+        setCreatedExaminationForm(data.data)
     }
 
     const connectToWebSocket = () => {
         const webSocket = new WebSocketService()
-        const topics = [WEBSOCKET.topicCreateEmployee(JwtService.geUserFromToken()),
-            WEBSOCKET.topicCreatedEmployee(JwtService.geUserFromToken())]
-        webSocket.connectAndSubscribe(topics, (message, index) => {
-            sendMessageToStatusBar (message, index)
+        const topics = [WEBSOCKET.updatedNumberExaminationForm(JwtService.geUserFromToken())]
+        webSocket.connectAndSubscribe(topics, (message) => {
+            receivedCreatedExaminationForm (message)
         })
     }
 
@@ -198,7 +232,6 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
         getAppointmentByToday()
         getDiseases()
         connectToWebSocket()
-
     }, [])
 
     const handleCreateExaminationForm = (appointment) => {
@@ -208,6 +241,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
     }
 
     const openCreateModal = () => {
+        setCreatedExaminationForm(null)
         setIsCreateModelOpen(true);
     };
 
@@ -246,7 +280,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
                 </tbody>
             </table>
 
-            <CreateExaminationFormModal  isOpen={isCreateModalOpen} onClose={closeCreateModal} appointment={selectedAppointment} roomsMap={workingRoomsMap} workingSchedule={workingScheduleMap} diseasesMap={diseasesMap} appointmentsMap={appointmentsMap} />
+            <CreateExaminationFormModal  isOpen={isCreateModalOpen} onClose={closeCreateModal} appointment={selectedAppointment} roomsMap={workingRoomsMap} workingSchedule={workingScheduleMap} diseasesMap={diseasesMap} appointmentsMap={appointmentsMap} createdExaminationForm={createdExaminationForm} />
         </div>
     )
 }
