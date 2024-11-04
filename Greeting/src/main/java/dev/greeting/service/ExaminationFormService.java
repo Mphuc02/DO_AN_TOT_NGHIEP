@@ -2,6 +2,7 @@ package dev.greeting.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.constant.ExceptionConstant.GREETING_EXCEPTION;
+import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.UpdateNumberExaminationFormRequest;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.exception.BaseException;
@@ -42,7 +43,7 @@ public class ExaminationFormService {
     @Value(CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC)
     private String CREATE_EXAMINATION_RESULT_TOPIC;
 
-    @Value(UPDATE_NUMBER_EXAMINATION_FORM_TOPIC)
+    @Value(KafkaTopicsConstrant.UPDATED_NUMBER_EXAMINATION_FORM_TOPIC)
     private String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC;
 
     @Transactional
@@ -85,8 +86,6 @@ public class ExaminationFormService {
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
         return examinationFormMapperUtil.entityToResponse(entity);
     }
-
-
 
     @KafkaListener(topics = CREATED_PATIENT_INFORMATION_TOPIC, groupId = GREETING_GROUP)
     public void handleCreatedPatientInformation(UUID examinationFormId){

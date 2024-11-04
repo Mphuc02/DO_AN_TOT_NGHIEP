@@ -63,6 +63,7 @@ public class AppointmentService {
 
         appointment.setPatientId(auditingUtil.getUserLogged().getId());
         appointment.setCreatedAt(LocalDateTime.now());
+        appointment.setIsExamined(false);
         appointment = appointmentRepository.save(appointment);
         return appointmentMapperUtil.mapEntityToResponse(appointment);
     }

@@ -14,6 +14,7 @@ public class ExaminationFormResponse {
     private UUID patientId;
     private UUID employeeId;
     private Integer examinedNumber;
+    private UUID workingScheduleId;
     private LocalDateTime createdAt;
     private String symptom;
 }

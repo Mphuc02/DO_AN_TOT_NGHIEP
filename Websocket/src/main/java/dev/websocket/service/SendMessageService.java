@@ -41,7 +41,7 @@ public class SendMessageService {
         messagingTemplate.convertAndSend(TOPIC.PROCESSED_IMAGE(data.getOwner()), message);
     }
 
-    @KafkaListener(topics = UPDATED_NUMBER_EXAMINATION_FORM, groupId = WEBSOCKET_GROUP)
+    @KafkaListener(topics = UPDATED_NUMBER_EXAMINATION_FORM_TOPIC, groupId = WEBSOCKET_GROUP)
     public void handle(ExaminationFormResponse data){
         log.info("Received message from topic: updated_number_examination_form" + data.getEmployeeId());
         Message message = Message.buildOkMessage(MESSAGE.UPDATED_NUMBER_EXAMINATION_FORM, data);
