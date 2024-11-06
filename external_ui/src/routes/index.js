@@ -22,6 +22,7 @@ import ReceiptLayout from "../layouts/body/receipt/ReceiptLayout";
 import {Login as ReceiptLogin} from '../components/receipt/Login'
 import {ReceiptLoginLayout} from "../layouts/body/receipt/ReceiptLoginLayout";
 import PrintTicket from "../components/receipt/PrintTicket";
+import {ExaminationManagement} from "../components/doctor/examination/ExaminationManagement";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -48,6 +49,7 @@ const publicRoutes = [
 
     //Doctor working schedule management
     {path: RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT, component: WorkingScheduleManagement, layout: DoctorLayout},
+    {path: RoutesConstant.DOCTOR.EXAMINATION_MANAGEMENT, component: ExaminationManagement, layout: DoctorLayout},
 
     {path: RoutesConstant.PATIENT.DASHBOARD, component: PatientDashBoard, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.LOGIN, component: PatientLogin, layout: PatientLoginLayout},

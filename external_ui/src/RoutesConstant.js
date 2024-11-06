@@ -18,6 +18,7 @@ class RoutesConstant{
         static LOGIN = '/employee/doctor/login'
         static WORKING_SCHEDULE_MANAGEMENT = '/employee/doctor/working-schedule-management'
         static WORKING_SCHEDULE_MANAGEMENT_CREATE = '/employee/doctor/working-schedule-management/create'
+        static EXAMINATION_MANAGEMENT = '/employee/doctor/examination-management'
     }
 
     static PATIENT = class {

@@ -6,6 +6,8 @@ import WebSocketService from "../../service/WebSocketService";
 import {JwtService} from "../../service/JwtService";
 import { jsPDF } from 'jspdf';
 
+//Todo: Kiểm tra dữ liệu có hợp lệ hay không
+
 const printGreetingForm = (form, appointment) => {
     const ticketData = {
         hospitalName: "Benh vien da lieu Minh Phuc",
@@ -45,6 +47,7 @@ const printGreetingForm = (form, appointment) => {
 
 const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap, createdExaminationForm }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
+    const [createExaminationFormError, setCreateExaminationFormError] = useState({})
 
     useEffect(() => {
         const temp = {...appointment, symptom: appointment.description}
@@ -71,7 +74,10 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
         SendApiService.postRequest(Greeting.ExaminationForm.withAppointment(), createExaminationForm, {'Content-type': 'application/json'}, (response) => {
             appointmentsMap.delete(appointment.id)
         }, (error) => {
-
+            if(error.status === 400){
+                setCreateExaminationFormError(error.response.data.fields)
+                alert(error.response.data.message)
+            }
         })
     }
 
@@ -94,6 +100,11 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                     <tr>
                         <td>Triệu chứng:</td>
                         <td>{appointment.description}</td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>{createExaminationFormError.workingScheduleId}</td>
                     </tr>
 
                     <tr>

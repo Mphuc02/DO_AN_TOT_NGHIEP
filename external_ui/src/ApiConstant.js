@@ -178,4 +178,17 @@ class Greeting{
         }
     }
 }
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting}
+
+class ExaminationResult{
+    static ExaminationResultUrl = class{
+        static getUrl = () => {
+            return HOST.getHost() + "/api/examination-results"
+        }
+
+        static findWaitingExaminationPatients = () => {
+            return this.getUrl() + '/find/waiting-examination-patients'
+        }
+    }
+}
+
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult}
