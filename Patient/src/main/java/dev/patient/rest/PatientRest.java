@@ -23,7 +23,7 @@ public class PatientRest {
         return ResponseEntity.ok(patientService.getAll());
     }
 
-    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN)
+    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN_DOCTOR)
     @PostMapping(GET_BY_IDS)
     public ResponseEntity<List<PatientResponse>> getByIds(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(patientService.getByIds(ids));

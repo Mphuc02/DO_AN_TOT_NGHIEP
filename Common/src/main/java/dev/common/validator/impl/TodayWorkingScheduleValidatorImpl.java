@@ -13,7 +13,7 @@ public class TodayWorkingScheduleValidatorImpl implements ConstraintValidator<To
     @Override
     public boolean isValid(UUID id, ConstraintValidatorContext constraintValidatorContext) {
         if(id == null)
-            return false;
+            return true;
 
         return client.checkScheduleIsToday(id);
     }

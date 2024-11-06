@@ -1,6 +1,8 @@
 package dev.examinationresult.rest;
 
 import static dev.common.constant.ApiConstant.EXAMINATION_RESULT_URL.*;
+
+import dev.common.constant.AuthorizationConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.examinationresult.dto.request.UpdateExaminationResultRequest;
@@ -9,8 +11,11 @@ import dev.examinationresult.service.ExaminationResultService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +29,12 @@ public class ExaminationResultRest {
         return ResponseEntity.ok(examinationResultService.getById(id));
     }
 
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
+    @GetMapping(FIND_WAITING_EXAMINATION_PATIENTS)
+    public ResponseEntity<List<ExaminationResultResponse>> findWaitingExaminationPatients(){
+        return ResponseEntity.ok(examinationResultService.findWaitingExaminationPatients());
+    }
+
     @PutMapping(ID)
     public ResponseEntity<ExaminationResultResponse> update(@Valid @RequestBody UpdateExaminationResultRequest request,
                                                             BindingResult result,
@@ -33,4 +44,5 @@ public class ExaminationResultRest {
         }
         return ResponseEntity.ok(examinationResultService.update(request, id));
     }
+
 }

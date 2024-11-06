@@ -11,6 +11,7 @@ import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
 import dev.common.model.AuthenticatedUser;
+import dev.common.util.AuditingUtil;
 import dev.examinationresult.dto.request.UpdateExaminationResultRequest;
 import dev.common.dto.response.examination_result.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
@@ -38,9 +39,10 @@ import java.util.stream.Collectors;
 public class ExaminationResultService {
     private final ExaminationResultMapperUtil resultMapperUtil;
     private final ExaminationResultRepository examinationResultRepository;
-    private final ExaminationResultDetailMapperUtil resultDetailUtil;
+    private final ExaminationResultDetailMapperUtil resultDetailMapperUtil;
     private final WorkingScheduleClient workingScheduleClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final AuditingUtil auditingUtil;
 
     @Value(KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC)
     private String CREATED_EXAMINATION_RESULT_SUCCESS;
@@ -56,6 +58,14 @@ public class ExaminationResultService {
                 .orElseThrow(() ->
                         new NotFoundException(EXAMINATION_RESULT_EXCEPTION.RESULT_NOT_FOUND));
         return resultMapperUtil.mapEntityToResponse(findById);
+    }
+
+    public List<ExaminationResultResponse> findWaitingExaminationPatients(){
+        UUID doctorId = auditingUtil.getUserLogged().getId();
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 0, 0);
+        LocalDateTime end = start.plusDays(1);
+        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findWaitingExaminationPatientsOfDoctor(doctorId, start, end));
     }
 
     @KafkaListener(topics = CREATE_EXAMINATION_RESULT_FROM_GREETING_TOPIC,
@@ -104,7 +114,7 @@ public class ExaminationResultService {
 
         final ExaminationResult tempResult = findToUpdate;
         List<ExaminationResultDetail> details = request.getDetails().stream().map(detail -> {
-                                            ExaminationResultDetail entity = resultDetailUtil.mapCreateRequestToDetail(detail);
+                                            ExaminationResultDetail entity = resultDetailMapperUtil.mapCreateRequestToDetail(detail);
                                             entity.setResult(tempResult);
                                             return entity;
                                         }).collect(Collectors.toList());

@@ -6,15 +6,15 @@ import dev.common.dto.response.examination_result.ExaminationResultResponse;
 import dev.examinationresult.entity.ExaminationResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ExaminationResultMapperUtil {
-    ExaminationResultMapperUtil INSTANCE = Mappers.getMapper(ExaminationResultMapperUtil.class);
     ExaminationResult mapCreateRequestToEntity(CreateExaminationResultCommonRequest request);
     CreateInvoiceCommonRequest mapEntityToCreateInvoiceRequest(ExaminationResult result);
     ExaminationResultResponse mapEntityToResponse(ExaminationResult result);
+    List<ExaminationResultResponse> mapEntitiesToResponses(List<ExaminationResult> entities);
 }

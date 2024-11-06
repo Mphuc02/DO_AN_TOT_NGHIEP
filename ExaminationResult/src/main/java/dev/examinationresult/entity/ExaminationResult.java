@@ -32,6 +32,8 @@ public class ExaminationResult {
     @Column(columnDefinition = "TEXT")
     private String treatment;
 
+    private UUID appointmentId;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
