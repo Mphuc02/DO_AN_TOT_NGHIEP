@@ -50,7 +50,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentImageDetailResponse> findDetailsByAppointmentId(UUID id){
-        return appointmentImageDetailMapperUtil.mapEntitiesToResponses(appointmentImageDetailRepository.findB addyAppointmentId(id));
+        return appointmentImageDetailMapperUtil.mapEntitiesToResponses(appointmentImageDetailRepository.findByAppointmentId(id));
     }
 
     @Transactional
