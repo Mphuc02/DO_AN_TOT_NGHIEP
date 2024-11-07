@@ -3,6 +3,7 @@ import {SendApiService} from "../../../service/SendApiService";
 import {ExaminationResult, PATIENT} from "../../../ApiConstant";
 import styles from '../../../layouts/body/style.module.css'
 import {useNavigate} from "react-router-dom";
+import RoutesConstant from "../../../RoutesConstant";
 
 const WaitingExaminationPatientList = () => {
     const [patientsMap, setPatientMap] = useState(new Map())
@@ -53,17 +54,19 @@ const WaitingExaminationPatientList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {waitingPatients.map((waitingPatient, index) => {
-                        const patient = patientsMap.get(waitingPatient.patientId)
-                        if(!patient){
-                            return ''
-                        }
-                        const fullName = patient.fullName
-                        return <tr onClick={() => navigate('/hehe')} className={styles.cursorPointer}>
-                                    <td>{waitingPatient.examinedNumber}</td>
-                                    <td>{fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName}</td>
-                                </tr>
-                    })}
+                {waitingPatients.map(function (waitingPatient, index) {
+                    const patient = patientsMap.get(waitingPatient.patientId)
+                    if (!patient) {
+                        return ''
+                    }
+                    const fullName = patient.fullName
+                    const url = RoutesConstant.DOCTOR.EXAMINING_PATIENT_WITH_ID(waitingPatient.id)
+                    console.log(url)
+                    return <tr key={waitingPatient.id} onClick={() => navigate(url)} className={styles.cursorPointer}>
+                                <td>{waitingPatient.examinedNumber}</td>
+                                <td>{fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName}</td>
+                            </tr>
+                })}
                 </tbody>
             </table>
         </div>

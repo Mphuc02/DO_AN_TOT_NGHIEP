@@ -148,6 +148,10 @@ class PATIENT{
         static getAppointmentsOfToday = () => {
             return this.getUrl() + "/today"
         }
+
+        static findAppointmentDetailByAppointmentId = (id) => {
+            return this.getUrl() + "/find-detail-by-appointment-id/" + id
+        }
     }
 
     static PATIENT_API = class {
@@ -158,8 +162,11 @@ class PATIENT{
         static getByIds = () => {
             return this.getUrl() + "/get/by-ids"
         }
-    }
 
+        static findById = (id) => {
+            return this.getUrl() + "/" + id
+        }
+    }
 }
 
 
@@ -187,6 +194,10 @@ class ExaminationResult{
 
         static findWaitingExaminationPatients = () => {
             return this.getUrl() + '/find/waiting-examination-patients'
+        }
+
+        static findById = (id) => {
+            return this.getUrl() + "/" + id
         }
     }
 }

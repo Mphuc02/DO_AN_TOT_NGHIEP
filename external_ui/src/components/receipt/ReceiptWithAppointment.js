@@ -48,6 +48,7 @@ const printGreetingForm = (form, appointment) => {
 const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, workingSchedule, diseasesMap, appointmentsMap, createdExaminationForm }) => {
     const [createExaminationForm, setCreateExaminationForm] = useState({...appointment, symptom: appointment.description})
     const [createExaminationFormError, setCreateExaminationFormError] = useState({})
+    let sendingApi = false
 
     useEffect(() => {
         const temp = {...appointment, symptom: appointment.description}
@@ -68,6 +69,10 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
     }
 
     const handleCreateExaminationForm = () => {
+        if(sendingApi)
+            return
+
+        sendingApi = true
         //Todo: Sau bỏ fix cứng số thứ tự
         createExaminationForm.appointmentId = appointment.id
         createExaminationForm.numberCall = 1
@@ -160,6 +165,11 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                         <td></td>
                     </tr>
 
+                    <tr>
+                        <td></td>
+                        <td>{createExaminationFormError.symptom}</td>
+                    </tr>
+
                     {appointment.images.map((image, index) => {
                         return (
                             <tr key={index}>
@@ -171,7 +181,9 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                     })}
                     </tbody>
                 </table>
-                <button onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>
+                {!createdExaminationForm &&
+                    <button onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>}
+
                 {createdExaminationForm &&
                     <button onClick={() => printGreetingForm(createdExaminationForm, appointment)}>In phiếu khám bệnh</button>}
             </div>

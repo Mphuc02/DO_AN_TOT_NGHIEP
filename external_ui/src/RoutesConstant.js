@@ -19,6 +19,10 @@ class RoutesConstant{
         static WORKING_SCHEDULE_MANAGEMENT = '/employee/doctor/working-schedule-management'
         static WORKING_SCHEDULE_MANAGEMENT_CREATE = '/employee/doctor/working-schedule-management/create'
         static EXAMINATION_MANAGEMENT = '/employee/doctor/examination-management'
+        static EXAMINING_PATIENT = '/employee/doctor/examining-patient/:id'
+        static EXAMINING_PATIENT_WITH_ID = (id) => {
+            return `/employee/doctor/examining-patient/${id}`
+        }
     }
 
     static PATIENT = class {
