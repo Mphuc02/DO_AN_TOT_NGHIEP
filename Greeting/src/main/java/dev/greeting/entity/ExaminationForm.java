@@ -25,7 +25,4 @@ public class ExaminationForm {
     private UUID workingScheduleId;
 
     private LocalDateTime createdAt;
-
-    @Column(columnDefinition = "TEXT")
-    private String symptom;
 }

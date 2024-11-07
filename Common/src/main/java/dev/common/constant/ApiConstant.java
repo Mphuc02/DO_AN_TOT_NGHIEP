@@ -90,6 +90,7 @@ public class ApiConstant {
         public static final String APPOINTMENT_URL = "/api/appointments";
         public static final String GET_APPOINTMENTS_OF_TODAY = "/today";
         public static final String GET_EXAMINED_APPOINTMENTS_OF_TODAY = "/today/examined";
+        public static final String FIND_DETAILS_BY_APPOINTMENT_ID = "/find-detail-by-appointment-id/{id}";
     }
 
     public static final class PAYMENT{

@@ -32,6 +32,9 @@ public class ExaminationResult {
     @Column(columnDefinition = "TEXT")
     private String treatment;
 
+    @Column(columnDefinition = "TEXT")
+    private String symptom;
+
     private UUID appointmentId;
 
     @CreatedDate

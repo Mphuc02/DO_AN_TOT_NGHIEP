@@ -23,6 +23,11 @@ public class PatientRest {
         return ResponseEntity.ok(patientService.getAll());
     }
 
+    @GetMapping(ID)
+    public ResponseEntity<PatientResponse> findById(@PathVariable UUID id){
+        return ResponseEntity.ok(patientService.findById(id));
+    }
+
     @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN_DOCTOR)
     @PostMapping(GET_BY_IDS)
     public ResponseEntity<List<PatientResponse>> getByIds(@RequestBody List<UUID> ids){

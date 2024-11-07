@@ -24,7 +24,7 @@ public class CreateForWithPatientInforRequest {
     @Min(value = 1, message = "Số thứ tự phải bắt đầu từ 1")
     private Integer numberCall;
 
-    @NotEmpty(message = "Triệu chứng không được bỏ trống")
+    @NotNull(message = "Triệu chứng không đuợc bỏ trống")
     private String symptom;
 
     @NotNull(message = "Phòng khám không được bỏ trống")

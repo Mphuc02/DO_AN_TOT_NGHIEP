@@ -99,6 +99,7 @@ public class ExceptionConstant {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class PATIENT_EXCEPTION{
+        public static final String PATIENT_NOT_FOUND = "Không tìm thấy thông tin bệnh nhân";
         public static final String APPOINTMENT_NOT_FOUND = "Không tìm thấy lịch hẹn";
         public static final String NOT_PERMISSION_WITH_APPOINTMENT = "Bạn không có quyền thao tác với lịch hẹn này";
         public static final String CAN_NOT_UPDATE_PASSED_APPOINTMENT = "Không thể chỉnh sửa lịch hẹn đã qua";

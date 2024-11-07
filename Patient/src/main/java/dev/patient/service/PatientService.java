@@ -1,10 +1,12 @@
 package dev.patient.service;
 
 import com.google.gson.Gson;
+import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateNewPatientRequest;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.response.patient.PatientResponse;
+import dev.common.exception.BaseException;
 import dev.patient.entity.Patient;
 import dev.patient.repository.PatientRepository;
 import dev.patient.util.AddressMapperUtil;
@@ -24,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PatientService {
     private final PatientRepository patientRepository;
-    private final PatientMapperUtil patientUtil;
+    private final PatientMapperUtil patientMapperUtil;
     private final Gson gson;
     private final AddressMapperUtil addressMapperUtil;
     private final FullNameMapperUtil fullNameMapperUtil;
@@ -34,11 +36,16 @@ public class PatientService {
     private String CREATED_PATIENT_INFORMATION_TOPIC;
 
     public List<PatientResponse> getAll(){
-        return patientUtil.mapEntitiesToResponses(patientRepository.findAll());
+        return patientMapperUtil.mapEntitiesToResponses(patientRepository.findAll());
+    }
+
+    public PatientResponse findById(UUID id){
+        Patient patient = patientRepository.findById(id).orElseThrow(() -> BaseException.buildNotFound().message(PATIENT_EXCEPTION.PATIENT_NOT_FOUND).build());
+        return patientMapperUtil.mapEntityToResponse(patient);
     }
 
     public List<PatientResponse> getByIds(List<UUID> ids){
-        return patientUtil.mapEntitiesToResponses(patientRepository.findAllById(ids));
+        return patientMapperUtil.mapEntitiesToResponses(patientRepository.findAllById(ids));
     }
 
     public boolean checkPatientExist(UUID id){
@@ -49,7 +56,7 @@ public class PatientService {
     public void createPatientFromGreeting(CreateNewPatientRequest request){
         log.info(String.format("Receive request create patient from kafka: %s", gson.toJson(request)));
 
-        Patient patient = patientUtil.createRequestToEntity(request);
+        Patient patient = patientMapperUtil.createRequestToEntity(request);
         patient.setAddress(addressMapperUtil.createRequestToEntity(request.getAddress()));
         patient.getAddress().setPatient(patient);
 

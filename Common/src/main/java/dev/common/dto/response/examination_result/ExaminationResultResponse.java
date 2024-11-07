@@ -19,5 +19,6 @@ public class ExaminationResultResponse {
     private UUID appointmentId;
     private LocalDateTime examinatedAt;
     private Integer examinedNumber;
+    private String symptom;
     private List<ExaminationResultDetailResponse> details;
 }

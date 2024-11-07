@@ -1,7 +1,6 @@
 package dev.common.dto.request;
 
 import lombok.*;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -15,4 +14,5 @@ public class CreateExaminationResultCommonRequest {
     private UUID workingScheduleId;
     private Integer orderNumber;
     private UUID appointmentId;
+    private String symptom;
 }

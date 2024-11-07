@@ -2,6 +2,9 @@ package dev.patient.service;
 
 import dev.common.constant.ExceptionConstant.*;
 import static dev.common.constant.KafkaTopicsConstrant.*;
+
+import dev.common.dto.response.patient.AppointmentDetailResponse;
+import dev.common.dto.response.patient.AppointmentImageDetailResponse;
 import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.model.ErrorField;
@@ -12,7 +15,11 @@ import dev.common.dto.response.patient.AppointmentResponse;
 import dev.patient.entity.Appointment;
 import dev.patient.entity.AppointmentDetail;
 import dev.patient.entity.AppointmentImageDetail;
+import dev.patient.repository.AppointmentDetailRepository;
+import dev.patient.repository.AppointmentImageDetailRepository;
 import dev.patient.repository.AppointmentRepository;
+import dev.patient.util.AppointmentDetailMapperUtil;
+import dev.patient.util.AppointmentImageDetailMapperUtil;
 import dev.patient.util.AppointmentMapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +38,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentDetailRepository appointmentDetailRepository;
     private final AppointmentMapperUtil appointmentMapperUtil;
+    private final AppointmentDetailMapperUtil appointmentDetailMapperUtil;
+    private final AppointmentImageDetailRepository appointmentImageDetailRepository;
+    private final AppointmentImageDetailMapperUtil appointmentImageDetailMapperUtil;
     private final AuditingUtil auditingUtil;
 
     public List<AppointmentResponse> getAppointmentsOfToday(){
         return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateAndIsExamined(LocalDate.now(), false));
+    }
+
+    public List<AppointmentImageDetailResponse> findDetailsByAppointmentId(UUID id){
+        return appointmentImageDetailMapperUtil.mapEntitiesToResponses(appointmentImageDetailRepository.findB addyAppointmentId(id));
     }
 
     @Transactional

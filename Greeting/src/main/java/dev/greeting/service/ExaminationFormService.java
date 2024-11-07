@@ -3,6 +3,7 @@ package dev.greeting.service;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.constant.ExceptionConstant.GREETING_EXCEPTION;
 import dev.common.constant.KafkaTopicsConstrant;
+import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.UpdateNumberExaminationFormRequest;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.exception.BaseException;
@@ -83,7 +84,9 @@ public class ExaminationFormService {
         entity.setEmployeeId(auditingUtil.getUserLogged().getId());
         entity = examinationFormRepository.save(entity);
 
-        kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
+        CreateExaminationResultCommonRequest createExaminationResultRequest =  examinationFormMapperUtil.buildCreateExaminationResultRequest(entity);
+        createExaminationResultRequest.setSymptom(request.getSymptom());
+        kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, createExaminationResultRequest);
         return examinationFormMapperUtil.entityToResponse(entity);
     }
 
