@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {SendApiService} from "../../../service/SendApiService";
-import {ExaminationResult, PATIENT} from "../../../ApiConstant";
+import {ExaminationResult, HOSPITAL_INFORMATION, PATIENT} from "../../../ApiConstant";
 import RoutesConstant from "../../../RoutesConstant";
 import {Link} from "react-router-dom";
 import styles from '../../../layouts/body/style.module.css'
@@ -9,20 +9,122 @@ const HistoriesExamiantion = () => {
 
 }
 
-const Examination = ({examinationResult, patient, imageDetails}) => {
+const SelectDiseaseModal = ({isOpen, onClose, diseasesMap, selectCallBack}) => {
+    const [queryString, setQueryString] = useState('')
+    const [queriedDiseases, setQueriedDiseases] = useState(null)
+
+    useEffect(() => {
+        setQueriedDiseases([...diseasesMap].map(([key, value]) => value))
+    }, [diseasesMap])
+
+    useEffect(() => {
+        const query = queryString.toLowerCase()
+        const temp = [...diseasesMap].filter(([key, value]) => {
+            return value.name.toLowerCase().includes(query);
+        }).map(([key, value]) => value);
+        setQueriedDiseases(temp)
+    }, [queryString])
+
+    if(!isOpen){
+        return null
+    }
+
+    return (
+        <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+                <button className={styles.closeButton} onClick={onClose}>&times;</button>
+
+                <table>
+                    <thead></thead>
+                    <tbody>
+                        <tr>
+                            <td>Nhập tên bệnh: </td>
+                            <td><input value={queryString} onChange={(e) => {setQueryString(e.target.value)}}/></td>
+                        </tr>
+
+                        <tr>
+                            <td>Tên bệnh</td>
+                            <td>Mô tả</td>
+                        </tr>
+
+                        {queriedDiseases.map(disease => {
+                            return <tr key={disease.id}>
+                                        <td>{disease.name}</td>
+                                        <td>{disease.description}</td>
+                                        <td><button onClick={() => selectCallBack(disease.id)}>Chọn bệnh này</button></td>
+                                    </tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+
+const Examination = ({examinationResult}) => {
+    const [thisExaminationResult, setThisExaminationResult] = useState({...examinationResult})
+    const [diseasesMap, setDiseasesMap] = useState(new Map())
+    const [selectedDiseasesMap, setSelectedDiseasesMap] = useState(new Map())
+    const [isSelectDiseaseOpen, setIsSelectDiseaseOpen] = useState(false)
+
+    const getDiseases = () => {
+        SendApiService.getRequest(HOSPITAL_INFORMATION.DISEASES.getUrl(), {}, response => {
+            const tempMap = new Map()
+            for(const disease of response.data){
+                tempMap.set(disease.id, disease)
+            }
+            setDiseasesMap(tempMap)
+        }, error => {
+
+        })
+    }
+
+    useEffect(() => {
+        setThisExaminationResult({...examinationResult})
+    }, [examinationResult]);
+
+    useEffect(() => {
+        getDiseases()
+    }, [])
+
+    //Phần lựa chọn bệnh
+    const onCloseSelectDieseaseModal = () => {
+        setIsSelectDiseaseOpen(false)
+    }
+
+    const onOpenSelectDiseaseModal = () => {
+        setIsSelectDiseaseOpen(true)
+    }
+
+    const selectedDisease = (id) => {
+        console.log(id)
+    }
+
 
     return (
         <div>
             <table>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <td>Bệnh nhân:</td>
-                        <td>${}</td>
+                        <td>{(() => {
+                           if(!thisExaminationResult || !thisExaminationResult.patient){
+                               return <p></p>
+                           }
+                           const fullName = thisExaminationResult.patient.fullName
+                           return fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName
+                        })()}</td>
                     </tr>
 
                     <tr>
                         <td>Triệu chứng: </td>
-                        <td>{examinationResult.symptom}</td>
+                        <td>{thisExaminationResult.symptom}</td>
                     </tr>
                 </tbody>
             </table>
@@ -36,53 +138,100 @@ const Examination = ({examinationResult, patient, imageDetails}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {examinationResult.images.map(image => {
-                        return <tr key={image.id}>
-                            <td><img className={styles.previewImage} src={image.image}/></td>
-                            <td><img className={styles.previewImage} src={image.processedImage}/></td>
-                        </tr>
-                    })}
+                    {(() => {
+                        if (!thisExaminationResult || !thisExaminationResult.images) {
+                            return <tr><td></td><td></td></tr>;
+                        }
+
+                        return thisExaminationResult.images.map(image => (
+                            <tr key={image.id}>
+                                <td><img className={styles.previewImage} src={image.image} alt="Original" /></td>
+                                <td><img className={styles.previewImage} src={image.processedImage} alt="Processed" /></td>
+                            </tr>
+                        ));
+                    })()}
                 </tbody>
             </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Điều trị:</td>
+                        <td><textarea onChange={(e) => {setThisExaminationResult({...thisExaminationResult, treatment: e.target.value})}}/></td>
+                    </tr>
+                    <tr>
+                        <td>Các bệnh phát hiện: </td>
+                        <td><button onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal} diseasesMap={diseasesMap} selectCallBack={selectedDisease}/>
         </div>
     )
 }
 
 const ExaminatingPatient = () => {
-    const examintionResultId = window.location.href.split('/').pop()
+    const examinationResultId = window.location.href.split('/').pop()
     const [examinationResult, setExaminationResult] = useState({})
-    const [patient, setPatient] = useState({})
     const [selectedTab, setSeletedTab] = useState(1)
-    const [imageDetails, setImageDetails] = useState([])
 
     const getImageDetails = (id, examinationResult) => {
-        SendApiService.getRequest(PATIENT.APPOINTMENT.findAppointmentDetailByAppointmentId(id), {}, response => {
-            examinationResult.images = response.data
-        }, error => {
-
-        })
-    }
+        return new Promise((resolve, reject) => {
+            SendApiService.getRequest(
+                PATIENT.APPOINTMENT.findAppointmentDetailByAppointmentId(id),
+                {},
+                response => {
+                    examinationResult.images = response.data;
+                    resolve(); // Đảm bảo Promise được giải quyết khi hoàn thành
+                },
+                error => {
+                    reject(error); // Đảm bảo Promise bị từ chối khi có lỗi
+                }
+            );
+        });
+    };
 
     const getPatient = (patientId, examinationResult) => {
-        SendApiService.getRequest(PATIENT.PATIENT_API.findById(patientId), {}, response => {
-            examinationResult.patient = response.data
-        }, error => {
+        return new Promise((resolve, reject) => {
+            SendApiService.getRequest(
+                PATIENT.PATIENT_API.findById(patientId),
+                {},
+                response => {
+                    examinationResult.patient = response.data;
+                    resolve(); // Đảm bảo Promise được giải quyết khi hoàn thành
+                },
+                error => {
+                    reject(error); // Đảm bảo Promise bị từ chối khi có lỗi
+                }
+            );
+        });
+    };
 
-        })
-    }
-
-    const getExamiantionResult = () => {
-        SendApiService.getRequest(ExaminationResult.ExaminationResultUrl.findById(examintionResultId), {}, response => {
-            const tempResult = response.data
-            getPatient(tempResult.patientId, tempResult)
-            if(response.data.appointmentId){
-                getImageDetails(response.data.appointmentId, tempResult)
+    const getExamiantionResult = async () => {
+        SendApiService.getRequest(
+            ExaminationResult.ExaminationResultUrl.findById(examinationResultId),
+            {},
+            async response => {
+                const tempResult = response.data;
+                await getPatient(tempResult.patientId, tempResult);
+                if (response.data.appointmentId) {
+                    await getImageDetails(response.data.appointmentId, tempResult);
+                }
+                setExaminationResult(tempResult);
+            },
+            error => {
+                // Xử lý lỗi tại đây nếu cần
             }
-            setExaminationResult(tempResult)
-        }, error => {
+        );
+    };
 
-        })
-    }
 
     useEffect(() => {
         getExamiantionResult()
@@ -100,7 +249,7 @@ const ExaminatingPatient = () => {
                 <div className={styles.cursorPointer} onClick={() => setSeletedTab(4)}>Tạo phiếu hẹn khám lại</div>
             </div>
 
-            {selectedTab === 1 && <Examination examinationResult={examinationResult} patient={patient} imageDetails={imageDetails}/>}
+            {selectedTab === 1 && <Examination examinationResult={examinationResult}/>}
         </div>
     )
 }

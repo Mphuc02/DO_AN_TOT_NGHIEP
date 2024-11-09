@@ -198,6 +198,7 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
     const [selectedAppointment, setSelectedAppointment] = useState({})
     const [diseasesMap, setDiseasesMap] = useState(new Map())
     const [createdExaminationForm, setCreatedExaminationForm] = useState(null)
+    const [webSocket, setWebsocket] = useState(new WebSocketService())
 
     const getPatientsByIds = async (ids) => {
         const tempMap = new Map()
@@ -244,17 +245,24 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
     }
 
     const connectToWebSocket = () => {
-        const webSocket = new WebSocketService()
         const topics = [WEBSOCKET.updatedNumberExaminationForm(JwtService.geUserFromToken())]
         webSocket.connectAndSubscribe(topics, (message) => {
             receivedCreatedExaminationForm (message)
         })
     }
 
+    const disconnect = () => {
+        webSocket.disconnect()
+    }
+
     useEffect(() => {
         getAppointmentByToday()
         getDiseases()
         connectToWebSocket()
+
+        return () => {
+            disconnect()
+        }
     }, [])
 
     const handleCreateExaminationForm = (appointment) => {

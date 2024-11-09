@@ -20,6 +20,16 @@ class WebSocketService{
             })
         });
     }
+
+    disconnect = () => {
+        if (this.stompClient && this.stompClient.connected) {
+            this.stompClient.disconnect(() => {
+                console.log('Disconnected from WebSocket');
+            });
+        } else {
+            console.log('STOMP client is not connected');
+        }
+    }
 }
 
 export default WebSocketService
