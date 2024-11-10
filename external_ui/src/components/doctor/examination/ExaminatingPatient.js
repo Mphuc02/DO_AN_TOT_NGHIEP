@@ -96,10 +96,38 @@ const Examination = ({examinationResult}) => {
         setIsSelectDiseaseOpen(true)
     }
 
-    const selectedDisease = (id) => {
-        console.log(id)
+    const setSelectedDisease = (id) => {
+        const tempDiseasesMap = new Map(diseasesMap)
+        const tempSelectedDiseasesMap = new Map(selectedDiseasesMap)
+
+        tempSelectedDiseasesMap.set(id, tempDiseasesMap.get(id))
+        tempDiseasesMap.delete(id)
+
+        setDiseasesMap(tempDiseasesMap)
+        setSelectedDiseasesMap(tempSelectedDiseasesMap)
+        onCloseSelectDieseaseModal()
     }
 
+    const deleteSelectedDisease = (id) => {
+        const tempDiseasesMap = new Map(diseasesMap); // Tạo bản sao mới
+        const tempSelectedDiseasesMap = new Map(selectedDiseasesMap); // Tạo bản sao mới
+
+        tempDiseasesMap.set(id, tempSelectedDiseasesMap.get(id));
+        tempSelectedDiseasesMap.delete(id);
+
+        setDiseasesMap(tempDiseasesMap);
+        setSelectedDiseasesMap(tempSelectedDiseasesMap);
+    }
+
+    const onChangeDiseaseDescriptionAtIndex = (index, value) => {
+        const tempMap = new Map(selectedDiseasesMap)
+        const diseaseAtIndex = tempMap.get(index)
+        selectedDiseasesMap.set(index, {...diseaseAtIndex, diseaseDescription: value})
+    }
+
+    const onClickSaveResult = () => {
+
+    }
 
     return (
         <div>
@@ -165,14 +193,29 @@ const Examination = ({examinationResult}) => {
                         <td>Điều trị:</td>
                         <td><textarea onChange={(e) => {setThisExaminationResult({...thisExaminationResult, treatment: e.target.value})}}/></td>
                     </tr>
+
                     <tr>
                         <td>Các bệnh phát hiện: </td>
                         <td><button onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>
                     </tr>
+
+                    {[...selectedDiseasesMap].map(([key, value]) => {
+                        if(!value){
+                            return ''
+                        }
+
+                        return <tr key={key}>
+                                    <td>{value.name}</td>
+                                    <td><textarea onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/></td>
+                                    <td> <button onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button> </td>
+                        </tr>
+                    })}
                 </tbody>
             </table>
 
-            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal} diseasesMap={diseasesMap} selectCallBack={selectedDisease}/>
+            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal} diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
+
+            <button onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>
         </div>
     )
 }
