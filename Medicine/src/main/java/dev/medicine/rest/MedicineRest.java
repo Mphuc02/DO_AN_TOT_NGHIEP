@@ -33,6 +33,11 @@ public class MedicineRest {
         return ResponseEntity.ok(medicineService.getByID(id));
     }
 
+    @GetMapping(SEARCH)
+    public ResponseEntity<List<MedicineResponse>> search(@RequestParam String q){
+        return ResponseEntity.ok(medicineService.search(q));
+    }
+
     @PostMapping(CHECK_MEDICINES_EXIST)
     public ResponseEntity<Set<UUID>> checkMedicinesExist(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(medicineService.checkMedicinesExist(ids));

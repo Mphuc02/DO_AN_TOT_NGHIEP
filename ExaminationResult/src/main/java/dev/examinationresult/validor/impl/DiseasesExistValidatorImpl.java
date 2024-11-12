@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class DiseasesExistValidatorImpl implements ConstraintValidator<DiseasesExistValidator, List<CreateExaminationResultDetailRequest>> {
@@ -22,7 +21,7 @@ public class DiseasesExistValidatorImpl implements ConstraintValidator<DiseasesE
         if(ObjectUtils.isEmpty(requests))
             return true;
 
-        List<UUID> ids = requests.stream().map(request -> request.getDiseaseId()).collect(Collectors.toList());
+        List<UUID> ids = requests.stream().map(CreateExaminationResultDetailRequest::getDiseaseId).toList();
         List<UUID> response = client.checkDiseasesExist(ids);
         if(response.size() == ids.size())
             return true;

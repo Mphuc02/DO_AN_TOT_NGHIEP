@@ -6,6 +6,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
+
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -27,6 +29,9 @@ public class Patient {
 
     @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FullName fullName;
+
+    private Integer gender;
+    private LocalDate dateOfBirth;
 
     private boolean usingAccount;
 }

@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,6 +40,16 @@ public class MedicineService {
 
     public List<MedicineResponse> getAll(){
         return medicineMapperUtil.mapEntitiesFromResponses(medicineRepository.findAll());
+    }
+
+    public List<MedicineResponse> search(String search){
+        if(StringUtils.hasText(search)){
+            search = "%" + search.trim().toLowerCase() + "%";
+        }
+        else{
+            search = null;
+        }
+        return medicineMapperUtil.mapEntitiesFromResponses(medicineRepository.searchByName(search));
     }
 
     public Set<UUID> checkMedicinesExist(List<UUID> ids){
