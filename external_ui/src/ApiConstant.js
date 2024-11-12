@@ -46,6 +46,10 @@ class MEDICINE{
         static getById = (id) => {
             return this.getUrl() + `/${id}`;
         }
+
+        static search = (q) => {
+            return this.getUrl() + `/search?q=${q}`
+        }
     }
 
     static Origin = class {

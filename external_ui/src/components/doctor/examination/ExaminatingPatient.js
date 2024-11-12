@@ -4,6 +4,8 @@ import {ExaminationResult, HOSPITAL_INFORMATION, PATIENT} from "../../../ApiCons
 import RoutesConstant from "../../../RoutesConstant";
 import {Link} from "react-router-dom";
 import styles from '../../../layouts/body/style.module.css'
+import {jsPDF} from "jspdf";
+import {MedicineConsultation} from "./MedicineConsultation";
 
 const HistoriesExamiantion = () => {
 
@@ -66,6 +68,10 @@ const Examination = ({examinationResult}) => {
     const [diseasesMap, setDiseasesMap] = useState(new Map())
     const [selectedDiseasesMap, setSelectedDiseasesMap] = useState(new Map())
     const [isSelectDiseaseOpen, setIsSelectDiseaseOpen] = useState(false)
+    const [treatment, setTreatment] = useState('')
+    const [examinationResultResponse, setExaminationResultResponse] = useState(null)
+    const [error, setError] = useState({})
+    let isClickSaveButton = false
 
     const getDiseases = () => {
         SendApiService.getRequest(HOSPITAL_INFORMATION.DISEASES.getUrl(), {}, response => {
@@ -126,6 +132,76 @@ const Examination = ({examinationResult}) => {
     }
 
     const onClickSaveResult = () => {
+        if(isClickSaveButton){
+            return
+        }
+
+        isClickSaveButton = true
+
+        const details = [...selectedDiseasesMap].map(([key, value]) => {
+            return {
+                diseaseId: key,
+                diseaseDescription: value.diseaseDescription
+            }
+        })
+
+        const examinationResult = {
+            treatment: treatment,
+            details: details
+        }
+
+        SendApiService.putRequest(ExaminationResult.ExaminationResultUrl.findById(thisExaminationResult.id), examinationResult,{ }, response => {
+                setError({})
+                setExaminationResultResponse(response.data)
+            }, error => {
+                isClickSaveButton = false
+                if(error.status === 400){
+                    setError(error.response.data)
+                }
+            }
+        )
+    }
+
+    const handlePrintExaminationResult = () => {
+        const hospitalName = 'Benh vien da lieu Minh Phuc'
+        const fullName = examinationResult.patient.fullName
+        const dateOfBirth = examinationResult.patient.dateOfBirth.split('-').reverse().join('-')
+
+        const doc = new jsPDF();
+
+        doc.setFont('helvetica', 'normal');
+
+        doc.setFontSize(20);
+        doc.text(hospitalName, 105, 20, { align: 'center' });
+
+        doc.setFontSize(16);
+        doc.text('Ket qua kham benh', 105, 40, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.text(`Ten benh nhan: ${fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}`, 20, 70);
+        doc.text(`Nam sinh: ${dateOfBirth}`, 20, 80)
+        doc.text('Que quan: ', 20,90)
+        doc.text(`Trieu chung: ${examinationResultResponse.symptom}`, 20, 100)
+        doc.text(`Dieu tri: ${examinationResultResponse.treatment}`, 20, 110)
+        doc.text('Ket qua kham benh:', 20, 130)
+
+        const header = ['Số thứ tự', 'Tên bệnh', 'Kết quả'];
+        const data = [
+                {'Số thứ tự': '1', 'Tên bệnh': 'Bệnh A', 'Kết quả': 'Kết quả 1 jkhjha ajhshhdhjag aassuy tdajsyhg d jhagsd jhasg hj gajh gd ajhsgd jha d'},
+                {'Số thứ tự': '2', 'Tên bệnh': 'Bệnh B', 'Kết quả': 'Kết quả 2'},
+                {'Số thứ tự': '3', 'Tên bệnh': 'Bệnh C', 'Kết quả': 'Kết quả 3'}
+        ];
+
+        var config = {
+            autoSize     : false,
+            printHeaders : true,
+            overflow: 'linebreak'
+        }
+
+        doc.table(10, 10, data, header, config);
+
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
 
     }
 
@@ -190,8 +266,13 @@ const Examination = ({examinationResult}) => {
                 </thead>
                 <tbody>
                     <tr>
+                        <td></td>
+                        <td>{error.treatment}</td>
+                    </tr>
+
+                    <tr>
                         <td>Điều trị:</td>
-                        <td><textarea onChange={(e) => {setThisExaminationResult({...thisExaminationResult, treatment: e.target.value})}}/></td>
+                        <td><textarea onChange={(e) => setTreatment(e.target.value)}/></td>
                     </tr>
 
                     <tr>
@@ -199,23 +280,44 @@ const Examination = ({examinationResult}) => {
                         <td><button onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>
                     </tr>
 
-                    {[...selectedDiseasesMap].map(([key, value]) => {
+                    <tr>
+                        <td></td>
+                        <td>{error.details}</td>
+                    </tr>
+
+                    {[...selectedDiseasesMap].map(([key, value], index) => {
                         if(!value){
                             return ''
                         }
 
-                        return <tr key={key}>
-                                    <td>{value.name}</td>
-                                    <td><textarea onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/></td>
-                                    <td> <button onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button> </td>
-                        </tr>
+                        const errorAtIndex = `details[${index}].diseaseDescription`
+                        return <>
+                                    <tr>
+                                        <td></td>
+                                        <td>{error[errorAtIndex]}</td>
+                                    </tr>
+
+                                    <tr key={key}>
+                                        <td>{value.name}</td>
+                                        <td><textarea onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
+                                        </td>
+                                        <td>
+                                            <button onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button>
+                                        </td>
+                                    </tr>
+                                </>
                     })}
                 </tbody>
             </table>
 
-            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal} diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
+            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal}
+                                diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
 
-            <button onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>
+            {!examinationResultResponse &&
+                <button onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>}
+
+            {examinationResultResponse &&
+                <button onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
         </div>
     )
 }
@@ -232,10 +334,10 @@ const ExaminatingPatient = () => {
                 {},
                 response => {
                     examinationResult.images = response.data;
-                    resolve(); // Đảm bảo Promise được giải quyết khi hoàn thành
+                    resolve();
                 },
                 error => {
-                    reject(error); // Đảm bảo Promise bị từ chối khi có lỗi
+                    reject(error);
                 }
             );
         });
@@ -248,10 +350,10 @@ const ExaminatingPatient = () => {
                 {},
                 response => {
                     examinationResult.patient = response.data;
-                    resolve(); // Đảm bảo Promise được giải quyết khi hoàn thành
+                    resolve();
                 },
                 error => {
-                    reject(error); // Đảm bảo Promise bị từ chối khi có lỗi
+                    reject(error);
                 }
             );
         });
@@ -270,7 +372,7 @@ const ExaminatingPatient = () => {
                 setExaminationResult(tempResult);
             },
             error => {
-                // Xử lý lỗi tại đây nếu cần
+
             }
         );
     };
@@ -293,6 +395,7 @@ const ExaminatingPatient = () => {
             </div>
 
             {selectedTab === 1 && <Examination examinationResult={examinationResult}/>}
+            {selectedTab === 3 && <MedicineConsultation />}
         </div>
     )
 }
