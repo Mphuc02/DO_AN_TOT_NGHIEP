@@ -15,7 +15,6 @@ import java.util.UUID;
 @Builder
 public class MedicineConsultationForm {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private LocalDateTime createdAt;

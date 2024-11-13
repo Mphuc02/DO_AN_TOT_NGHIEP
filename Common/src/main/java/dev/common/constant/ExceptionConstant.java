@@ -71,6 +71,7 @@ public class ExceptionConstant {
         public static final String OUT_OF_TIME_DELETE_APPOINTMENT_FORM = "Hết thời gian xóa lịch khám lại";
         public static final String NOT_OWN_APPOINTMENT_FORM = "Không thể thao tác với lịch hẹn khám lại này";
         public static final String FAIL_VALIDATION_APPOINTMENT_FORM = "Lỗi khi kiểm tra thuộc tính Appointment form";
+        public static final String MEDICINE_CONSULTATION_EXISTED = "Đã có phiếu tư vấn thuốc cho kết quả khám này";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

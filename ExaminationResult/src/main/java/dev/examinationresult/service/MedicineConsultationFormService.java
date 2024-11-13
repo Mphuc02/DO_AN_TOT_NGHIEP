@@ -1,6 +1,7 @@
 package dev.examinationresult.service;
 
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
 import dev.common.util.AuditingUtil;
@@ -38,12 +39,21 @@ public class MedicineConsultationFormService {
 
     @Transactional
     public MedicineConsultationFormResponse create(SaveMedicineConsultationFormRequest request){
+        if(formRepository.existsById(request.getId())){
+            throw BaseException.buildBadRequest().message(EXAMINATION_RESULT_EXCEPTION.MEDICINE_CONSULTATION_EXISTED).build();
+        }
+
         UUID employeeId = auditingUtil.getUserLogged().getId();
         MedicineConsultationForm form = formMapperUtil.mapCreateRequestToEntity(request);
         form.setEmployeeId(employeeId);
         form.setCreatedAt(LocalDateTime.now());
         form = formRepository.save(form);
         handleSaveFormDetail(request.getDetails(), form);
+        return formMapperUtil.mapEntityToResponse(form);
+    }
+
+    public MedicineConsultationFormResponse findById(UUID id){
+        MedicineConsultationForm form = formRepository.findById(id).orElseThrow(() -> BaseException.buildNotFound().message(EXAMINATION_RESULT_EXCEPTION.CONSULTATION_FORM_NOT_FOUND).build());
         return formMapperUtil.mapEntityToResponse(form);
     }
 

@@ -2,7 +2,8 @@ package dev.examinationresult.validor.impl;
 
 import dev.common.client.MedicineClient;
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.exception.ObjectIllegalArgumentException;
+import dev.common.exception.BaseException;
+import dev.common.model.ErrorField;
 import dev.examinationresult.dto.request.SaveMedicineConsultationFormDetailRequest;
 import dev.examinationresult.validor.MedicineConsultationDetailsValidator;
 import jakarta.validation.ConstraintValidator;
@@ -21,43 +22,44 @@ public class MedicinesConsultationDetailsValidatorImpl implements ConstraintVali
         if(ObjectUtils.isEmpty(requests))
             return true;
 
-        Map<Integer, HashMap<String, String>> errors = new HashMap<>();
+        List<ErrorField> errorFields = new ArrayList<>();
         List<UUID> medicineIds = new ArrayList<>();
 
         IntStream.range(0, requests.size()).forEach(index -> {
-            HashMap<String, String> errorDetail = new HashMap<>();
             if(requests.get(index).getMedicineId() == null){
-                errorDetail.put("medicineId", "Thuốc không được bỏ trống");
+                ErrorField field = new ErrorField("Thuốc không được bỏ trống", String.format("details[%s].medicineId", index));
+                errorFields.add(field);
             }else {
                 medicineIds.add(requests.get(index).getMedicineId());
             }
 
             if(requests.get(index).getQuantity() == null){
-                errorDetail.put("quantity", "Số lượng không được bỏ trống");
+                ErrorField field = new ErrorField("Số lượng không được bỏ trống", String.format("details[%s].quantity", index));
+                errorFields.add(field);
             }
             else {
-                if(requests.get(index).getQuantity() <= 0)
-                    errorDetail.put("quantity", "Số lượng phải lớn hơn bằng 1");
+                if(requests.get(index).getQuantity() <= 0){
+                    ErrorField field = new ErrorField("Số lượng phải lớn hơn bằng 1", String.format("details[%s].quantity", index));
+                    errorFields.add(field);
+                }
             }
 
-            if(ObjectUtils.isEmpty(requests.get(index).getTreatment()))
-                errorDetail.put("treatment", "Cách dùng không được bỏ trống");
-
-            if(!errorDetail.isEmpty())
-                errors.put(index, errorDetail);
+            if(ObjectUtils.isEmpty(requests.get(index).getTreatment())){
+                ErrorField field = new ErrorField("Cách dùng không được bỏ trống", String.format("details[%s].treatment", index));
+                errorFields.add(field);
+            }
         });
 
         Set<UUID> resultIds = client.checkMedicinesExist(medicineIds);
         IntStream.range(0, medicineIds.size()).forEach(index -> {
             if(!resultIds.contains(medicineIds.get(index))){
-                HashMap<String, String> errorDetail = errors.computeIfAbsent(index, k -> new HashMap<>());
-                errorDetail.put("medicineId", "Không tồn tại thuốc với id này");
+                ErrorField errorField = new ErrorField("Không tồn tại thuốc với id này", String.format("details[%s].medicineId", index));
+                errorFields.add(errorField);
             }
         });
 
-        if(!errors.isEmpty())
-            throw new ObjectIllegalArgumentException((Map<Object, Object>) (Object)errors,
-                                        EXAMINATION_RESULT_EXCEPTION.FAIL_VALIDATION_CONSULTATION_DETAIL);
+        if(!errorFields.isEmpty())
+            throw BaseException.buildBadRequest().message(EXAMINATION_RESULT_EXCEPTION.FAIL_VALIDATION_CONSULTATION_DETAIL).addFields(errorFields).build();
 
         return true;
     }
