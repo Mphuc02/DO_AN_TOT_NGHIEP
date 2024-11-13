@@ -204,6 +204,16 @@ class ExaminationResult{
             return this.getUrl() + "/" + id
         }
     }
+
+    static MedicineConsultationForm = class {
+        static getUrl = () => {
+            return HOST.getHost() + "/api/consultation-form"
+        }
+
+        static byId = (id) => {
+            return this.getUrl() + `/${id}`
+        }
+    }
 }
 
 export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult}
