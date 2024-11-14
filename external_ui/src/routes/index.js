@@ -53,6 +53,7 @@ const publicRoutes = [
     //Doctor working schedule management
     {path: RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT, component: WorkingScheduleManagement, layout: DoctorLayout},
 
+    //Patient
     {path: RoutesConstant.PATIENT.DASHBOARD, component: PatientDashBoard, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.LOGIN, component: PatientLogin, layout: PatientLoginLayout},
     {path: RoutesConstant.PATIENT.DIAGNOSTICS, component: Diagnostics, layout: PatientLayout},

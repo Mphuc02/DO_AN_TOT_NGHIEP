@@ -156,6 +156,10 @@ class PATIENT{
         static findAppointmentDetailByAppointmentId = (id) => {
             return this.getUrl() + "/find-detail-by-appointment-id/" + id
         }
+
+        static doctorCreateAppointment = () => {
+            return this.getUrl() + "/create-appointment-by-doctor"
+        }
     }
 
     static PATIENT_API = class {

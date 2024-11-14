@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import styles from '../../../layouts/body/style.module.css'
 import {jsPDF} from "jspdf";
 import {MedicineConsultation} from "./MedicineConsultation";
+import {AppointmentForm} from "./AppointmentForm";
 
 const HistoriesExamiantion = () => {
 
@@ -396,6 +397,7 @@ const ExaminatingPatient = () => {
 
             {selectedTab === 1 && <Examination examinationResult={examinationResult}/>}
             {selectedTab === 3 && <MedicineConsultation />}
+            {selectedTab === 4 && <AppointmentForm examinationResult={examinationResult} />}
         </div>
     )
 }

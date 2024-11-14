@@ -1,7 +1,9 @@
-import {useEffect, useState} from "react";
+import {forwardRef, useEffect, useRef, useState} from "react";
 import {SendApiService} from "../../../service/SendApiService";
 import {ExaminationResult, MEDICINE} from "../../../ApiConstant";
 import styles from "../../../layouts/body/style.module.css";
+import html2canvas from "html2canvas";
+import {jsPDF} from "jspdf";
 
 const ChooseMedicineModal = ({isOpen, onClose, onChooseMedicine}) => {
     const [valueSearch, setValueSearch] = useState('')
@@ -61,12 +63,36 @@ const ChooseMedicineModal = ({isOpen, onClose, onChooseMedicine}) => {
             </div>)
 }
 
+const PrintableComponent = forwardRef((props, ref) => {
+    return (
+        <div className={`${styles.printableContent}`} ref={ref}>
+            <h2>Bệnh viện da liễu Minh Phúc</h2>
+            <p>Phiếu tư vấn sử dụng thuốc</p>
+            <p>Bác sĩ: {}</p>
+            <p>Thời gian tạo: </p>
+            <p>Danh sách thuốc tư vấn</p>
+
+            <table border={1}>
+                <thead>
+                    <tr>
+                        <td>Số thứ tự</td>
+                        <td>Tên thuốc</td>
+                        <td>Cách dùng</td>
+                        <td>Số lượng tư vấn</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    );
+});
+
 const MedicineConsultation = ({}) => {
     const [isOpenChooseMedicineModal, setIsOpenChooseMedicineModal] = useState(false)
     const [selectedMedicinesMap, setSelectedMedicinesMap] = useState(new Map())
     const [formError, setFormError] = useState({})
     const [formResponse, setFormResponse] = useState(null)
     let isClickCreateConsultation = false;
+    const printRef = useRef();
     const id = window.location.href.split('/').pop()
 
     const onCloseChooseMedicineModal = () => {
@@ -133,6 +159,30 @@ const MedicineConsultation = ({}) => {
         })
     }
 
+    const handleDownloadPdf = async () => {
+        const element = printRef.current;
+
+        // Điều chỉnh kích thước canvas để giữ đúng cỡ chữ
+        const canvas = await html2canvas(element, {
+            scale: 3, // Giảm scale nếu chữ quá to để đảm bảo tỷ lệ phù hợp
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'pt',
+            format: 'a4',
+        });
+
+        // Điều chỉnh kích thước hình ảnh để phù hợp với PDF
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.output('dataurlnewwindow');
+    };
+
     return (
         <div>
             <button onClick={() => openChooseMedicineModal()}>Chọn thuốc</button>
@@ -141,45 +191,49 @@ const MedicineConsultation = ({}) => {
 
             <table>
                 <thead>
-                    <tr>
-                        <td>Số thứ tự</td>
-                        <td>Tên thuốc</td>
-                        <td>Số lượng trong kho</td>
-                        <td>Cách dùng</td>
-                        <td>Số lượng tư vấn</td>
-                    </tr>
+                <tr>
+                    <td>Số thứ tự</td>
+                    <td>Tên thuốc</td>
+                    <td>Số lượng trong kho</td>
+                    <td>Cách dùng</td>
+                    <td>Số lượng tư vấn</td>
+                </tr>
                 </thead>
                 <tbody>
-                    {[...selectedMedicinesMap].map(([key, value], index) => {
-                        const detailAtIndex = `details[${index}].`
-                        console.log(detailAtIndex + 'treatment', formError)
+                {[...selectedMedicinesMap].map(([key, value], index) => {
+                    const detailAtIndex = `details[${index}].`
+                    console.log(detailAtIndex + 'treatment', formError)
 
-                        return <>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{formError[detailAtIndex + 'treatment']}</td>
-                                    <td>{formError[detailAtIndex + 'quantity']}</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>{index + 1}</td>
-                                    <td>{value.name}</td>
-                                    <td>{value.quantity}</td>
-                                    <td><input value={value.treatment} onChange={(e) => onChangeUsageMedicine(key, e.target.value)}/></td>
-                                    <td><input type={"number"} onChange={(e) => onChangeQuantity(key, e.target.value)}/></td>
-                                    <td>
-                                        <button onClick={() => onRemoveMedicine(key)}>Xóa</button>
-                                    </td>
-                                </tr>
-                            </>
-                    })}
+                    return <>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{formError[detailAtIndex + 'treatment']}</td>
+                            <td>{formError[detailAtIndex + 'quantity']}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>{index + 1}</td>
+                            <td>{value.name}</td>
+                            <td>{value.quantity}</td>
+                            <td><input value={value.treatment}
+                                       onChange={(e) => onChangeUsageMedicine(key, e.target.value)}/></td>
+                            <td><input type={"number"} onChange={(e) => onChangeQuantity(key, e.target.value)}/></td>
+                            <td>
+                                <button onClick={() => onRemoveMedicine(key)}>Xóa</button>
+                            </td>
+                        </tr>
+                    </>
+                })}
                 </tbody>
             </table>
 
-            {!formResponse && <button onClick={() => {onClickCreateConsultationForm()}}>Tạo phiếu tư vấn thuốc</button>}
-            {formResponse && <button>In phiếu tư vấn</button>}
+            <PrintableComponent ref={printRef}/>
+            {!formResponse && <button onClick={() => {
+                onClickCreateConsultationForm()
+            }}>Tạo phiếu tư vấn thuốc</button>}
+            {formResponse && <button onClick={() => handleDownloadPdf()}>In phiếu tư vấn</button>}
         </div>
     )
 }

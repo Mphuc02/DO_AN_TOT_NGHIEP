@@ -187,3 +187,15 @@ button:hover {
 .displayNone{
     display: none;
 }
+
+.printableContent{
+    position: absolute;
+    left: -9999px;
+}
+
+@media print{
+    .printableContent{
+        position: static;
+        left: 0;
+    }
+}
