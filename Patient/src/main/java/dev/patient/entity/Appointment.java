@@ -23,7 +23,7 @@ public class Appointment {
     private UUID patientId;
     private UUID doctorId;
     private String description;
-
+    private UUID examinationResultId;
     private Boolean isExamined = false;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment", fetch = FetchType.LAZY)

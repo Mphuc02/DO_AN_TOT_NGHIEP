@@ -1,5 +1,6 @@
 package dev.patient.util;
 
+import dev.patient.dto.request.CreateAppointmentByDoctorRequest;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentResponse;
@@ -16,6 +17,7 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AppointmentMapperUtil {
     Appointment mapCreateRequestToEntity(CreateAppointmentRequest request);
+    Appointment mapCreateRequestToEntity(CreateAppointmentByDoctorRequest request);
     AppointmentResponse mapEntityToResponse(Appointment appointment);
     void mapUpdateRequestToEntity(UpdateAppointmentRequest request, @MappingTarget Appointment appointment);
     List<AppointmentResponse> mapEntitiesToResponses(List<Appointment> appointments);

@@ -105,5 +105,6 @@ public class ExceptionConstant {
         public static final String NOT_PERMISSION_WITH_APPOINTMENT = "Bạn không có quyền thao tác với lịch hẹn này";
         public static final String CAN_NOT_UPDATE_PASSED_APPOINTMENT = "Không thể chỉnh sửa lịch hẹn đã qua";
         public static final String DUPLICATE_APPOINTMENT_DATE = "Bạn đã có 1 lịch hẹn vào ngày đã chọn";
+        public static final String DUPLICATE_APPOINTMENT_FOR_EXAMINATION_RESULT = "Đã có lịch hẹn cho kết quả khám bệnh này";
     }
 }

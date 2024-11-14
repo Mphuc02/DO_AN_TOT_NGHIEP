@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
+    boolean existsByExaminationResultId(UUID examinationResultId);
     boolean existsByPatientIdAndAppointmentDate(UUID patientId, LocalDate date);
     List<Appointment> findByAppointmentDateAndIsExamined(LocalDate today, boolean isExamined);
 }

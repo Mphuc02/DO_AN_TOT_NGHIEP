@@ -4,6 +4,7 @@ import static dev.common.constant.ApiConstant.PATIENT.*;
 import dev.common.constant.AuthorizationConstant;
 import dev.common.dto.response.patient.AppointmentDetailResponse;
 import dev.common.dto.response.patient.AppointmentImageDetailResponse;
+import dev.patient.dto.request.CreateAppointmentByDoctorRequest;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentResponse;
@@ -32,6 +33,12 @@ public class AppointmentRest {
     @GetMapping(FIND_DETAILS_BY_APPOINTMENT_ID)
     public ResponseEntity<List<AppointmentImageDetailResponse>> getDetailByAppointmentID(@PathVariable UUID id){
         return ResponseEntity.ok(appointmentService.findDetailsByAppointmentId(id));
+    }
+
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
+    @PostMapping(DOCTOR_CREATE_APPOINTMENT)
+    public ResponseEntity<AppointmentResponse> doctorCreateAppointment(@Validated @RequestBody CreateAppointmentByDoctorRequest request){
+        return ResponseEntity.ok(appointmentService.create(request));
     }
 
     @PreAuthorize(AuthorizationConstant.USER)

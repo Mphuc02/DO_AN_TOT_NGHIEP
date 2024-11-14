@@ -92,6 +92,7 @@ public class ApiConstant {
         public static final String GET_APPOINTMENTS_OF_TODAY = "/today";
         public static final String GET_EXAMINED_APPOINTMENTS_OF_TODAY = "/today/examined";
         public static final String FIND_DETAILS_BY_APPOINTMENT_ID = "/find-detail-by-appointment-id/{id}";
+        public static final String DOCTOR_CREATE_APPOINTMENT = "/create-appointment-by-doctor";
     }
 
     public static final class PAYMENT{

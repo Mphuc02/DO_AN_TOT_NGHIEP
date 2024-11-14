@@ -9,6 +9,7 @@ import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.model.ErrorField;
 import dev.common.util.AuditingUtil;
+import dev.patient.dto.request.CreateAppointmentByDoctorRequest;
 import dev.patient.dto.request.CreateAppointmentRequest;
 import dev.patient.dto.request.UpdateAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentResponse;
@@ -51,6 +52,26 @@ public class AppointmentService {
 
     public List<AppointmentImageDetailResponse> findDetailsByAppointmentId(UUID id){
         return appointmentImageDetailMapperUtil.mapEntitiesToResponses(appointmentImageDetailRepository.findByAppointmentId(id));
+    }
+
+    @Transactional
+    public AppointmentResponse create(CreateAppointmentByDoctorRequest request){
+        if(appointmentRepository.existsByExaminationResultId(request.getExaminationResultId())){
+            ErrorField error = new ErrorField(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_FOR_EXAMINATION_RESULT, CreateAppointmentByDoctorRequest.Fields.examinationResultId);
+            throw BaseException.buildBadRequest().message(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_FOR_EXAMINATION_RESULT).addField(error).build();
+        }
+
+        if(appointmentRepository.existsByPatientIdAndAppointmentDate(auditingUtil.getUserLogged().getId(), request.getAppointmentDate())){
+            ErrorField error = new ErrorField(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_DATE, CreateAppointmentRequest.Fields.appointmentDate);
+            throw BaseException.buildBadRequest().addField(error).build();
+        }
+
+        Appointment appointment = appointmentMapperUtil.mapCreateRequestToEntity(request);
+        appointment.setDoctorId(auditingUtil.getUserLogged().getId());
+        appointment.setCreatedAt(LocalDateTime.now());
+        appointment.setIsExamined(false);
+        appointment = appointmentRepository.save(appointment);
+        return appointmentMapperUtil.mapEntityToResponse(appointment);
     }
 
     @Transactional
