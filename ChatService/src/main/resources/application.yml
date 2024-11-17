@@ -1,7 +1,21 @@
 spring:
     application:
-        name: Websocket
-        
+        name: Chat
+    
+    datasource:
+        url: jdbc:mysql://localhost:3306/chat
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+    
     kafka:
         bootstrap-servers:
             - localhost:9092
@@ -14,8 +28,11 @@ spring:
             properties:
                 spring.json.trusted.packages: "*"
     
-    main:
-        allow-bean-definition-overriding: true
+    data:
+        redis:
+            #            host: 10.10.100.42
+            port: 6379
+            host: localhost
 
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
@@ -24,19 +41,13 @@ jwt:
 
 kafka:
     topics:
-        create-employee-topic: create_employee
-        created-employee-topic: created_employee
+        detect-topic: request_detect_image
         detected-topic: detected_image
-        processed-image: processed-image
-        
-        create-patient-account-from-greeting: create_patient_from_greeting
-        created-patient-account-from-greeting-success: created_patient_from_greeting_success
-        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
-        
-        updated-number-examination-form-topic: updated_number_examination_form_topic
+        create-relation-ship: create_relation_ship
         
     group-id:
-        websocket: websocket_group
+        chat: chat
+
 
 eureka:
     client:
@@ -49,7 +60,6 @@ eureka:
         lease-renewal-interval-in-seconds: 5
         lease-expiration-duration-in-seconds: 5
         hostname: localhost
-
-
+        
 server:
-    port: 8092
+    port: 8090

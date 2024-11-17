@@ -13,4 +13,5 @@ public class PackageConstant {
     public static final String MEDICINE_PACKAGE = "dev.medicine";
     public static final String PAYMENT_PACKAGE = "dev.payment";
     public static final String WEBSOCKET_PACKAGE = "dev.websocket";
+    public static final String CHAT_PACKAGE = "dev.chat.chatservice";
 }

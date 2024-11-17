@@ -60,6 +60,11 @@ spring:
                   predicates:
                     - Path=/api/v1/appointment-form-next-examination/** , /api/examination-results/** , /api/consultation-form/**
                     
+                - id: chat
+                  uri: lb://CHAT
+                  predicates:
+                    - Path=/api/chat/**
+            
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
             globalcors:

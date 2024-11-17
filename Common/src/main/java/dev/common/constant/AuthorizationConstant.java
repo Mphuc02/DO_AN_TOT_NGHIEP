@@ -11,4 +11,5 @@ public class AuthorizationConstant {
     public static final String USER = "hasAuthority('USER')";
     public static final String RECEIPT_ADMIN = "hasAnyAuthority('RECEPTION_STAFF', 'ADMIN')";
     public static final String RECEIPT_ADMIN_DOCTOR = "hasAnyAuthority('RECEPTION_STAFF', 'ADMIN', 'DOCTOR')";
+    public static final String DOCTOR_USER = "hasAuthority('DOCTOR', 'USER')";
 }

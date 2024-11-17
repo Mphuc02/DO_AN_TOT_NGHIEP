@@ -16,12 +16,16 @@ public class KafkaTopicsConstrant {
     public static final String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.update-number-examination-form-topic}";
     public static final String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.updated-number-examination-form-topic}";
 
+    public static final String REQUEST_DETECT_IMAGE_TOPIC = "${kafka.topics.detect-topic}";
+    public static final String DETECTED_IMAGE_TOPIC = "${kafka.topics.detected-topic}";
+    public static final String CHAT_GROUP = "${kafka.group-id.chat}";
+
     public static final String PATIENT_GROUP = "${kafka.group-id.patient}";
     public static final String AUTHENTICATION_GROUP = "${kafka.group-id.authentication}";
     public static final String EXAMINATION_RESULT_GROUP = "${kafka.group-id.examination-result}";
     public static final String CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC = "${kafka.topics.created-examination-result-success}";
+    public static final String CREATE_RELATION_SHIP_TOPIC = "${kafka.topics.create-relation-ship}";
     public static final String PAYMENT_GROUP = "${kafka.group-id.payment-group}";
-
     public static final String GREETING_GROUP = "${kafka.group-id.greeting}";
     public static final String WEBSOCKET_GROUP = "${kafka.group-id.websocket}";
 }

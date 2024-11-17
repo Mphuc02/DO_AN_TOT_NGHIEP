@@ -101,4 +101,12 @@ public class ApiConstant {
 
         public static final String INVOICE_URL = "/api/invoices";
     }
+
+    public static final class CHAT{
+        public static final String CHAT_URL = "/api/chat";
+        public static final String RECEIVER_ID = "/witch/{id}";
+
+        public static final String RELATION_SHIP_URL = "/api/relation-ship";
+        public static final String FIRST_TIME = "/first-time";
+    }
 }

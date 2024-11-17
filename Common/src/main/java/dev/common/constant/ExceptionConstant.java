@@ -107,4 +107,10 @@ public class ExceptionConstant {
         public static final String DUPLICATE_APPOINTMENT_DATE = "Bạn đã có 1 lịch hẹn vào ngày đã chọn";
         public static final String DUPLICATE_APPOINTMENT_FOR_EXAMINATION_RESULT = "Đã có lịch hẹn cho kết quả khám bệnh này";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class ChatException{
+        public static final String CONTENT_MUST_NOT_EMPTY = "Nội dung không được bỏ trống";
+        public static final String MESSAGE_NOT_FOUND = "Tin nhắn không tồn tại";
+    }
 }

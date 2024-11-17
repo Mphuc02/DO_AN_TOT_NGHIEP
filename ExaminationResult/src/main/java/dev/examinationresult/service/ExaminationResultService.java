@@ -6,6 +6,7 @@ import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
+import dev.common.dto.request.CreateRelationShipCommonRequest;
 import dev.common.dto.request.UpdateNumberExaminationFormRequest;
 import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
@@ -52,6 +53,9 @@ public class ExaminationResultService {
 
     @Value(KafkaTopicsConstrant.UPDATE_NUMBER_EXAMINATION_FORM_TOPIC)
     private String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC;
+
+    @Value(KafkaTopicsConstrant.CREATE_RELATION_SHIP_TOPIC)
+    private String CREATE_RELATION_SHIP_TOPIC;
 
     public ExaminationResultResponse getById(UUID id){
         ExaminationResult findById = examinationResultRepository.findById(id)
@@ -123,6 +127,15 @@ public class ExaminationResultService {
         findToUpdate.setExaminatedAt(LocalDateTime.now());
         findToUpdate.setTreatment(request.getTreatment());
         findToUpdate = examinationResultRepository.save(findToUpdate);
+
+        //Gửi thông tin tạo đoạn chat giữa bệnh nhân và bác sĩ
+        CreateRelationShipCommonRequest relationShipCommonRequest = CreateRelationShipCommonRequest.builder()
+                .doctorId(employeeId)
+                .patientId(findToUpdate.getPatientId())
+                .build();
+        kafkaTemplate.send(CREATE_RELATION_SHIP_TOPIC, relationShipCommonRequest);
+
+
         return resultMapperUtil.mapEntityToResponse(findToUpdate);
     }
 }
