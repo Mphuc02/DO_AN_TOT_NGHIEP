@@ -18,6 +18,7 @@ public class KafkaTopicsConstrant {
 
     public static final String REQUEST_DETECT_IMAGE_TOPIC = "${kafka.topics.detect-topic}";
     public static final String DETECTED_IMAGE_TOPIC = "${kafka.topics.detected-topic}";
+    public static final String NEW_MESSAGE_TOPIC = "${kafka.topics.new-message}";
     public static final String CHAT_GROUP = "${kafka.group-id.chat}";
 
     public static final String PATIENT_GROUP = "${kafka.group-id.patient}";

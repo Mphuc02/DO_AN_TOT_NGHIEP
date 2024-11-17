@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(EMPLOYEE_URL.ROLE_URL)
+@RequestMapping(EmployeeUrl.ROLE_URL)
 @RequiredArgsConstructor
 public class RoleRest {
     private final EmployeeRoleService employeeRoleService;
@@ -21,8 +21,8 @@ public class RoleRest {
         return ResponseEntity.ok(employeeRoleService.getAll());
     }
 
-    @GetMapping(EMPLOYEE_URL.ID)
+    @GetMapping(EmployeeUrl.ID)
     public ResponseEntity<Object> getAllRolesOfEmployee(@PathVariable UUID id){
-        return ResponseEntity.ok(employeeRoleService.getAllRolesOfEmployeeById(id));
+        return ResponseEntity.ok(employeeRoleService.findAllRolesOfEmployeeById(id));
     }
 }

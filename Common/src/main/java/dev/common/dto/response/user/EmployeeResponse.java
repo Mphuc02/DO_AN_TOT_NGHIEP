@@ -1,6 +1,6 @@
 package dev.common.dto.response.user;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import lombok.*;
 import java.sql.Date;
 import java.util.Set;
@@ -16,5 +16,5 @@ public class EmployeeResponse {
     private FullNameCommonResponse fullName;
     private String introduce;
     private Date date;
-    private Set<Permission> permissions;
+    private Set<Role> roles;
 }

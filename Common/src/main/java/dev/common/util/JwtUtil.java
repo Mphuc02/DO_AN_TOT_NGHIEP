@@ -2,7 +2,7 @@ package dev.common.util;
 
 import dev.common.constant.ValueConstant.*;
 import dev.common.model.AuthenticatedUser;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.model.TokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
@@ -58,11 +58,11 @@ public class JwtUtil {
             throw new JwtException("Jwt không hợp lệ");
 
         List<String> roles = (List<String>) claims.get("roles");
-        Set<Permission> permissions = roles == null ? null : roles.stream().map(Permission::valueOf).collect(Collectors.toSet());
+        Set<Role> permissions = roles == null ? null : roles.stream().map(Role::valueOf).collect(Collectors.toSet());
         UUID id = UUID.fromString(String.valueOf(claims.get("userId")));
         return AuthenticatedUser.builder()
                 .id(id)
-                .permissions(permissions)
+                .roles(permissions)
                 .build();
     }
 

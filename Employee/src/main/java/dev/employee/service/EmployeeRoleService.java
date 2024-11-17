@@ -3,7 +3,7 @@ package dev.employee.service;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.DuplicateException;
 import dev.common.exception.NotFoundException;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.employee.dto.request.UpdateEmployeeRoleRequest;
 import dev.employee.entity.Employee;
 import dev.employee.entity.EmployeeRole;
@@ -16,22 +16,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeRoleService {
     private final RoleRepository roleRepository;
 
-    public List<Permission> getAll(){
-        return Arrays.asList(Permission.DOCTOR, Permission.RECEPTION_STAFF, Permission.MEDICINE_DISPENSER);
+    public List<Role> getAll(){
+        return Arrays.asList(Role.DOCTOR, Role.RECEPTION_STAFF, Role.MEDICINE_DISPENSER);
     }
 
-    public List<Permission> getAllRolesOfEmployeeById(UUID employeeId){
+    public List<Role> findAllRolesOfEmployeeById(UUID employeeId){
         return roleRepository.getAllByEmployeeId(employeeId)
                         .stream()
-                        .map(EmployeeRole::getPermission)
-                        .collect(Collectors.toList());
+                        .map(EmployeeRole::getRole)
+                        .toList();
     }
 
     @Transactional
@@ -39,17 +38,17 @@ public class EmployeeRoleService {
         if(ObjectUtils.isEmpty(requests))
             return;
 
-        List<Permission> existedRole = new ArrayList<>();
+        List<Role> existedRole = new ArrayList<>();
         List<EmployeeRole> roles = new ArrayList<>();
 
         requests.forEach(request -> {
-            if(roleRepository.existsByPermissionAndEmployeeId(request.getPermission(), employee.getId()) ){
-                existedRole.add(request.getPermission());
+            if(roleRepository.existsByRoleAndEmployeeId(request.getRole(), employee.getId()) ){
+                existedRole.add(request.getRole());
                 return;
             }
 
             EmployeeRole role = EmployeeRole.builder()
-                    .permission(request.getPermission())
+                    .role(request.getRole())
                     .employee(employee)
                     .build();
             roles.add(role);
@@ -64,12 +63,12 @@ public class EmployeeRoleService {
     @Transactional
     public void deleteRolesForEmployee(List<UpdateEmployeeRoleRequest> requests, UUID employeeId){
         List<EmployeeRole> deleteList = new ArrayList<>();
-        List<Permission> idsNotFound = new ArrayList<>();
+        List<Role> idsNotFound = new ArrayList<>();
 
         requests.forEach(request -> {
-            EmployeeRole role = roleRepository.findByPermissionAndEmployeeId(request.getPermission(), employeeId);
+            EmployeeRole role = roleRepository.findByRoleAndEmployeeId(request.getRole(), employeeId);
             if(ObjectUtils.isEmpty(role))
-                idsNotFound.add(request.getPermission());
+                idsNotFound.add(request.getRole());
             else
                 deleteList.add(role);
         });

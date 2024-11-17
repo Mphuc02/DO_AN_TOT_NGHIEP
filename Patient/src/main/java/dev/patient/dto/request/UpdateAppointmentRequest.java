@@ -1,6 +1,6 @@
 package dev.patient.dto.request;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.validator.DateAfterTodayValidator;
 import dev.common.validator.ExistedEmployeeValidator;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdateAppointmentRequest {
-    @ExistedEmployeeValidator(message = "Bác sĩ không tồn tại", permissions = Permission.DOCTOR)
+    @ExistedEmployeeValidator(message = "Bác sĩ không tồn tại", permissions = Role.DOCTOR)
     private UUID doctorId;
 
     @DateAfterTodayValidator

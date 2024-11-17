@@ -12,6 +12,7 @@ public class DetectedImageChatResponse {
     private UUID id;
     private String image;
     private String processedImage;
+    private UUID relationShipId;
     private UUID senderId;
     private UUID receiverId;
 }

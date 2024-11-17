@@ -43,8 +43,8 @@ public class AccountUtil {
                 .dateOfBirth(request.getDateOfBirth())
                 .fullName(request.getFullName())
                 .introduce(request.getIntroduce())
-                .permissions(request.getPermissions().stream()
-                                    .map(CreatePermissionRequest::getPermission)
+                .roles(request.getPermissions().stream()
+                                    .map(CreatePermissionRequest::getRole)
                                     .toList())
                 .build();
     }

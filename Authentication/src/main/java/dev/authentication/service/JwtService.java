@@ -2,7 +2,7 @@ package dev.authentication.service;
 
 import dev.common.constant.ValueConstant.*;
 import dev.authentication.entity.Account;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class JwtService {
     @Value(JWT.REFRESH_TOKEN_EXPIRATION)
     public int REFRESH_TOKEN_EXPIRATION;
 
-    public String generateAccessToken(Account account, List<Permission> permissions) {
+    public String generateAccessToken(Account account, List<Role> roles) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION);
 
@@ -33,14 +33,14 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(UUID.randomUUID().toString())
                 .claim("userId", account.getId().toString())
-                .claim("roles", permissions)
+                .claim("roles", roles)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
     }
 
-    public String generateRefreshToken(Account account, List<Permission> permissions){
+    public String generateRefreshToken(Account account, List<Role> roles){
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION);
 
@@ -48,7 +48,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(UUID.randomUUID().toString())
                 .claim("userId", account.getId().toString())
-                .claim("roles", permissions)
+                .claim("roles", roles)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

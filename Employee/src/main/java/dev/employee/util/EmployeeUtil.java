@@ -2,7 +2,7 @@ package dev.employee.util;
 
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.user.EmployeeResponse;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.entity.EmployeeRole;
@@ -26,9 +26,9 @@ public class EmployeeUtil {
                 .dateOfBirth(new Date(request.getDateOfBirth().getTime()))
                 .build();
 
-        Set<EmployeeRole> roles = request.getPermissions().stream()
+        Set<EmployeeRole> roles = request.getRoles().stream()
                                             .map(permission -> EmployeeRole.builder()
-                                                                    .permission(permission)
+                                                                    .role(permission)
                                                                     .employee(employee)
                                                                     .build())
                                             .collect(Collectors.toSet());
@@ -38,16 +38,16 @@ public class EmployeeUtil {
     }
 
     public EmployeeResponse entityToResponse(Employee entity){
-        Set<Permission> permissions = entity.getRoles()
+        Set<Role> roles = entity.getRoles()
                                             .stream()
-                                            .map(EmployeeRole::getPermission)
+                                            .map(EmployeeRole::getRole)
                                             .collect(Collectors.toSet());
         return EmployeeResponse.builder()
                 .id(entity.getId())
                 .introduce(entity.getIntroduce())
                 .date(entity.getDateOfBirth())
                 .fullName(fullNameUtil.entityToResponse(entity.getFullName()))
-                .permissions(permissions)
+                .roles(roles)
                 .build();
     }
 

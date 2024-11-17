@@ -17,5 +17,6 @@ public class MessageResponse {
     private String content;
     private String img;
     private String processedImg;
+    private UUID relationShipId;
     private LocalDateTime createdAt;
 }

@@ -1,6 +1,6 @@
 package dev.employee.entity;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
@@ -21,7 +21,7 @@ public class EmployeeRole {
     private UUID id;
 
     @Enumerated()
-    private Permission permission;
+    private Role role;
 
     @ManyToOne
     private Employee employee;

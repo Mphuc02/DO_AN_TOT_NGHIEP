@@ -15,8 +15,8 @@ public class WebsocketConstant {
         public static String UPDATED_NUMBER_EXAMINATION_FORM(UUID id){
             return String.format("/topic/updated-number-examination-form/%s", id);
         }
-        public static String chatWithUserId(UUID userId){
-            return String.format("/topic/chat/%s", userId);
+        public static String chattingTopic(UUID receiverId){
+            return String.format("/topic/chat/user/%s", receiverId);
         }
     }
 
@@ -26,5 +26,6 @@ public class WebsocketConstant {
         public static final String PROCESSED_IMAGE = "Kết qủa chuẩn đoán";
         public static final String UPDATED_NUMBER_EXAMINATION_FORM = "Tạo thành công phiếu khám bệnh";
         public static final String DETECTED_IMAGE_MESSAGE = "Chuẩn đoán thành công hình ảnh của tin nhắn";
+        public static final String NEW_MESSAGE = "Bạn có tin nhắn mới";
     }
 }

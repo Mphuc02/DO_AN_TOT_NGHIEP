@@ -4,7 +4,7 @@ import dev.authentication.entity.Account;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.request.CreateFullNameRequest;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.authentication.repository.AccountRepository;
 import dev.common.constant.PackageConstant;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class AuthenticationApplication implements CommandLineRunner {
                 .passWord(encoder.encode(ADMIN_STRING))
                 .build();
 
-        List<Permission> permissions = List.of(Permission.ADMIN);
+        List<Role> roles = List.of(Role.ADMIN);
 
         CreateFullNameRequest request = new CreateFullNameRequest("Phuc",
                                                                 "Minh",
@@ -66,7 +66,7 @@ public class AuthenticationApplication implements CommandLineRunner {
                         .fullName(request)
                         .introduce("Người quản lý trang web")
                         .dateOfBirth(new Date(new java.util.Date().getTime()))
-                        .permissions(permissions)
+                        .roles(roles)
                         .build();
         kafkaTemplate.send(createEmployeeTopic, registerRequest);
     }

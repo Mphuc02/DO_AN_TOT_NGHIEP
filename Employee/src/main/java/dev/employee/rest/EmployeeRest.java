@@ -1,9 +1,9 @@
 package dev.employee.rest;
 
-import dev.common.constant.ApiConstant.*;
+import static dev.common.constant.ApiConstant.EmployeeUrl.*;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -12,20 +12,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(EMPLOYEE_URL.URL)
+@RequestMapping(URL)
 @RequiredArgsConstructor
 public class EmployeeRest {
     private final EmployeeService employeeService;
 
     @GetMapping()
-    public ResponseEntity<Object> getAll(@RequestParam(value = "permission", required = false) Permission permission){
-        return ResponseEntity.ok(employeeService.getByPermisstion(permission));
+    public ResponseEntity<Object> getAll(@RequestParam(value = "role", required = false) Role role){
+        return ResponseEntity.ok(employeeService.getByPermisstion(role));
     }
 
-    @PutMapping(EMPLOYEE_URL.ID)
+    @GetMapping(ID)
+    public ResponseEntity<Object> findById(@PathVariable UUID id){
+        return ResponseEntity.ok(employeeService.findDetailById(id));
+    }
+
+    @PutMapping(ID)
     public ResponseEntity<Object> update(@PathVariable UUID id,
                                          @Valid @RequestBody UpdateEmployeeRequest request,
                                          BindingResult result){
@@ -35,5 +41,10 @@ public class EmployeeRest {
 
         employeeService.update(request, id);
         return ResponseEntity.ok("");
+    }
+
+    @PostMapping()
+    public ResponseEntity<Object> findByIds(@RequestBody List<UUID> ids){
+        return ResponseEntity.ok(employeeService.findByIds(ids));
     }
 }

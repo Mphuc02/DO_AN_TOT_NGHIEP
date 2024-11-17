@@ -24,6 +24,7 @@ public class PatientRest {
     }
 
     @GetMapping(ID)
+    @PreAuthorize(AuthorizationConstant.USER)
     public ResponseEntity<PatientResponse> findById(@PathVariable UUID id){
         return ResponseEntity.ok(patientService.findById(id));
     }

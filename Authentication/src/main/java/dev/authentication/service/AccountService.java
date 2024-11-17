@@ -19,7 +19,7 @@ import dev.common.exception.FailAuthenticationException;
 import dev.common.exception.NotPermissionException;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.common.model.AuthenticatedUser;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.model.TokenType;
 import dev.common.service.RedisService;
 import dev.common.util.AuditingUtil;
@@ -92,20 +92,20 @@ public class AccountService {
 
     public AuthenticationResponse authenticateUser(AuthenticationRequest request){
         Account account = authenticate(request);
-        List<Permission> permissions = List.of(Permission.USER);
-        String accessToken = jwtService.generateAccessToken(account, permissions);
-        String refreshToken = jwtService.generateRefreshToken(account, permissions);
+        List<Role> roles = List.of(Role.USER);
+        String accessToken = jwtService.generateAccessToken(account, roles);
+        String refreshToken = jwtService.generateRefreshToken(account, roles);
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     public AuthenticationResponse authenticationForEmployee(AuthenticationRequest request){
         Account account = authenticate(request);
-        List<Permission> permissions = employeeRoleOpenClient.getAllRolesOfEmployee(account.getId());
-        if(ObjectUtils.isEmpty(permissions))
+        List<Role> roles = employeeRoleOpenClient.getAllRolesOfEmployee(account.getId());
+        if(ObjectUtils.isEmpty(roles))
             throw new NotPermissionException(EMPLOYEE_EXCEPTION.NOT_PERMISSION);
 
-        String accessToken = jwtService.generateAccessToken(account, permissions);
-        String refreshToken = jwtService.generateRefreshToken(account, permissions);
+        String accessToken = jwtService.generateAccessToken(account, roles);
+        String refreshToken = jwtService.generateRefreshToken(account, roles);
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
@@ -153,7 +153,7 @@ public class AccountService {
             throw new NotPermissionException("This token has been revoked");
 
         AuthenticatedUser user = jwtUtil.getUserFromJwt(request.getToken(), TokenType.REFRESH_TOKEN);
-        return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getPermissions() == null ? null : user.getPermissions().stream().toList());
+        return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getRoles() == null ? null : user.getRoles().stream().toList());
     }
 
     @Transactional

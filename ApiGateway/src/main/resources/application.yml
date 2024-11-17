@@ -63,7 +63,7 @@ spring:
                 - id: chat
                   uri: lb://CHAT
                   predicates:
-                    - Path=/api/chat/**
+                    - Path=/api/chat/** , /api/relation-ship/**
             
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE

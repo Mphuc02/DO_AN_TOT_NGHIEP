@@ -6,7 +6,7 @@ import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.exception.NotFoundException;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.repository.EmployeeRepository;
@@ -20,7 +20,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -37,8 +39,8 @@ public class EmployeeService {
     @Value(KafkaTopicsConstrant.CREATED_EMPLOYEE_TOPIC)
     private String CREATED_EMPLOYEE_TOPIC;
 
-    public List<EmployeeResponse> getByPermisstion(Permission permission){
-        return employeeUtil.listEntitiesToResponses(employeeRepository.getByPermission(permission));
+    public List<EmployeeResponse> getByPermisstion(Role role){
+        return employeeUtil.listEntitiesToResponses(employeeRepository.getByPermission(role));
     }
 
     @KafkaListener(topics = "${kafka.topics.create-employee-topic}", groupId = "${kafka.group-id.account}")
@@ -70,8 +72,21 @@ public class EmployeeService {
         employeeRepository.save(findToUpdate);
     }
 
-    public Employee findById(UUID id){
+    public EmployeeResponse findDetailById(UUID id){
+        Employee employee = findById(id);
+        Set<Role> roles = new HashSet<>(employeeRoleService.findAllRolesOfEmployeeById(id));
+        EmployeeResponse response = employeeUtil.entityToResponse(employee);
+        response.setRoles(roles);
+        return response;
+    }
+
+    private Employee findById(UUID id){
         return employeeRepository.findById(id)
                         .orElseThrow(() -> new NotFoundException(EMPLOYEE_EXCEPTION.EMPLOYEE_NOT_FOUND));
+    }
+
+    public List<EmployeeResponse> findByIds(List<UUID> ids){
+        List<Employee> employees = employeeRepository.findByIdIn(ids);
+        return employeeUtil.listEntitiesToResponses(employees);
     }
 }

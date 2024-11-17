@@ -11,5 +11,5 @@ import java.util.UUID;
 @Builder
 public class AuthenticatedUser {
     private UUID id;
-    private Set<Permission> permissions;
+    private Set<Role> roles;
 }

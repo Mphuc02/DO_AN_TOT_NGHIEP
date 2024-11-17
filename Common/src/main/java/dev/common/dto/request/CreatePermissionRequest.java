@@ -1,6 +1,6 @@
 package dev.common.dto.request;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.validator.NotAdminPermissionValidator;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -13,5 +13,5 @@ import lombok.*;
 public class CreatePermissionRequest {
     @NotNull(message = "Chức vụ không được bỏ trống")
     @NotAdminPermissionValidator
-    private Permission permission;
+    private Role role;
 }

@@ -22,4 +22,9 @@ public class RelationShip {
     private UUID patientId;
     private LocalDateTime lastContact;
     private LocalDateTime firstContact;
+    private String lastMessage;
+
+    public void messageIsImage(){
+        this.lastMessage = "Hình ảnh";
+    }
 }

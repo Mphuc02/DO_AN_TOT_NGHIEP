@@ -26,7 +26,7 @@ public class MessageRest {
 
     @PostMapping()
     @PreAuthorize(AuthorizationConstant.USER)
-    public ResponseEntity<Object> createMessage(@Validated @RequestBody CreateMessageRequest request){
-        return ResponseEntity.ok(messageService.create(request));
+    public ResponseEntity<Object> sendMessage(@Validated @RequestBody CreateMessageRequest request){
+        return ResponseEntity.ok(messageService.sendMessage(request));
     }
 }

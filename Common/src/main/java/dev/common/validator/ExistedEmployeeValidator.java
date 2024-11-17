@@ -1,6 +1,6 @@
 package dev.common.validator;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.validator.impl.ExistedEmployeeValidatorImpl;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ExistedEmployeeValidatorImpl.class)
 public @interface ExistedEmployeeValidator {
     String message() default "Nhân viên với id không tồn tại";
-    Permission permissions();
+    Role permissions();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

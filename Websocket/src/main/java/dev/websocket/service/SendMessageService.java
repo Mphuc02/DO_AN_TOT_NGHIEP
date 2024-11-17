@@ -3,6 +3,7 @@ package dev.websocket.service;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.chat.DetectedImageChatResponse;
+import dev.common.dto.response.chat.MessageResponse;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.model.ProcessedImageData;
 import dev.websocket.constant.WebsocketConstant.*;
@@ -53,7 +54,14 @@ public class SendMessageService {
     public void handle(DetectedImageChatResponse response){
         log.info("Received message from topic: detected_image with id: " + response.getId());
         Message message = Message.buildOkMessage(MESSAGE.DETECTED_IMAGE_MESSAGE, response);
-        messagingTemplate.convertAndSend(TOPIC.chatWithUserId(response.getSenderId()), message);
-        messagingTemplate.convertAndSend(TOPIC.chatWithUserId(response.getReceiverId()), message);
+        messagingTemplate.convertAndSend(TOPIC.chattingTopic(response.getSenderId()), message);
+        messagingTemplate.convertAndSend(TOPIC.chattingTopic(response.getReceiverId()), message);
+    }
+
+    @KafkaListener(topics = NEW_MESSAGE_TOPIC, groupId = WEBSOCKET_GROUP)
+    public void handle(MessageResponse response){
+        log.info("Received message from topic: new_message with relationShipId: " + response.getRelationShipId());
+        Message message = Message.buildOkMessage(MESSAGE.NEW_MESSAGE, response);
+        messagingTemplate.convertAndSend(TOPIC.chattingTopic(response.getReceiverId()), message);
     }
 }

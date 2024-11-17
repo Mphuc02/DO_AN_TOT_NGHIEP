@@ -1,7 +1,7 @@
 package dev.common.validator.impl;
 
 import dev.common.client.RoleClient;
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import dev.common.validator.ExistedEmployeeValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -13,11 +13,11 @@ import java.util.UUID;
 public class ExistedEmployeeValidatorImpl implements ConstraintValidator<ExistedEmployeeValidator, UUID> {
     private final RoleClient roleClient;
 
-    private Permission permission;
+    private Role role;
 
     @Override
     public void initialize(ExistedEmployeeValidator constraintAnnotation) {
-        permission = constraintAnnotation.permissions();
+        role = constraintAnnotation.permissions();
     }
 
     @Override
@@ -26,9 +26,9 @@ public class ExistedEmployeeValidatorImpl implements ConstraintValidator<Existed
             return true;
         }
 
-        List<Permission> permissionsOfEmployee = roleClient.getAllRolesOfEmployee(id);
-        for (Permission temp : permissionsOfEmployee) {
-            if(temp.equals(permission)){
+        List<Role> permissionsOfEmployee = roleClient.getAllRolesOfEmployee(id);
+        for (Role temp : permissionsOfEmployee) {
+            if(temp.equals(role)){
                 return true;
             }
         }

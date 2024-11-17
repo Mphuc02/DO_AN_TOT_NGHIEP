@@ -1,6 +1,6 @@
 package dev.common.dto.request;
 
-import dev.common.model.Permission;
+import dev.common.model.Role;
 import lombok.*;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +16,6 @@ public class CommonRegisterEmployeeRequest {
     private CreateFullNameRequest fullName;
     private String introduce;
     private Date dateOfBirth;
-    private List<Permission> permissions;
+    private List<Role> roles;
     private UUID owner;
 }

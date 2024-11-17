@@ -44,6 +44,7 @@ kafka:
         detect-topic: request_detect_image
         detected-topic: detected_image
         create-relation-ship: create_relation_ship
+        new-message: new_message
         
     group-id:
         chat: chat

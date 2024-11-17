@@ -16,4 +16,5 @@ public class DetectImageRequest {
     private String image;
     private UUID senderId;
     private UUID receiverId;
+    private UUID relationShipId;
 }

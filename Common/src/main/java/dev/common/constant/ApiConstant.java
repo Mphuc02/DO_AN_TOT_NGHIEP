@@ -1,5 +1,8 @@
 package dev.common.constant;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 public class ApiConstant {
     public static final class AUTHENTICATION_URL {
         public static final String SERVICE_NAME = "AUTHENTICATION";
@@ -34,11 +37,13 @@ public class ApiConstant {
         public static final String FACULTY_ID = "/faculty/{id}";
     }
 
-    public static final class EMPLOYEE_URL{
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class EmployeeUrl {
         public static final String URL = "/api/v1/employees";
         public static final String SERVICE_NAME = "EMPLOYEE";
         public static final String ROLE_URL = "/api/v1/roles";
         public static final String ID = "/{id}";
+        public static final String FIND_BY_IDS = "/find-by-ids";
     }
 
     public static final class GREETING_URL{
@@ -107,6 +112,7 @@ public class ApiConstant {
         public static final String RECEIVER_ID = "/witch/{id}";
 
         public static final String RELATION_SHIP_URL = "/api/relation-ship";
-        public static final String FIRST_TIME = "/first-time";
+        public static final String FIND_RELATION_SHIPS_OF_DOCTOR = "/find-relation-ships-of-doctor";
+        public static final String FIND_RELATION_SHIPS_OF_PATIENT = "/find-relation-ship-of-patient";
     }
 }

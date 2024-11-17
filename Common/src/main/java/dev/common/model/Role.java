@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum Permission {
+public enum Role {
     ADMIN("Quản trị viên"),
     RECEPTION_STAFF("Nhân viên tiếp đón"),
     DOCTOR("Bác sĩ"),
