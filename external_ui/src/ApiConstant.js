@@ -171,7 +171,7 @@ class PATIENT{
             return this.getUrl() + "/get/by-ids"
         }
 
-        static findById = (id) => {
+        static byId = (id) => {
             return this.getUrl() + "/" + id
         }
     }
@@ -220,4 +220,22 @@ class ExaminationResult{
     }
 }
 
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult}
+const Chat = class {
+    static Message = class {
+        static getUrl = () => {
+            return HOST.getHost() + "/api/chat"
+        }
+    }
+
+    static RelationShip = class {
+        static getUrl = () => {
+            return HOST.getHost() + "/api/relation-ship"
+        }
+
+        static findRelationShipsOfPatient = (page) => {
+            return this.getUrl() + `/find-relation-ship-of-patient?page=${page}`
+        }
+    }
+}
+
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult, Chat}

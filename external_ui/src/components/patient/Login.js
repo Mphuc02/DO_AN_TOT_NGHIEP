@@ -1,14 +1,24 @@
 import axios from 'axios';
-import {AUTHENTICATION} from "../../ApiConstant";
+import {AUTHENTICATION, PATIENT} from "../../ApiConstant";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import RoutesConstant from "../../RoutesConstant";
+import {JwtService} from "../../service/JwtService";
+import {SendApiService} from "../../service/SendApiService";
 
 function Login(){
     const [userName, setUserName] = useState('')
     const [passWord, setPassWord] = useState('')
     const [labelError, setLabelError] = useState('')
     const navigate = useNavigate();
+
+    const getPatientInformation = (id) => {
+        SendApiService.getRequest(PATIENT.PATIENT_API.byId(id), {}, response => {
+            localStorage.setItem('patient', JSON.stringify(response.data))
+        }, error => {
+
+        })
+    }
 
     function doLogin(){
         const data = {
@@ -22,6 +32,9 @@ function Login(){
                 console.log(response.data);
                 localStorage.setItem('access-token', response.data.accessToken)
                 localStorage.setItem('refresh-token', response.data.refreshToken)
+
+                getPatientInformation(JwtService.geUserFromToken())
+
                 navigate(RoutesConstant.PATIENT.DASHBOARD)
             })
             .catch(error => {

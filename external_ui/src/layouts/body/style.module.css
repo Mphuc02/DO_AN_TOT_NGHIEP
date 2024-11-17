@@ -199,3 +199,19 @@ button:hover {
         left: 0;
     }
 }
+
+.width20{
+    width: 20%;
+}
+
+.width80{
+    width: 80%;
+}
+
+.height100{
+    height: 100%;
+}
+
+.scrollY{
+    overflow-y: scroll;
+}

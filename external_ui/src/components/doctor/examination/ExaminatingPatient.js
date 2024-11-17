@@ -347,7 +347,7 @@ const ExaminatingPatient = () => {
     const getPatient = (patientId, examinationResult) => {
         return new Promise((resolve, reject) => {
             SendApiService.getRequest(
-                PATIENT.PATIENT_API.findById(patientId),
+                PATIENT.PATIENT_API.byId(patientId),
                 {},
                 response => {
                     examinationResult.patient = response.data;
