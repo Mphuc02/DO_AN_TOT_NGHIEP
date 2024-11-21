@@ -29,11 +29,15 @@ class EMPLOYYEE{
     static getUrl = (permission) => {
         if(permission === null || permission === '')
             return HOST.getHost() + '/api/v1/employees'
-        return HOST.getHost() + `/api/v1/employees?permission=${permission}`
+        return HOST.getHost() + `/api/v1/employees?role=${permission}`
     }
 
     static id = (id) => {
         return this.getUrl() + "/" + id;
+    }
+
+    static findByIds = () => {
+        return this.getUrl('') + "/find-by-ids"
     }
 }
 
@@ -95,6 +99,10 @@ class WEBSOCKET{
 
     static updatedNumberExaminationForm = (id) => {
         return "/topic/updated-number-examination-form/" + id
+    }
+
+    static chat = (id) => {
+        return `/topic/chat/user/${id}`
     }
 }
 
@@ -174,6 +182,10 @@ class PATIENT{
         static byId = (id) => {
             return this.getUrl() + "/" + id
         }
+
+        static getUserInformation = () =>{
+            return this.getUrl() + "/get-logged-user-information";
+        }
     }
 }
 
@@ -224,6 +236,14 @@ const Chat = class {
     static Message = class {
         static getUrl = () => {
             return HOST.getHost() + "/api/chat"
+        }
+
+        static getMessageByReceiverId = (id, pageable) => {
+            return this.getUrl() + `/with/${id}?page=${pageable.page}`
+        }
+
+        static sendImage = (id) => {
+            return this.getUrl() + "/send-image/" + id
         }
     }
 

@@ -47,7 +47,7 @@ function EmployeeManagement(){
                             <td>{user.fullName.firstName + " " + user.fullName.middleName + " " + user.fullName.lastName}</td>
                             <td>{user.introduce}</td>
                             <td>{user.date}</td>
-                            <td>{user.permissions.reduce((total, cur) => {
+                            <td>{user.roles.reduce((total, cur) => {
                                     return total + ROLE.getRole(cur) + ", "
                                 }, '')}</td>
                             <td>
@@ -141,7 +141,7 @@ function CreateEmployee() {
             },
             permissions: selectedRoles.map(role => {
                 return {
-                    permission: role
+                    role: role
                 }
             })
         }
@@ -155,7 +155,7 @@ function CreateEmployee() {
             setDateError('')
             setEmailError('')
             setDescriptionError('')
-            setPermisstionError('')
+            setRoleError('')
         }, (error) => {
             if(error.response.status === 400){
                 const data = error.response.data
@@ -167,7 +167,7 @@ function CreateEmployee() {
                 setDateError(data.dateOfBirth)
                 setEmailError(data.email)
                 setDescriptionError(data.introduce)
-                setPermisstionError(data.permissions)
+                setRoleError(data.role)
 
                 if(data.message != null){
                     const errorMessage = {
@@ -201,7 +201,7 @@ function CreateEmployee() {
     const [description, setDescription] = useState('')
     const [descriptionError, setDescriptionError] = useState('')
 
-    const [permissionsError, setPermisstionError] = useState('')
+    const [roleError, setRoleError] = useState('')
 
     return (
         <>
@@ -218,7 +218,7 @@ function CreateEmployee() {
                         <td><p>{firstNameError}</p></td>
                     </tr>
                     <tr>
-                        <td><label>Tên</label></td>
+                        <td><label>Họ</label></td>
                         <td><input value={firstName} onChange={e => setFirstName(e.target.value)}/></td>
                     </tr>
 
@@ -227,7 +227,7 @@ function CreateEmployee() {
                         <td><p>{lastNameError}</p></td>
                     </tr>
                     <tr>
-                        <td><label>Họ</label></td>
+                        <td><label>Tên</label></td>
                         <td><input value={lastName} onChange={e => setLastName(e.target.value)}/></td>
                     </tr>
 
@@ -278,7 +278,7 @@ function CreateEmployee() {
 
                     <tr>
                         <td></td>
-                        <td><p>{permissionsError}</p></td>
+                        <td><p>{roleError}</p></td>
                     </tr>
                     <tr>
                         <td>Vai trò:</td>

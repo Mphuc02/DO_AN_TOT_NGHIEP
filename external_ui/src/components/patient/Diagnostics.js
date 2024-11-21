@@ -35,6 +35,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
     useEffect(() => {
         SendApiService.getRequest(WORKING_SCHEDULE.getSchedulesByDate(appointment.appointmentDate), {}, (response) => {
             setDoctorsInDay(response.data)
+            console.log(response.data)
         }, (error) => {
         })
     }, [appointment.appointmentDate])

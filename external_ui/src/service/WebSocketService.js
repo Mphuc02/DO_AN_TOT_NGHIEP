@@ -5,7 +5,8 @@ import {WEBSOCKET} from "../ApiConstant";
 class WebSocketService{
     constructor() {
         const socket = new SockJS(WEBSOCKET.getUrl());
-        this.stompClient = Stomp.over(socket);
+        this.stompClient = Stomp.over(() => socket);
+        this.stompClient.activate();
     }
 
     connectAndSubscribe = (topics, callBack) => {
@@ -26,6 +27,14 @@ class WebSocketService{
             this.stompClient.disconnect(() => {
                 console.log('Disconnected from WebSocket');
             });
+        } else {
+            console.log('STOMP client is not connected');
+        }
+    }
+
+    sendMessage = (message, topic) => {
+        if (this.stompClient && this.stompClient.connected) {
+            this.stompClient.send(topic, {}, JSON.stringify(message));
         } else {
             console.log('STOMP client is not connected');
         }

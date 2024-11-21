@@ -13,7 +13,7 @@ function Login(){
     const navigate = useNavigate();
 
     const getPatientInformation = (id) => {
-        SendApiService.getRequest(PATIENT.PATIENT_API.byId(id), {}, response => {
+        SendApiService.getRequest(PATIENT.PATIENT_API.getUserInformation(), {}, response => {
             localStorage.setItem('patient', JSON.stringify(response.data))
         }, error => {
 

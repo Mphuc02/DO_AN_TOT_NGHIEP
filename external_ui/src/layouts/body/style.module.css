@@ -215,3 +215,9 @@ button:hover {
 .scrollY{
     overflow-y: scroll;
 }
+
+.previewChatImage{
+    display: block;
+    height: 100px;
+    width: 100px;
+}
