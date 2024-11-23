@@ -29,6 +29,12 @@ public class PatientRest {
         return ResponseEntity.ok(patientService.findById(id));
     }
 
+    @GetMapping(GET_LOGGED_USER_INFORMATION)
+    @PreAuthorize(AuthorizationConstant.USER)
+    public ResponseEntity<Object> getLoggedUserInformation(){
+        return ResponseEntity.ok(patientService.getLoggedUserInformation());
+    }
+
     @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN_DOCTOR)
     @PostMapping(GET_BY_IDS)
     public ResponseEntity<List<PatientResponse>> getByIds(@RequestBody List<UUID> ids){

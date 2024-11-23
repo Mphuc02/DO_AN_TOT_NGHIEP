@@ -20,7 +20,8 @@ public class KafkaTopicsConstrant {
     public static final String DETECTED_IMAGE_TOPIC = "${kafka.topics.detected-topic}";
     public static final String NEW_MESSAGE_TOPIC = "${kafka.topics.new-message}";
     public static final String CHAT_GROUP = "${kafka.group-id.chat}";
-
+    public static final String RECEIVED_IMAGE_MESSAGE = "${kafka.topics.received-image-message}";
+    public static final String RECEIVED_MESSAGE = "${kafka.topics.received-message}";
     public static final String PATIENT_GROUP = "${kafka.group-id.patient}";
     public static final String AUTHENTICATION_GROUP = "${kafka.group-id.authentication}";
     public static final String EXAMINATION_RESULT_GROUP = "${kafka.group-id.examination-result}";

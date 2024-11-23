@@ -44,6 +44,7 @@ public class ApiConstant {
         public static final String ROLE_URL = "/api/v1/roles";
         public static final String ID = "/{id}";
         public static final String FIND_BY_IDS = "/find-by-ids";
+        public static final String GET_LOGGED_USER_INFORMATION = "/get-logged-user-information";
     }
 
     public static final class GREETING_URL{
@@ -98,6 +99,7 @@ public class ApiConstant {
         public static final String GET_EXAMINED_APPOINTMENTS_OF_TODAY = "/today/examined";
         public static final String FIND_DETAILS_BY_APPOINTMENT_ID = "/find-detail-by-appointment-id/{id}";
         public static final String DOCTOR_CREATE_APPOINTMENT = "/create-appointment-by-doctor";
+        public static final String GET_LOGGED_USER_INFORMATION = "/get-logged-user-information";
     }
 
     public static final class PAYMENT{
@@ -109,8 +111,8 @@ public class ApiConstant {
 
     public static final class CHAT{
         public static final String CHAT_URL = "/api/chat";
-        public static final String RECEIVER_ID = "/witch/{id}";
-
+        public static final String RECEIVER_ID = "/with/{id}";
+        public static final String SEND_IMAGE = "/send-image/{id}";
         public static final String RELATION_SHIP_URL = "/api/relation-ship";
         public static final String FIND_RELATION_SHIPS_OF_DOCTOR = "/find-relation-ships-of-doctor";
         public static final String FIND_RELATION_SHIPS_OF_PATIENT = "/find-relation-ship-of-patient";

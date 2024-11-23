@@ -55,3 +55,8 @@ kafka:
         patient: patient
 server:
     port: 8089
+    
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

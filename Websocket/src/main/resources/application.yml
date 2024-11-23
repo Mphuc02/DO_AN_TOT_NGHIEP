@@ -1,4 +1,7 @@
 spring:
+    websocket:
+        maxMessageSize: 10485760
+        
     application:
         name: Websocket
         
@@ -16,7 +19,7 @@ spring:
     
     main:
         allow-bean-definition-overriding: true
-
+        
 jwt:
     secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
     access-token=expiration: 300000
@@ -32,8 +35,10 @@ kafka:
         create-patient-account-from-greeting: create_patient_from_greeting
         created-patient-account-from-greeting-success: created_patient_from_greeting_success
         fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
-        
+        received-new-message: received_new_message
         updated-number-examination-form-topic: updated_number_examination_form_topic
+        received-image-message: received_image_message
+        received-message: received_message
         
     group-id:
         websocket: websocket_group
@@ -53,3 +58,8 @@ eureka:
 
 server:
     port: 8092
+
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

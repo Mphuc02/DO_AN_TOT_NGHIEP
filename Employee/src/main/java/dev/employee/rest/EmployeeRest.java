@@ -43,8 +43,13 @@ public class EmployeeRest {
         return ResponseEntity.ok("");
     }
 
-    @PostMapping()
+    @PostMapping(FIND_BY_IDS)
     public ResponseEntity<Object> findByIds(@RequestBody List<UUID> ids){
         return ResponseEntity.ok(employeeService.findByIds(ids));
+    }
+
+    @GetMapping(GET_LOGGED_USER_INFORMATION)
+    public ResponseEntity<Object> getLoggedUserInformation(){
+        return ResponseEntity.ok(employeeService.getLoggedUserInformation());
     }
 }

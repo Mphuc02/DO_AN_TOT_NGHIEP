@@ -50,3 +50,7 @@ eureka:
         lease-expiration-duration-in-seconds: 5
         hostname: localhost
     
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

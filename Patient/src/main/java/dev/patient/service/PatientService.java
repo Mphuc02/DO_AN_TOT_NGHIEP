@@ -7,6 +7,7 @@ import dev.common.dto.request.CreateNewPatientRequest;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.response.patient.PatientResponse;
 import dev.common.exception.BaseException;
+import dev.common.util.AuditingUtil;
 import dev.patient.entity.Patient;
 import dev.patient.repository.PatientRepository;
 import dev.patient.util.AddressMapperUtil;
@@ -31,6 +32,8 @@ public class PatientService {
     private final AddressMapperUtil addressMapperUtil;
     private final FullNameMapperUtil fullNameMapperUtil;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final AuditingUtil auditingUtil;
+
 
     @Value(KafkaTopicsConstrant.CREATED_PATIENT_INFORMATION_TOPIC)
     private String CREATED_PATIENT_INFORMATION_TOPIC;
@@ -50,6 +53,11 @@ public class PatientService {
 
     public boolean checkPatientExist(UUID id){
         return patientRepository.existsById(id);
+    }
+
+    public PatientResponse getLoggedUserInformation(){
+        UUID userId = auditingUtil.getUserLogged().getId();
+        return findById(userId);
     }
 
     @KafkaListener(topics = CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC, groupId = PATIENT_GROUP)

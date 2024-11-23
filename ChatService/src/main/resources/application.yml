@@ -45,6 +45,8 @@ kafka:
         detected-topic: detected_image
         create-relation-ship: create_relation_ship
         new-message: new_message
+        received-image-message: received_image_message
+        received-message: received_message
         
     group-id:
         chat: chat
@@ -64,3 +66,12 @@ eureka:
         
 server:
     port: 8090
+
+file:
+    upload-dir: src/main/resources/static/uploads
+    
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789
+    

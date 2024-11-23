@@ -21,14 +21,11 @@ public class Message {
     private UUID senderId;
     private UUID receiverId;
 
+    private String imageUrl;
+    private String detectedImageUrl;
+
     @Column(columnDefinition = "TEXT")
     private String content;
-
-    @Column(columnDefinition = "mediumtext")
-    private String processedImage;
-
-    @Column(columnDefinition = "mediumtext")
-    private String image;
 
     private LocalDateTime createdAt;
 }

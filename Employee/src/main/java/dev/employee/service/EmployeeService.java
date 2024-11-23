@@ -7,6 +7,7 @@ import dev.common.dto.request.CommonRegisterEmployeeRequest;
 import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.model.Role;
+import dev.common.util.AuditingUtil;
 import dev.employee.dto.request.UpdateEmployeeRequest;
 import dev.employee.entity.Employee;
 import dev.employee.repository.EmployeeRepository;
@@ -35,6 +36,7 @@ public class EmployeeService {
     private final EmployeeRoleService employeeRoleService;
     private final FullNameService fullNameService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final AuditingUtil auditingUtil;
 
     @Value(KafkaTopicsConstrant.CREATED_EMPLOYEE_TOPIC)
     private String CREATED_EMPLOYEE_TOPIC;
@@ -88,5 +90,10 @@ public class EmployeeService {
     public List<EmployeeResponse> findByIds(List<UUID> ids){
         List<Employee> employees = employeeRepository.findByIdIn(ids);
         return employeeUtil.listEntitiesToResponses(employees);
+    }
+
+    public EmployeeResponse getLoggedUserInformation(){
+        UUID userId = auditingUtil.getUserLogged().getId();
+        return findDetailById(userId);
     }
 }

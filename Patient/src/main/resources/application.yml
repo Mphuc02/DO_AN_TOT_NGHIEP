@@ -59,3 +59,8 @@ kafka:
         
     group-id:
         patient: patient
+
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

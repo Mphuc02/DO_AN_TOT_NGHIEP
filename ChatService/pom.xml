@@ -112,6 +112,13 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.5.0</version> <!-- Hoặc phiên bản mới nhất -->
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

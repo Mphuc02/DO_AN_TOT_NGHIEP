@@ -100,8 +100,23 @@ services:
             spring.data.redis.host: redis
             eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
     
+    minio:
+        image: minio/minio:latest
+        container_name: minio
+        environment:
+            MINIO_ROOT_USER: root
+            MINIO_ROOT_PASSWORD: 123456789
+        ports:
+            - "9000:9000"  # Cổng HTTP cho MinIO (web interface)
+            - "9001:9001"  # Cổng console MinIO
+        volumes:
+            - minio_data:/data
+        command: server /data --console-address ":9001"
+
 volumes:
     redis_data:
         driver: local
     authentication_db:
+        driver: local
+    minio_data:
         driver: local
