@@ -122,6 +122,12 @@ const ChatWindow = ({relationShip, callBack}) => {
         }
     }));
 
+    const handleClickUpload = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click(); // Kích hoạt input file khi nhấp vào SVG
+        }
+    }
+
     return (<div>
         <h2>{(() => {
             if (!relationShip.doctor) {
@@ -144,49 +150,48 @@ const ChatWindow = ({relationShip, callBack}) => {
             if (message.imageUrl) {
                 return <div key={key}
                             className={`border border-gray-300 rounded-lg p-4 w-fit ${styles.marginTop10} ${styles.marginLeft5} ${message.senderId === JwtService.geUserFromToken() ? 'ml-auto flex-row-reverse' : ''}`}>
-                        <div className="flex gap-4 items-center">
-                            <div className="flex flex-col items-center">
-                                <label className="text-sm font-medium mb-2">Ảnh ban đầu</label>
-                                <img
-                                    onClick={() => openModal(MinioUrl.downloadFile(message.imageUrl))}
-                                    className="w-48 h-48 object-cover rounded-lg cursor-pointer"
-                                    src={MinioUrl.downloadFile(message.imageUrl)}
-                                    alt="Ảnh ban đầu"
-                                />
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <label className="text-sm font-medium mb-2">Ảnh được chuẩn đoán</label>
-                                <img
-                                    onClick={() => openModal(MinioUrl.downloadFile(message.detectedImageUrl))}
-                                    className="w-48 h-48 object-cover rounded-lg cursor-pointer"
-                                    src={MinioUrl.downloadFile(message.detectedImageUrl)}
-                                    alt="Ảnh được chuẩn đoán"
-                                />
-                            </div>
+                    <div className="flex gap-4 items-center">
+                        <div className="flex flex-col items-center">
+                            <label className="text-sm font-medium mb-2">Ảnh ban đầu</label>
+                            <img
+                                onClick={() => openModal(MinioUrl.downloadFile(message.imageUrl))}
+                                className="w-48 h-48 object-cover rounded-lg cursor-pointer"
+                                src={MinioUrl.downloadFile(message.imageUrl)}
+                                alt="Ảnh ban đầu"
+                            />
                         </div>
+                        <div className="flex flex-col items-center">
+                            <label className="text-sm font-medium mb-2">Ảnh được chuẩn đoán</label>
+                            <img
+                                onClick={() => openModal(MinioUrl.downloadFile(message.detectedImageUrl))}
+                                className="w-48 h-48 object-cover rounded-lg cursor-pointer"
+                                src={MinioUrl.downloadFile(message.detectedImageUrl)}
+                                alt="Ảnh được chuẩn đoán"
+                            />
+                        </div>
+                    </div>
 
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
                             <span
                                 className="text-sm font-normal text-black-500 dark:text-gray-400">{FormatCreatedDate(message.createdAt)}</span>
-                        </div>
+                    </div>
                 </div>
             }
 
-            return <div key={key} className={`flex gap-2.5 items-start ${styles.marginTop10} ${styles.marginLeft5} ${message.senderId === JwtService.geUserFromToken() ? 'ml-auto flex-row-reverse' : ''}`}>
+            return <div key={key}
+                        className={`flex gap-2.5 items-start ${styles.marginTop10} ${styles.marginLeft5} ${message.senderId === JwtService.geUserFromToken() ? 'ml-auto flex-row-reverse' : ''}`}>
                 <div
                     className={`flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 rounded-e-xl rounded-es-xl ${
                         message.senderId === JwtService.geUserFromToken() ? 'bg-blue-500 dark:bg-blue-700' : 'bg-gray-100 dark:bg-gray-700'
                     }`}>
                     <p className="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{message.content}</p>
                     <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span className="text-sm font-normal text-black-500 dark:text-gray-400">{FormatCreatedDate(message.createdAt)}</span>
+                        <span
+                            className="text-sm font-normal text-black-500 dark:text-gray-400">{FormatCreatedDate(message.createdAt)}</span>
                     </div>
                 </div>
             </div>
         })}
-
-        <textarea value={content} onChange={(e) => setContent(e.target.value)}/>
-        <button onClick={() => onclickSendButton()}>Gửi</button>
 
         {previewImage &&
             <div>
@@ -194,32 +199,64 @@ const ChatWindow = ({relationShip, callBack}) => {
                 <button onClick={() => deleteSelectedImage()}>Xoá ảnh này</button>
             </div>
         }
-        <div>
-            <label>Chọn ảnh</label>
-            <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleImageChange}/>
-        </div>
+
+        <form>
+            <div
+                className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+                    <label htmlFor="comment" className="sr-only">Your comment</label>
+                    <textarea id="comment" rows="4"
+                              className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                              placeholder="Nhập bình luận"
+                              value={content} onChange={(e) => setContent(e.target.value)}></textarea>
+                </div>
+                <div className="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
+                    <button type="button"
+                            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
+                            onClick={() => onclickSendButton()}>Gửi</button>
+                    <div className="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
+                        <button type="button"
+                                className="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+                        >
+                            <div>
+                                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 12 20"
+                                    onClick={() => handleClickUpload()}>
+                                    <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
+                                          d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6"/>
+                                </svg>
+
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="absolute top-0 left-0 opacity-0 cursor-pointer"/>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
 
         {isModalOpen && (
             <div
                 className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
                 onClick={closeModal}>
-                    <div className="relative">
-                        <img
-                            className="max-w-full max-h-screen"
-                            src={selectedWatchImage}
-                            alt="Phóng to"/>
-                        <button
-                            className="absolute top-2 right-2 text-white text-2xl"
-                            onClick={closeModal}>
-                            ×
-                        </button>
-                    </div>
+                <div className="relative">
+                    <img
+                        className="max-w-full max-h-screen"
+                        src={selectedWatchImage}
+                        alt="Phóng to"/>
+                    <button
+                        className="absolute top-2 right-2 text-white text-2xl"
+                        onClick={closeModal}>
+                        ×
+                    </button>
                 </div>
-            )}
+            </div>
+        )}
     </div>)
 }
 
@@ -296,21 +333,39 @@ const Message = () => {
 
     return (<>
         <h2>Tin nhắn tư vấn</h2>
-        <div className={`${styles.height100} ${styles.divFlex}`}>
-            <div className={`${styles.width20} ${styles.height100} ${styles.scrollY}`}>
+        <div className={`${styles.divFlex}`}>
+            {/* Cột bên trái (cố định khi cuộn) */}
+            <div
+                className={`${styles.width20} ${styles.height100} ${styles.scrollY}`}
+                style={{position: 'sticky', top: '0', height: '100vh'}}>
                 {[...relationShipMap].map(([key, value]) => {
-                    const doctor = value.doctor
+                    const doctor = value.doctor;
                     if (!doctor) {
-                        return null
+                        return null;
                     }
-                    const fullName = doctor.fullName
-                    return <div className={styles.cursorPointer} key={key}
-                                onClick={() => setSelectedRelationShip(value)}>
-                        {fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}
-                    </div>
+                    const fullName = doctor.fullName;
+                    return (
+                        <div
+                            className={styles.cursorPointer}
+                            key={key}
+                            onClick={() => setSelectedRelationShip(value)}
+                        >
+                            {fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}
+                        </div>
+                    );
                 })}
             </div>
-            <div className={`${styles.width80} ${styles.scrollY}`}>
+
+            {/* Cột bên phải (Chiều cao cố định là toàn khung hình, có thanh cuộn nếu nội dung vượt quá) */}
+            <div
+                className={`${styles.width80}`}
+                style={{
+                    height: '100vh', // Chiều cao là toàn bộ khung hình
+                    overflowY: 'auto', // Thanh cuộn dọc
+                    border: '1px solid #ccc', // Viền (tùy chọn)
+                    padding: '10px', // Khoảng cách bên trong (tùy chọn)
+                    boxSizing: 'border-box' // Đảm bảo padding không làm thay đổi chiều cao
+                }}>
                 <ChatWindow relationShip={selectedRelationShip} webSocket={webSocket} callBack={receivedMesageRef}/>
             </div>
         </div>

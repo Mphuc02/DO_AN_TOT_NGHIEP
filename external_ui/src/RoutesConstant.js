@@ -28,8 +28,10 @@ class RoutesConstant{
     static PATIENT = class {
         static DASHBOARD = '/patient'
         static LOGIN = '/patient/login'
-        static DIAGNOSTICS = '/patient/appointments-management'
+        static APPOINTMENTS_MANAGEMENT = "/patient/appointments-management"
+        static DIAGNOSTICS = '/patient/diagnostics'
         static CHAT = "/patient/messages"
+        static EXAMINATION_HISTORIES = "/patient/examination-histories"
     }
 
     static RECEIPT = class {

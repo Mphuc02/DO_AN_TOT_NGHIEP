@@ -27,7 +27,6 @@
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     padding: 16px;
-    overflow: auto;
 }
 
 .status_container {
@@ -239,4 +238,8 @@ button:hover {
 
 .floatRight{
     float: right;
+}
+
+.overFlowNone{
+    overflow-y: hidden;
 }
