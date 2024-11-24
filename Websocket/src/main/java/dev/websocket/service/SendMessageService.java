@@ -55,6 +55,4 @@ public class SendMessageService {
         messagingTemplate.convertAndSend(TOPIC.chattingTopic(response.getReceiverId()), message);
         messagingTemplate.convertAndSend(TOPIC.chattingTopic(response.getSenderId()), message);
     }
-
-
 }

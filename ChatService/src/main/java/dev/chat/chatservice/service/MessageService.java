@@ -131,6 +131,7 @@ public class MessageService {
         messageRepository.save(message);
 
         MessageResponse messageResponse = messageMapper.mapEntityToResponse(message);
+        messageResponse.setRelationShipId(response.getRelationShipId());
         kafkaTemplate.send(newMessageTopic, messageResponse);
     }
 }
