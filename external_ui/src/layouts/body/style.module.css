@@ -218,6 +218,25 @@ button:hover {
 
 .previewChatImage{
     display: block;
-    height: 100px;
-    width: 100px;
+    width: 300px;
+}
+
+.marginTop10{
+    margin-top: 10px;
+}
+
+.marginLeft5{
+    margin-left: 5px;
+}
+
+.width500px{
+    width: 500px;
+}
+
+.floatLeft{
+    float: left;
+}
+
+.floatRight{
+    float: right;
 }

@@ -1,6 +1,7 @@
 import { Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import {WEBSOCKET} from "../ApiConstant";
+import {JwtService} from "./JwtService";
 
 class WebSocketService{
     constructor() {
@@ -34,7 +35,7 @@ class WebSocketService{
 
     sendMessage = (message, topic) => {
         if (this.stompClient && this.stompClient.connected) {
-            this.stompClient.send(topic, {}, JSON.stringify(message));
+            this.stompClient.send(topic, {senderId: JwtService.geUserFromToken()}, message);
         } else {
             console.log('STOMP client is not connected');
         }

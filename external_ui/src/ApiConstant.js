@@ -1,6 +1,16 @@
 
 class HOST{
-    static getHost = () => { return "http://localhost:9000"}
+    static getHost = () => { return "http://localhost:9010"}
+}
+
+class MinioUrl{
+    static getHost = () => {
+        return 'http://localhost:9000'
+    }
+
+    static downloadFile = (url) => {
+        return this.getHost() + `/${url}`
+    }
 }
 
 class AUTHENTICATION{
@@ -103,6 +113,10 @@ class WEBSOCKET{
 
     static chat = (id) => {
         return `/topic/chat/user/${id}`
+    }
+
+    static appSendImage = (id) => {
+        return `/app/chat/image/doctor/${id}`
     }
 }
 
@@ -258,4 +272,4 @@ const Chat = class {
     }
 }
 
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult, Chat}
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult, Chat, MinioUrl}
