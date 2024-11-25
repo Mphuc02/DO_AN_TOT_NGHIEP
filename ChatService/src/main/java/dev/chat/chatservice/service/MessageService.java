@@ -51,8 +51,9 @@ public class MessageService {
 
     public Page<MessageResponse> getWithOtherById(UUID receiverId, Pageable pageable){
         UUID senderId = auditingUtil.getUserLogged().getId();
+        RelationShip relationShip = getRelationShip(senderId, receiverId);
         Page<Message> messages = messageRepository.findByReceiverId(receiverId, senderId, pageable);
-        return messages.map(messageMapper::mapEntityToResponse);
+        return messages.map(message -> messageMapper.mapEntityToResponse(message, relationShip.getId()));
     }
 
     @Transactional

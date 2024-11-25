@@ -1,6 +1,8 @@
 package dev.employee.rest;
 
 import static dev.common.constant.ApiConstant.EmployeeUrl.*;
+
+import dev.common.constant.AuthorizationConstant;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.common.model.Role;
@@ -9,6 +11,7 @@ import dev.employee.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +52,7 @@ public class EmployeeRest {
     }
 
     @GetMapping(GET_LOGGED_USER_INFORMATION)
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
     public ResponseEntity<Object> getLoggedUserInformation(){
         return ResponseEntity.ok(employeeService.getLoggedUserInformation());
     }
