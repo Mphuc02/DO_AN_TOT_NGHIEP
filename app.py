@@ -15,6 +15,7 @@ from decorators import (is_authenticated)
 from kafka import KafkaConsumer
 import json
 from uuid import UUID
+import threading
 
 eruekaServerPort = 5000
 
@@ -53,9 +54,8 @@ def index():
     return render_template('index.html')
 
 @app.route('/api/v1/ai/diagnostic', methods=['POST'])
-# @is_authenticated
-# def upload_image(user_id):
-def upload_image():
+@is_authenticated
+def upload_image(user_id):
     if 'image' not in request.files:
         return jsonify({"error": "No image file provided"}), 400
 
@@ -99,78 +99,81 @@ def upload_image():
     response = {
         "decodedImg": img_base64,
         "diseases": list(detected_diseases)  # Danh sách các bệnh phát hiện
-        # "owner": user_id
     }
-
-    # # Gửi thông điệp tới Kafka topic
-    # print('response:', response)
-    # headers = [('__TypeId__', b'dev.common.model.ProcessedImageData')]
-    # producer.send('processed-image', value=response, headers=headers)  
-    # producer.flush() 
     return jsonify(response)
 
-# Xử lý message từ Kafka
-for message in consumer:
-    try:
-        data = message.value
-        id = data.get('id')
-        image = data.get('image')
-        senderId = data.get('senderId')
-        receiverId = data.get('receiverId')
+def kafka_consumer_worker():
+    for message in consumer:
+        try:
+            # Lấy dữ liệu từ message
+            data = message.value
+            id = data.get('id')
+            image_base64 = data.get('image')  # Chuỗi Base64
+            senderId = data.get('senderId')
+            receiverId = data.get('receiverId')
+            relationShipId = data.get('relationShipId')
 
-        # Hiển thị thông tin nhận được
-        print(f"Received message with ID: {id}")
-        print(f"Image Data: {image}")
-        print(f"Sender ID: {senderId}")
-        print(f"Receiver ID: {receiverId}")
-        
-        # Chuyển đổi ảnh từ base64 thành ảnh PIL
-        if image.startswith("data:image"):
-            image = image.split(",", 1)[1]  # Remove the prefix before the comma
-        image_data = base64.b64decode(image)
-        img = Image.open(io.BytesIO(image_data))
-        img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            # Hiển thị thông tin nhận được
+            print(f"Received message with ID: {id}")
+            print(f"Image Data (Base64): {image_base64}")
+            print(f"Sender ID: {senderId}")
+            print(f"Receiver ID: {receiverId}")
 
-        # Resize the image to 640x640
-        img_resized = cv2.resize(img, (640, 640))
+            # Giải mã Base64 thành mảng byte
+            image_bytes = base64.b64decode(image_base64)
 
-        # Run inference (giả sử model đã được load trước đó)
-        results = model([img_resized], iou=0.5)
+            # Chuyển đổi mảng byte thành ảnh
+            img = Image.open(io.BytesIO(image_bytes))
+            img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
-        # List to hold detected diseases
-        detected_diseases = set()
+            # Resize the image to 640x640
+            img_resized = cv2.resize(img, (640, 640))
 
-        # Process results
-        for result in results:
-            result_img = result.plot()  # Plotting the results
+            # Run inference (giả sử model đã được load trước đó)
+            results = model([img_resized], iou=0.5)
 
-            # Trích xuất nhãn từ kết quả inference
-            boxes = result.boxes  # Get boxes attribute
-            for cls in boxes.cls:  # cls holds the class index
-                disease_name = result.names[int(cls)]  # Lấy tên bệnh từ class index
-                detected_diseases.add(disease_name)  # Thêm tên bệnh vào danh sách
+            # List to hold detected diseases
+            detected_diseases = set()
 
-        # Convert to PIL Image and save to BytesIO
-        result_pil_img = Image.fromarray(cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB))
-        img_io = io.BytesIO()
-        result_pil_img.save(img_io, 'JPEG', quality=70)
-        img_io.seek(0)
+            # Process results
+            for result in results:
+                result_img = result.plot()  # Plotting the results
 
-        # Encode image to base64
-        processedImage = 'data:image/jpeg;base64,' + base64.b64encode(img_io.getvalue()).decode('utf-8')
-        response = {
-            "id": id,
-            "image": image,
-            "processedImage": processedImage,
-            "senderId": senderId,
-            "receiverId": receiverId
-        }  
-        headers = [('__TypeId__', b'dev.common.dto.response.chat.DetectedImageChatResponse')]
-        producer.send('detected_image', value=response, headers=headers)  
-        producer.flush()  
+                # Trích xuất nhãn từ kết quả inference
+                boxes = result.boxes  # Get boxes attribute
+                for cls in boxes.cls:  # cls holds the class index
+                    disease_name = result.names[int(cls)]  # Lấy tên bệnh từ class index
+                    detected_diseases.add(disease_name)  # Thêm tên bệnh vào danh sách
 
-    except (ValueError, TypeError, json.JSONDecodeError) as e:
-        print(f"Error processing message: {e}")
+            # Convert processed image to a byte array
+            _, buffer = cv2.imencode('.jpg', result_img)
+            processed_image_bytes = buffer.tobytes()
+
+            # Mã hóa ảnh đã xử lý sang Base64
+            processed_image_base64 = base64.b64encode(processed_image_bytes).decode('utf-8')
+
+            # Kết quả trả về là Base64
+            response = {
+                "id": id,
+                "image": image_base64,  # Gửi lại ảnh gốc ở dạng Base64
+                "processedImage": processed_image_base64,  # Ảnh đã xử lý ở dạng Base64
+                "senderId": senderId,
+                "receiverId": receiverId,
+                "relationShipId": relationShipId
+            }
+
+            # Gửi thông tin đã xử lý qua producer
+            headers = [('__TypeId__', b'dev.common.dto.response.chat.DetectedImageChatResponse')]
+            producer.send('detected_image', value=response, headers=headers)
+            producer.flush()
+
+        except (ValueError, TypeError, json.JSONDecodeError) as e:
+            print(f"Error processing message: {e}")
+            continue
+
+# Start the Kafka consumer in a separate thread
+consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
+consumer_thread.start()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0' , debug=True)
