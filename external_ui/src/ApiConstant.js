@@ -33,6 +33,10 @@ class AUTHENTICATION{
     static createEmployee = () => {
         return this.getUrl() + "/create-employee"
     }
+
+    static logout = () => {
+        return this.getUrl() + "/logout"
+    }
 }
 
 class EMPLOYYEE{
@@ -48,6 +52,10 @@ class EMPLOYYEE{
 
     static findByIds = () => {
         return this.getUrl('') + "/find-by-ids"
+    }
+
+    static getLoggedUserInformation = () => {
+        return this.getUrl('') + "/get-logged-user-information"
     }
 }
 

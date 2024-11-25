@@ -1,7 +1,8 @@
 import axios from 'axios';
-import {AUTHENTICATION} from "../../ApiConstant";
+import {AUTHENTICATION, EMPLOYYEE} from "../../ApiConstant";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {SendApiService} from "../../service/SendApiService";
 
 function Login(){
     const [userName, setUserName] = useState('')
@@ -9,18 +10,27 @@ function Login(){
     const [labelError, setLabelError] = useState('')
     const navigate = useNavigate();
 
+    const getEmployeeInfor = () => {
+        SendApiService.getRequest(EMPLOYYEE.getLoggedUserInformation(), {}, response => {
+            localStorage.setItem('doctor', JSON.stringify(response.data))
+        }, error => {
+
+        })
+    }
+
     function doLogin(){
         const data = {
             userName: userName,
             passWord: passWord
         }
-        console.log(data)
+
 
         axios.post(AUTHENTICATION.authenticateEmployee(), data)
             .then(response => {
-                console.log(response.data);
                 localStorage.setItem('access-token', response.data.accessToken)
                 localStorage.setItem('refresh-token', response.data.refreshToken)
+                getEmployeeInfor()
+
                 navigate('/employee/doctor')
             })
             .catch(error => {

@@ -128,7 +128,7 @@ const ChatWindow = ({relationShip, callBack}) => {
         }
     }
 
-    return (<div>
+    return (<div className="flex-1 bg-white p-4">
         <h2>{(() => {
             if (!relationShip.doctor) {
                 return null
@@ -138,7 +138,7 @@ const ChatWindow = ({relationShip, callBack}) => {
             return `Bác sĩ  ${fullName.firstName} ${fullName.middleName} ${fullName.lastName}`
         })()}</h2>
 
-        {pageAble.page !== pageAble.total && <button onClick={() => setPableAble((prev => {
+        {relationShip.id && pageAble.page !== pageAble.total && <button onClick={() => setPableAble((prev => {
             const newPage = {
                 page: prev.page + 1,
                 total: 0
@@ -200,7 +200,7 @@ const ChatWindow = ({relationShip, callBack}) => {
             </div>
         }
 
-        <form>
+            {relationShip.id && <form>
             <div
                 className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                 <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
@@ -238,7 +238,7 @@ const ChatWindow = ({relationShip, callBack}) => {
                     </div>
                 </div>
             </div>
-        </form>
+        </form>}
 
         {isModalOpen && (
             <div
@@ -331,45 +331,40 @@ const Message = () => {
         }
     }, []);
 
-    return (<>
-        <h2>Tin nhắn tư vấn</h2>
-        <div className={`${styles.divFlex}`}>
-            {/* Cột bên trái (cố định khi cuộn) */}
-            <div
-                className={`${styles.width20} ${styles.height100} ${styles.scrollY}`}
-                style={{position: 'sticky', top: '0', height: '100vh'}}>
-                {[...relationShipMap].map(([key, value]) => {
-                    const doctor = value.doctor;
-                    if (!doctor) {
-                        return null;
-                    }
-                    const fullName = doctor.fullName;
-                    return (
-                        <div
-                            className={styles.cursorPointer}
-                            key={key}
-                            onClick={() => setSelectedRelationShip(value)}
-                        >
-                            {fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}
-                        </div>
-                    );
-                })}
+    return (
+        <div className="flex">
+            {/* Danh sách liên hệ */}
+            <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 h-full sticky top-0 overflow-y-auto h-screen">
+                <h2 className="text-lg font-bold mb-4">Danh sách liên hệ</h2>
+                <ul>
+                    {[...relationShipMap].map(([key, value]) => {
+                        const doctor = value.doctor;
+                        if (!doctor) {
+                            return null;
+                        }
+                        const fullName = doctor.fullName;
+                        return (
+                            <li
+                                className={`mb-2 p-3 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition ${styles.cursorPointer}`}
+                                key={key}
+                                onClick={() => setSelectedRelationShip(value)}>
+                                {fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
 
-            {/* Cột bên phải (Chiều cao cố định là toàn khung hình, có thanh cuộn nếu nội dung vượt quá) */}
-            <div
-                className={`${styles.width80}`}
-                style={{
-                    height: '100vh', // Chiều cao là toàn bộ khung hình
-                    overflowY: 'auto', // Thanh cuộn dọc
-                    border: '1px solid #ccc', // Viền (tùy chọn)
-                    padding: '10px', // Khoảng cách bên trong (tùy chọn)
-                    boxSizing: 'border-box' // Đảm bảo padding không làm thay đổi chiều cao
-                }}>
-                <ChatWindow relationShip={selectedRelationShip} webSocket={webSocket} callBack={receivedMesageRef}/>
+            {/* Khung chat */}
+            <div className="w-3/4 flex-grow h-full overflow-y-auto">
+                <ChatWindow
+                    relationShip={selectedRelationShip}
+                    webSocket={webSocket}
+                    callBack={receivedMesageRef}
+                />
             </div>
         </div>
-    </>)
+    )
 }
 
 export {Message}

@@ -23,6 +23,7 @@ class RoutesConstant{
         static EXAMINING_PATIENT_WITH_ID = (id) => {
             return `/employee/doctor/examining-patient/${id}`
         }
+        static CHAT = "/employee/doctor/chat"
     }
 
     static PATIENT = class {

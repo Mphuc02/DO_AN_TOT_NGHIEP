@@ -15,6 +15,7 @@ function Login(){
     const getPatientInformation = (id) => {
         SendApiService.getRequest(PATIENT.PATIENT_API.getUserInformation(), {}, response => {
             localStorage.setItem('patient', JSON.stringify(response.data))
+
         }, error => {
 
         })
