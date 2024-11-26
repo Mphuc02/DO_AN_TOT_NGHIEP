@@ -27,5 +27,8 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private RelationShip relationShip;
+
     private LocalDateTime createdAt;
 }

@@ -52,7 +52,7 @@ public class MessageService {
     public Page<MessageResponse> getWithOtherById(UUID receiverId, Pageable pageable){
         UUID senderId = auditingUtil.getUserLogged().getId();
         RelationShip relationShip = getRelationShip(senderId, receiverId);
-        Page<Message> messages = messageRepository.findByReceiverId(receiverId, senderId, pageable);
+        Page<Message> messages = messageRepository.findByRelationShipOrderByCreatedAtDesc(relationShip, pageable);
         return messages.map(message -> messageMapper.mapEntityToResponse(message, relationShip.getId()));
     }
 
@@ -61,12 +61,14 @@ public class MessageService {
         AuthenticatedUser user = auditingUtil.getUserLogged();
         log.info("Received create message from topic with senderId: " + user.getId() + ", receiverId: " + request.getReceiverId());
 
+        RelationShip relationShip = getRelationShip(user.getId(), request.getReceiverId());
+
         Message message = messageMapper.mapCreateRequestToEntity(request);
         message.setSenderId(user.getId());
         message.setCreatedAt(LocalDateTime.now());
+        message.setRelationShip(relationShip);
         message = messageRepository.save(message);
 
-        RelationShip relationShip = getRelationShip(user.getId(), request.getReceiverId());
         relationShip.setLastMessage(message.getContent());
         relationShipRepository.save(relationShip);
 
@@ -89,15 +91,16 @@ public class MessageService {
         String originFile = UUID.randomUUID() + fileExtension;
         s3ClientService.uploadObject(MinioConstant.MESSAGE_IMAGE_BUCKET, image.getBytes(), originFile);
 
+        RelationShip relationShip = getRelationShip(user.getId(),receiverId);
+
         Message message = Message.builder()
                 .senderId(user.getId())
                 .receiverId(receiverId)
                 .imageUrl(MinioConstant.MESSAGE_IMAGE_BUCKET + "/" + originFile)
+                .relationShip(relationShip)
                 .createdAt(LocalDateTime.now()).build();
         message = messageRepository.save(message);
 
-        RelationShip relationShip = getRelationShip(user.getId(),receiverId);
-        relationShip.messageIsImage();
         relationShip.messageIsImage();
         relationShipRepository.save(relationShip);
 

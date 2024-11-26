@@ -38,7 +38,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +152,11 @@ public class AccountService {
         if(!ObjectUtils.isEmpty(checkRevokedToken))
             throw new NotPermissionException("This token has been revoked");
 
+        if(invalidateTokenRepository.existsById(refreshTokenId)) {
+            redisService.setValue(RedisKeyConstrant.INVALID_TOKEN_KEY(refreshTokenId), String.class);
+            throw new NotPermissionException("This token has been revoked");
+        }
+
         AuthenticatedUser user = jwtUtil.getUserFromJwt(request.getToken(), TokenType.REFRESH_TOKEN);
         return jwtService.generateAccessToken(Account.builder().id(user.getId()).build(), user.getRoles() == null ? null : user.getRoles().stream().toList());
     }
@@ -166,7 +171,7 @@ public class AccountService {
 
         InvalidToken invalidRefreshToken = InvalidToken.builder()
                 .id(refreshTokenId)
-                .time(new Timestamp(new java.util.Date().getTime()))
+                .invalidatedAt(LocalDateTime.now())
                 .build();
 
         invalidateTokenRepository.save(invalidRefreshToken);

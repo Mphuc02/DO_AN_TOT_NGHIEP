@@ -115,6 +115,6 @@ public class ApiConstant {
         public static final String SEND_IMAGE = "/send-image/{id}";
         public static final String RELATION_SHIP_URL = "/api/relation-ship";
         public static final String FIND_RELATION_SHIPS_OF_DOCTOR = "/find-relation-ships-of-doctor";
-        public static final String FIND_RELATION_SHIPS_OF_PATIENT = "/find-relation-ship-of-patient";
+        public static final String FIND_RELATION_SHIPS_OF_PATIENT = "/find-relation-ships-of-patient";
     }
 }

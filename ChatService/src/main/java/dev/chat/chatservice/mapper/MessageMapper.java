@@ -17,6 +17,8 @@ import java.util.UUID;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface MessageMapper {
     Message mapCreateRequestToEntity(CreateMessageRequest request);
+
+    @Mapping(source = "message.relationShip.id", target = "relationShipId")
     MessageResponse mapEntityToResponse(Message message);
 
     @Mapping(source = "relationShipId", target = "relationShipId", qualifiedByName = "mapRelationShipId")

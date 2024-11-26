@@ -2,8 +2,7 @@ package dev.authentication.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +14,7 @@ import java.util.UUID;
 @Builder
 public class InvalidToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private Timestamp time;
+    private LocalDateTime invalidatedAt;
 }
