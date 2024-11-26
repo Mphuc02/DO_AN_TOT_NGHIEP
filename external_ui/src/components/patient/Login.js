@@ -13,11 +13,13 @@ function Login(){
     const navigate = useNavigate();
 
     const getPatientInformation = (id) => {
-        SendApiService.getRequest(PATIENT.PATIENT_API.getUserInformation(), {}, response => {
-            localStorage.setItem('patient', JSON.stringify(response.data))
-
-        }, error => {
-
+        return new Promise((resolve, reject) => {
+            SendApiService.getRequest(PATIENT.PATIENT_API.getUserInformation(), {}, response => {
+                localStorage.setItem('patient', JSON.stringify(response.data))
+                resolve()
+            }, error => {
+                reject()
+            })
         })
     }
 
@@ -29,12 +31,12 @@ function Login(){
         console.log(data)
 
         axios.post(AUTHENTICATION.authenticate(), data)
-            .then(response => {
+            .then(async response => {
                 console.log(response.data);
                 localStorage.setItem('access-token', response.data.accessToken)
                 localStorage.setItem('refresh-token', response.data.refreshToken)
 
-                getPatientInformation(JwtService.geUserFromToken())
+                await getPatientInformation(JwtService.geUserFromToken())
 
                 navigate(RoutesConstant.PATIENT.DASHBOARD)
             })

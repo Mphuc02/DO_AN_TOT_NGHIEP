@@ -4,16 +4,18 @@ import RoutesConstant from "../../../RoutesConstant";
 import {SendApiService} from "../../../service/SendApiService";
 import {AUTHENTICATION} from "../../../ApiConstant";
 
-function SideBar(){
-    const patient = JSON.parse(localStorage.getItem('patient'))
+function SideBar({patient}){
     const onClickLogout = () => {
-        const logoutReqeust = {
+        const logoutRequest = {
             accessToken: localStorage.getItem('access-token'),
             refreshToken: localStorage.getItem('refresh-token')
         }
 
-        SendApiService.postRequest(AUTHENTICATION.logout(), logoutReqeust, {}, response => {
-
+        SendApiService.postRequest(AUTHENTICATION.logout(), logoutRequest, {}, response => {
+            localStorage.removeItem('access-token')
+            localStorage.removeItem('refresh-token')
+            localStorage.removeItem('patient')
+            window.location.reload()
         }, error => {
 
         })

@@ -25,6 +25,7 @@ import PrintTicket from "../components/receipt/PrintTicket";
 import {ExaminationManagement} from "../components/doctor/examination/ExaminationManagement";
 import {ExaminatingPatient} from "../components/doctor/examination/ExaminatingPatient";
 import {Message} from "../components/patient/Message";
+import {DoctorMessage} from "../components/doctor/DoctorMessage";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -50,6 +51,7 @@ const publicRoutes = [
     {path: RoutesConstant.DOCTOR.DASHBOARD, component: DoctorDashboard, layout: DoctorLayout},
     {path: RoutesConstant.DOCTOR.EXAMINATION_MANAGEMENT, component: ExaminationManagement, layout: DoctorLayout},
     {path: RoutesConstant.DOCTOR.EXAMINING_PATIENT, component: ExaminatingPatient, layout: DoctorLayout},
+    {path: RoutesConstant.DOCTOR.CHAT, component: DoctorMessage, layout: DoctorLayout},
 
     //Doctor working schedule management
     {path: RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT, component: WorkingScheduleManagement, layout: DoctorLayout},

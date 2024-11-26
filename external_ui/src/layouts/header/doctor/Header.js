@@ -5,17 +5,11 @@ import {useEffect, useState} from "react";
 import {JwtService} from '../../../service/JwtService'
 import RoutesConstant from "../../../RoutesConstant";
 
-function Header() {
-    const [fullName, setFullName] = useState('');
-    const [doctor, setDoctor] = useState({})
-
+function Header({doctor}) {
+    const [thisDoctor, setThisDoctor] = useState(null)
     useEffect(() => {
-        const userName = JwtService.geUserFromToken();
-        if(userName != null)
-            setFullName(userName)
-
-        setDoctor(JSON.parse(localStorage.getItem('doctor')))
-    }, []);
+        setThisDoctor(doctor)
+    }, [doctor])
 
     return (
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -50,12 +44,12 @@ function Header() {
                             className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Bệnh viện da liễu Minh Phúc</span>
                     </a>
                 </div>
-                {fullName && <div className="flex items-center">
+                {thisDoctor && <div className="flex items-center">
                     <div>Xin chào, {(() => {
-                        if(!doctor){
+                        if(!thisDoctor){
                             return null
                         }
-                        return `${doctor.fullName.firstName} ${doctor.fullName.middleName} ${doctor.fullName.lastName}`
+                        return `${thisDoctor.fullName.firstName} ${thisDoctor.fullName.middleName} ${thisDoctor.fullName.lastName}`
                     }) ()}</div>
                     <div className="flex items-center ms-3">
                         <div>
@@ -74,9 +68,9 @@ function Header() {
                     </div>
                 </div>}
 
-                {!fullName && <div className="flex items-center">
+                {!thisDoctor && <div className="flex items-center">
                     <div className="flex items-center ms-3">
-                        <Link to={RoutesConstant.PATIENT.LOGIN}>Đăng nhập</Link>
+                        <Link to={RoutesConstant.DOCTOR.LOGIN}>Đăng nhập</Link>
                     </div>
                 </div> }
             </div>

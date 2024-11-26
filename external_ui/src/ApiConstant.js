@@ -275,7 +275,11 @@ const Chat = class {
         }
 
         static findRelationShipsOfPatient = (page) => {
-            return this.getUrl() + `/find-relation-ship-of-patient?page=${page}`
+            return this.getUrl() + `/find-relation-ships-of-patient?page=${page}`
+        }
+
+        static findRelationShipOfDoctor = (page) => {
+            return this.getUrl() + `/find-relation-ships-of-doctor?page=${page}`
         }
     }
 }
