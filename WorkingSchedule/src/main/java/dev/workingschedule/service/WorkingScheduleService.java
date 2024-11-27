@@ -3,8 +3,10 @@ package dev.workingschedule.service;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.BadRequestException;
+import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
+import dev.common.model.ErrorField;
 import dev.common.util.AuditingUtil;
 import dev.workingschedule.dto.request.SaveWorkingScheduleRequest;
 import dev.workingschedule.dto.request.SearchWorkingScheduleRequest;
@@ -107,11 +109,13 @@ public class WorkingScheduleService {
         UUID employeeId = auditingUtil.getUserLogged().getId();
         schedulesInDay.forEach(schedule -> {
             if(Objects.equals(schedule.getRoomId(), request.getRoomId())){
-                throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED);
+                ErrorField field = new ErrorField(WORKING_SCHEDULE_EXCEPTION.ROOM_HAS_BEEN_SELECTED, SaveWorkingScheduleRequest.Fields.roomId);
+                throw BaseException.buildBadRequest().addField(field).build();
             }
 
             if(Objects.equals(schedule.getEmployeeId(), employeeId) && Objects.equals(request.getRoomId(), schedule.getRoomId())){
-                throw new BadRequestException(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_CONFLICT);
+                ErrorField field = new ErrorField(WORKING_SCHEDULE_EXCEPTION.WORKING_SCHEDULE_CONFLICT, SaveWorkingScheduleRequest.Fields.roomId);
+                throw BaseException.buildBadRequest().addField(field).build();
             }
         });
     }
