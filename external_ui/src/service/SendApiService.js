@@ -80,7 +80,35 @@ class SendApiService{
             const result = await JwtService.checkTokenExpired(error)
             if(result){
                 countError++
-                await this.postRequest(url, data, customHeaders, successCallback, errorCallback)
+                await this.putRequest(url, data, customHeaders, successCallback, errorCallback)
+            }
+            errorCallback(error)
+        })
+    }
+
+    static deleteRequest = async (url, customHeaders, successCallback, errorCallback) => {
+        if(countError === 5){
+            countError = 0
+            return
+        }
+
+        const token = await JwtService.getAccessToken()
+        console.log(token)
+        axios.delete(url, {
+            headers: {
+                ...customHeaders,
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            countError = 0
+            console.log(response)
+            successCallback(response)
+        }).catch(async error => {
+            console.log(error)
+            const result = await JwtService.checkTokenExpired(error)
+            if(result){
+                countError++
+                await this.deleteRequest(url, customHeaders, successCallback, errorCallback)
             }
             errorCallback(error)
         })
