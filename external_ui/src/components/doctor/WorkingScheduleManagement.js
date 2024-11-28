@@ -321,14 +321,13 @@ const WorkingScheduleInMonth = () => {
     const [roomMap, setRoomMap] = useState(new Map())
     const [currentDate, setCurrentDate] = useState(new Date());
 
-    const currentMonth = currentDate.getMonth(); // Lấy tháng hiện tại (0 - 11)
+    const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const days = Array.from({length: daysInMonth}, (_, index) => index + 1);
 
-    //Click pre month
     const handlePreviousMonth = () => {
         setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
     };
@@ -339,64 +338,35 @@ const WorkingScheduleInMonth = () => {
     };
 
     const calendarDays = [];
-    let week = Array(firstDayOfMonth).fill(null); // Bắt đầu với các ô trống nếu tháng không bắt đầu từ Chủ Nhật
+    let week = Array(firstDayOfMonth).fill(null);
 
     //Get all room
-    const getAllRooms = async () => {
-        if (countError === 5)
-            return
-        const token = await JwtService.getAccessToken()
-        axios.get(HOSPITAL_INFORMATION.EXAMINATION_ROOM.getUrl(), {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
-            countError = 0
+
+    const getAllRooms = () => {
+        SendApiService.getRequest(HOSPITAL_INFORMATION.EXAMINATION_ROOM.getUrl(), {}, response => {
             const map = new Map()
             response.data.forEach(item => map.set(item.id, item))
             setRoomMap(map)
-        }).catch(async error => {
-            console.log(error)
-            const result = await JwtService.checkTokenExpired(error)
-            if (result) {
-                countError++
-                await getAllRooms()
-            }
+        }, error => {
+
         })
     }
 
 
     //Get all Schedule
     const [schedules, setSchedules] = useState([])
-    const getSchedules = async () => {
-        if (countError === 5)
-            return
-
-        const token = await JwtService.getAccessToken()
-        axios.get(WORKING_SCHEDULE.getSchedulesInMonthOfEmployee(currentYear, currentMonth + 1), {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
-            countError = 0
+    const getSchedules = () => {
+        SendApiService.getRequest(WORKING_SCHEDULE.getSchedulesInMonthOfEmployee(currentYear, currentMonth + 1), {}, response => {
             setSchedules(response.data)
-        }).catch(async error => {
-            console.log(error)
-            const result = await JwtService.checkTokenExpired(error)
-            if (result) {
-                countError++
-                await getSchedules()
-            }
+        }, error => {
+
         })
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            await getSchedules()
-            await getAllRooms()
-        }
-        fetchData()
-    }, [page])
+        getSchedules()
+        getAllRooms()
+    }, [currentDate])
 
     days.forEach((day) => {
         week.push(day);
@@ -406,12 +376,11 @@ const WorkingScheduleInMonth = () => {
         }
     });
 
-    // Thêm tuần cuối cùng nếu còn ngày
+
     if (week.length > 0) {
         calendarDays.push(week.concat(Array(7 - week.length).fill(null))); // Thêm các ô trống vào cuối tuần nếu chưa đủ 7 ngày
     }
 
-    //Create Schedule
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [creatingDate, setCreatingDate] = useState('')
     const openCreateModal = () => {
@@ -426,7 +395,6 @@ const WorkingScheduleInMonth = () => {
         openCreateModal()
     }
 
-    //Update schedule
     const [updatingData, setUpdatingData] = useState({
         id: '',
         roomId: '',
@@ -447,6 +415,7 @@ const WorkingScheduleInMonth = () => {
     }
 
     let index = 0
+    console.log(schedules)
 
     return (
         <div>
@@ -481,7 +450,8 @@ const WorkingScheduleInMonth = () => {
                                     const tomorrow = new Date()
                                     tomorrow.setDate(tomorrow.getDate() + 1)
                                     tomorrow.setUTCHours(0,0,0,0)
-                                    const dayTemp = currentYear + '-' + (currentMonth+1) + '-' + day
+                                    const dayTemp = currentYear + '-' + ( (currentMonth+1) < 10 ? '0' + (currentMonth+1) : (currentMonth+1)) + '-' + (day < 10 ? '0' + day : day)
+                                    console.log(dayTemp)
                                     if(schedules[index] != null && dayTemp === schedules[index].date){
                                         const schedule = schedules[index]
                                         index++
