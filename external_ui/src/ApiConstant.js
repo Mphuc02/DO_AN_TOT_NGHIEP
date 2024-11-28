@@ -131,7 +131,7 @@ class WEBSOCKET{
 class HOSPITAL_INFORMATION{
     static EXAMINATION_ROOM = class {
         static getUrl = () => {
-            return HOST.getHost() + "/api/v1/examination-rooms"
+            return HOST.getHost() + "/api/examination-rooms"
         }
 
         static findByIds = () => {
@@ -140,7 +140,21 @@ class HOSPITAL_INFORMATION{
     }
     static DISEASES = class {
         static getUrl = () => {
-            return HOST.getHost() + "/api/v1/diseases"
+            return HOST.getHost() + "/api/diseases"
+        }
+    }
+
+    static ADDRESS = class{
+        static getUrl = () => {
+            return HOST.getHost() + "/api/provinces"
+        }
+
+        static getByProvinceId = (id) => {
+            return this.getUrl() + `/by-province/${id}`
+        }
+
+        static getByDistrictId = (id) => {
+            return this.getUrl() + `/by-district/${id}`
         }
     }
 }

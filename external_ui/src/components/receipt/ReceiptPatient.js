@@ -5,6 +5,7 @@ import {SendApiService} from "../../service/SendApiService";
 import {HOSPITAL_INFORMATION, WORKING_SCHEDULE} from "../../ApiConstant";
 import {ReceivedPatients} from "./ReceivedPatients";
 import {GetTodayString} from "../../service/TimeService";
+import {ReceiptWithFirstTimePatient} from "./ReceiptWithFirstTimePatient";
 
 function ReceiptPatient(){
     const [selectedTab, setSelectedTab] = useState(1)
@@ -52,6 +53,7 @@ function ReceiptPatient(){
                 <div onClick={() => setSelectedTab(4)}>Danh sách bệnh nhân tiếp đón hôm nay</div>
             </div>
 
+            {selectedTab === 1 && <ReceiptWithFirstTimePatient workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap} />}
             {selectedTab === 3 && <ReceiptWithAppointment workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap} />}
             {selectedTab === 4 && <ReceivedPatients />}
         </div>
