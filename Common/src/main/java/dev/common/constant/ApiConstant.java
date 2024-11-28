@@ -20,14 +20,14 @@ public class ApiConstant {
     }
     public static final class HOSPITAL_INFORMATION {
         public static final String SERVICE_NAME = "HOSPITALINFORMATION";
-        public static final String PROVINCE_URL = "/api/v1/provinces";
+        public static final String PROVINCE_URL = "/api/provinces";
         public static final String CHECK_ADDRESS = "/check-address";
-        public static final String EXAMINATION_ROOM_URL = "/api/v1/examination-rooms";
+        public static final String EXAMINATION_ROOM_URL = "/api/examination-rooms";
         public static final String CHECK_ROOM_EXIST = "/check-room/{id}";
         public static final String ID = "{id}";
         public static final String GET_BY_IDS = "/find-by-ids";
         public static final String CHECK_DISEASES_EXIST = "/check";
-        public static final String DISEASE_URL = "/api/v1/diseases";
+        public static final String DISEASE_URL = "/api/diseases";
     }
 
     public static final class FACULTY_URL{

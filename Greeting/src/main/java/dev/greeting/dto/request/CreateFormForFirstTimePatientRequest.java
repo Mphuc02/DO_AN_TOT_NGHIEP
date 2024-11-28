@@ -22,10 +22,6 @@ public class CreateFormForFirstTimePatientRequest {
     @NewPatientValidator(message = "Số điện thoại đã được đăng ký")
     private CreateNewPatientRequest patient;
 
-    @NotNull(message = "Số thứ tự không được bỏ trống")
-    @Min(value = 1, message = "Số thứ tự phải bắt đầu từ 1")
-    private Integer numberCall;
-
     @NotEmpty(message = "Triệu chứng không được bỏ trống")
     private String symptom;
 

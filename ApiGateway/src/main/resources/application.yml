@@ -33,7 +33,7 @@ spring:
                 - id: hospital_information
                   uri: lb://HOSPITALINFORMATION
                   predicates:
-                    - Path=/api/v1/examination-rooms/** , /api/v1/provinces/**, /api/v1/diseases/**
+                    - Path=/api/examination-rooms/** , /api/provinces/**, /api/diseases/**
                    
                 - id: working_schedule
                   uri: lb://WORKINGSCHEDULE

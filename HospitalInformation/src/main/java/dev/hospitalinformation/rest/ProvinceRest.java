@@ -28,6 +28,16 @@ public class ProvinceRest {
         return ResponseEntity.ok(provinceService.getById(id));
     }
 
+    @GetMapping("/by-province/{id}")
+    public ResponseEntity<Object> findDistrictsByProvinceId(@PathVariable UUID id){
+        return ResponseEntity.ok(provinceService.findByProvinceId(id));
+    }
+
+    @GetMapping("/by-district/{id}")
+    public ResponseEntity<Object> findCommunesByDistrictId(@PathVariable UUID id){
+        return ResponseEntity.ok(provinceService.findByDistrictId(id));
+    }
+
     @PostMapping(CHECK_ADDRESS)
     public ResponseEntity<Boolean> checkAddress(@Valid @RequestBody CheckAddressRequest request,
                                                 BindingResult result){

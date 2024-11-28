@@ -17,7 +17,6 @@ public class DistrictUtil {
         return DistrictResponse.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-//                .communes(communeUtil.listEntityToResponse(entity.getCommunes()))
                 .build();
     }
 
