@@ -56,6 +56,7 @@ public class ExaminationFormService {
         entity.setCreatedAt(LocalDateTime.now());
         entity = examinationFormRepository.save(entity);
 
+        request.getPatient().setExaminationFormID(entity.getId());
         kafkaTemplate.send(CREATE_PATIENT_TOPIC, request.getPatient());
         return examinationFormMapperUtil.entityToResponse(entity);
     }
@@ -78,6 +79,7 @@ public class ExaminationFormService {
         return examinationFormMapperUtil.entityToResponse(entity);
     }
 
+    @Transactional
     public ExaminationFormResponse saveWithAppointment(CreateFormWithAppointmentRequest request){
         ExaminationForm entity = examinationFormMapperUtil.createRequestWithAppointmentToEntity(request);
         entity.setCreatedAt(LocalDateTime.now());
@@ -90,6 +92,7 @@ public class ExaminationFormService {
         return examinationFormMapperUtil.entityToResponse(entity);
     }
 
+    //Todo: dang loi khong goi sang examination result
     @KafkaListener(topics = CREATED_PATIENT_INFORMATION_TOPIC, groupId = GREETING_GROUP)
     public void handleCreatedPatientInformation(UUID examinationFormId){
         log.info(String.format("Received request created Patient information from kafka with id: %s", examinationFormId));

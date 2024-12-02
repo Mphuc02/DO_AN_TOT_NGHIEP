@@ -1,6 +1,11 @@
 package dev.medicine.service;
 
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.constant.KafkaTopicsConstrant;
+import dev.common.dto.request.PayMedicineDetailCommonRequest;
+import dev.common.dto.request.PayMedicineInCashCommonRequest;
+import dev.common.dto.response.medicine.PaidMedicineCommonResponse;
+import dev.common.dto.response.medicine.PaidMedicineDetailCommonResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateMedicineRequest;
@@ -14,6 +19,7 @@ import dev.medicine.repository.MedicineRepository;
 import dev.medicine.util.MedicineMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -88,7 +94,7 @@ public class MedicineService {
                                             .medicine(medicine)
                                             .price(medicine.getPrice())
                                             .build();
-                                }).collect(Collectors.toList());
+                                }).toList();
 
         exportInvoiceDetailRepository.saveAll(details);
         medicineRepository.saveAll(medicines);
@@ -109,5 +115,31 @@ public class MedicineService {
         medicineMapperUtil.mapUpdateRequestToEntity(request, medicine);
         medicine = medicineRepository.save(medicine);
         return medicineMapperUtil.mapEntityToResponse(medicine);
+    }
+
+    @Transactional
+    @KafkaListener(topics = KafkaTopicsConstrant.PAY_MEDICINE_IN_CASH, groupId = KafkaTopicsConstrant.MEDICINE_GROUP)
+    public void handlePayMedicineInCash(PayMedicineInCashCommonRequest request){
+        List<UUID> medicineIds = request.getDetails().stream().map(PayMedicineDetailCommonRequest::getMedicineId).toList();
+        Map<UUID, Medicine> medicines = medicineRepository.findAllById(medicineIds).stream().collect(Collectors.toMap(Medicine::getId, v -> v));
+
+        List<PaidMedicineDetailCommonResponse> detailsResponse = new ArrayList<>();
+        for(PayMedicineDetailCommonRequest detail: request.getDetails()){
+            Medicine medicine = medicines.get(detail.getMedicineId());
+            medicine.setQuantity(medicine.getQuantity() - detail.getQuantity());
+
+            PaidMedicineDetailCommonResponse medicineResponse = PaidMedicineDetailCommonResponse.builder()
+                    .medicineId(medicine.getId())
+                    .quantity(detail.getQuantity())
+                    .price(medicine.getPrice())
+                    .build();
+            detailsResponse.add(medicineResponse);
+        }
+
+        PaidMedicineCommonResponse paidInvoiceResponse = PaidMedicineCommonResponse.builder()
+                                                                .invoiceId(request.getInvoiceId())
+                                                                .details(detailsResponse)
+                                                                .build();
+        kafkaTemplate.send(, paidInvoiceResponse);
     }
 }

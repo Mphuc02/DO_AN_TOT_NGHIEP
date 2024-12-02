@@ -4,7 +4,6 @@ import dev.common.dto.request.CreateNewPatientRequest;
 import dev.common.validator.NewPatientValidator;
 import dev.common.validator.TodayWorkingScheduleValidator;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -29,5 +28,6 @@ public class CreateFormForFirstTimePatientRequest {
     @TodayWorkingScheduleValidator
     private UUID workingSchedule;
 
+    private UUID examinationFormId;
     private UUID owner;
 }

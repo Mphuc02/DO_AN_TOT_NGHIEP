@@ -65,6 +65,11 @@ spring:
                   predicates:
                     - Path=/api/chat/** , /api/relation-ship/**
             
+                - id: payment
+                  uri: lb://PAYMENT
+                  predicates:
+                    - Path=/api/invoices/**
+                
             default-filters:
                 - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
             globalcors:

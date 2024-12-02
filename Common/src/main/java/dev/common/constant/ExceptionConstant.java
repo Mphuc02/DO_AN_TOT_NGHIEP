@@ -94,7 +94,9 @@ public class ExceptionConstant {
         public static final String APPLIED_DAY_MUST_AFTER_TODAY = "Ngày áp dụng phải sau hôm nay";
         public static final String APPLIED_DAY_PASSED = "Đã quá thời gian chỉnh sửa";
         public static final String FAIL_VALIDATION_EXAMINATION_COST = "Lỗi khi kiểm tra thuộc tính ExaminationCost";
-
+        public static final String INVOICE_NOT_FOUND = "Không tìm thấy hóa đơn";
+        public static final String PAID_INVOICE = "Hóa đơn đã được thanh toán";
+        public static final String MONEY_NOT_SUFFICIENT = "Số tiền thanh toán không đủ";
         public static final String FAIL_VALIDATION_INVOICE = "Lỗi khi kiểm tra hóa đơn";
     }
 

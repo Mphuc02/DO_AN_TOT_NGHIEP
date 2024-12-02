@@ -49,10 +49,11 @@ eureka:
 
 kafka:
     topics:
-        create-patient-from-greeting: create_patient_from_greeting
-        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+        pay-medicine-in-cash: pay_medicine_in_cash
+        paid-medicine-invoice: paid_medicine_invoice
     group-id:
-        patient: patient
+        medicine: medicine
+        
 server:
     port: 8089
     
