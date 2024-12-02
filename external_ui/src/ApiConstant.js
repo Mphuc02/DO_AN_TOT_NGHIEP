@@ -239,6 +239,10 @@ class Greeting{
         static findReceivedPatientsToday = () => {
             return this.getGetUrl() + "/find/received-patients-today";
         }
+
+        static firstTime = () => {
+            return this.getGetUrl() + "/first-time"
+        }
     }
 }
 

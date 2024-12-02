@@ -37,8 +37,7 @@ function Header({receipt}) {
                             alt="FlowBite Logo"
                         />
                         <span
-                            className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-green-700">
-          Bệnh viện da liễu Minh Phúc
+                            className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-green-700">Phòng khám da liễu Minh Phúc
         </span>
                     </a>
                 </div>
