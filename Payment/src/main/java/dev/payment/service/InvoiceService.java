@@ -5,13 +5,20 @@ import static dev.common.constant.ExceptionConstant.PAYMENT_EXCEPTION;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
 import dev.common.dto.request.PayMedicineInCashCommonRequest;
+import dev.common.dto.response.medicine.PaidMedicineCommonResponse;
+import dev.common.dto.response.medicine.PaidMedicineDetailCommonResponse;
 import dev.common.exception.BaseException;
+import dev.common.util.AuditingUtil;
 import dev.payment.dto.request.PayInCashRequest;
-import dev.payment.dto.response.InvoiceResponse;
+import dev.common.dto.response.payment.InvoiceDetailResponse;
+import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.entity.ExaminationCost;
 import dev.payment.entity.Invoice;
+import dev.payment.entity.InvoiceDetail;
 import dev.payment.repository.ExaminationCostRepository;
+import dev.payment.repository.InvoiceDetailRepository;
 import dev.payment.repository.InvoiceRepository;
+import dev.payment.util.InvoiceDetailMapperUtil;
 import dev.payment.util.InvoiceMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +29,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,8 +42,15 @@ public class InvoiceService {
     private final InvoiceMapperUtil invoiceMapperUtil;
     private final ExaminationCostRepository costRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final InvoiceDetailRepository invoiceDetailRepository;
+    private final InvoiceDetailMapperUtil invoiceDetailMapperUtil;
+    private final AuditingUtil auditingUtil;
+
     @Value(KafkaTopicsConstrant.PAY_MEDICINE_IN_CASH)
     private String payMedicineInCashTopic;
+
+    @Value(KafkaTopicsConstrant.COMPLETED_PAYMENT_INVOICE)
+    private String completedPaidInvoice;
 
     public List<InvoiceResponse> findAll(){
        return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
@@ -59,11 +74,43 @@ public class InvoiceService {
             throw BaseException.buildBadRequest().message(PAYMENT_EXCEPTION.PAID_INVOICE).build();
         }
 
+        invoice.setEmployeeId(auditingUtil.getUserLogged().getId());
+        if(request.getDetails() == null || request.getDetails().isEmpty()){
+            invoice.setPaidAt(LocalDateTime.now());
+            InvoiceResponse invoiceResponse = invoiceMapperUtil.mapEntityToResponse(invoiceRepository.saveAndFlush(invoice));
+            kafkaTemplate.send(completedPaidInvoice, invoiceResponse);
+            return;
+        }
+
+        invoiceRepository.saveAndFlush(invoice);
         PayMedicineInCashCommonRequest payMedicineInCashRequest = PayMedicineInCashCommonRequest.builder()
                 .invoiceId(invoice.getId())
                 .details(request.getDetails())
                 .build();
 
         kafkaTemplate.send(payMedicineInCashTopic, payMedicineInCashRequest);
+    }
+
+    @Transactional
+    @KafkaListener(topics = KafkaTopicsConstrant.PAID_MEDICINE_INVOICE, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)
+    public void handlePaidMedicineInvoice(PaidMedicineCommonResponse medicineInvoice){
+        Invoice invoice = invoiceRepository.findById(medicineInvoice.getInvoiceId()).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
+        List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+        for(PaidMedicineDetailCommonResponse medicineInvoiceDetail: medicineInvoice.getDetails()){
+            InvoiceDetail invoiceDetail = InvoiceDetail.builder()
+                    .invoice(invoice)
+                    .price(medicineInvoiceDetail.getPrice())
+                    .quantity(medicineInvoiceDetail.getQuantity())
+                    .medicineId(medicineInvoiceDetail.getMedicineId())
+                    .build();
+            invoiceDetails.add(invoiceDetail);
+        }
+
+        invoice.setPaidAt(LocalDateTime.now());
+        InvoiceResponse invoiceResponse = invoiceMapperUtil.mapEntityToResponse(invoiceRepository.save(invoice));
+        List<InvoiceDetailResponse> detailsResponse = invoiceDetailMapperUtil.mapEntitiesToResponses(invoiceDetailRepository.saveAllAndFlush(invoiceDetails));
+        invoiceResponse.setDetails(detailsResponse);
+
+        kafkaTemplate.send(completedPaidInvoice, invoiceResponse);
     }
 }

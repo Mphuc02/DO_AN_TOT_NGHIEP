@@ -3,7 +3,7 @@ package dev.payment.rest;
 import static dev.common.constant.ApiConstant.PAYMENT.*;
 
 import dev.payment.dto.request.PayInCashRequest;
-import dev.payment.dto.response.InvoiceResponse;
+import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

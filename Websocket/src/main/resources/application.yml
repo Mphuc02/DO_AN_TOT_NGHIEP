@@ -39,7 +39,8 @@ kafka:
         updated-number-examination-form-topic: updated_number_examination_form_topic
         received-image-message: received_image_message
         received-message: received_message
-        
+        completed-payment-invoice: completed_payment_invoice
+    
     group-id:
         websocket: websocket_group
 

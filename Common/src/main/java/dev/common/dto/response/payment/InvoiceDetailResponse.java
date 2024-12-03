@@ -1,4 +1,4 @@
-package dev.payment.dto.response;
+package dev.common.dto.response.payment;
 
 import lombok.*;
 import java.math.BigDecimal;

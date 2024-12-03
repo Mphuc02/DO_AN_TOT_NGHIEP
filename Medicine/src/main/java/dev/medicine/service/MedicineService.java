@@ -19,6 +19,7 @@ import dev.medicine.repository.MedicineRepository;
 import dev.medicine.util.MedicineMapperUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,10 @@ public class MedicineService {
     private final MedicineRepository medicineRepository;
     private final MedicineMapperUtil medicineMapperUtil;
     private final ExportInvoiceDetailRepository exportInvoiceDetailRepository;
-
     private KafkaTemplate<String, Object> kafkaTemplate;
+
+    @Value(KafkaTopicsConstrant.PAID_MEDICINE_INVOICE)
+    private String paidMedicineInvoiceTopic;
 
     public MedicineResponse getByID(UUID id){
         Medicine medicine = medicineRepository.findById(id)
@@ -140,6 +143,6 @@ public class MedicineService {
                                                                 .invoiceId(request.getInvoiceId())
                                                                 .details(detailsResponse)
                                                                 .build();
-        kafkaTemplate.send(, paidInvoiceResponse);
+        kafkaTemplate.send(paidMedicineInvoiceTopic, paidInvoiceResponse);
     }
 }

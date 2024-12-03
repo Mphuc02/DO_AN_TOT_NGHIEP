@@ -26,7 +26,7 @@ public class CreateFormForFirstTimePatientRequest {
 
     @NotNull(message = "Phòng khám không được bỏ trống")
     @TodayWorkingScheduleValidator
-    private UUID workingSchedule;
+    private UUID workingScheduleId;
 
     private UUID examinationFormId;
     private UUID owner;

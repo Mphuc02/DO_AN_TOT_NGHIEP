@@ -1,5 +1,6 @@
-package dev.payment.dto.response;
+package dev.common.dto.response.payment;
 
+import dev.common.dto.response.payment.InvoiceDetailResponse;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -13,6 +13,7 @@ public class KafkaTopicsConstrant {
     public static final String CREATED_EMPLOYEE_TOPIC = "${kafka.topics.created-employee-topic}";
     public static final String PROCESSED_IMAGE = "${kafka.topics.processed-image}";
     public static final String PAID_MEDICINE_INVOICE = "${kafka.topics.paid-medicine-invoice}";
+    public static final String COMPLETED_PAYMENT_INVOICE = "${kafka.topics.completed-payment-invoice}";
     public static final String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.update-number-examination-form-topic}";
     public static final String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.updated-number-examination-form-topic}";
     public static final String PAY_MEDICINE_IN_CASH = "${kafka.topics.pay-medicine-in-cash}";

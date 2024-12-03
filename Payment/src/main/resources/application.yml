@@ -54,6 +54,8 @@ kafka:
     topics:
         created-examination-result-success: created_examination_result_success
         pay-medicine-in-cash: pay_medicine_in_cash
+        paid-medicine-invoice: paid_medicine_invoice
+        completed-payment-invoice: completed_payment_invoice
     group-id:
         payment-group: payment_group
         
