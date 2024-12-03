@@ -1,8 +1,44 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {SendApiService} from "../../service/SendApiService";
 import {Greeting, HOSPITAL_INFORMATION, WEBSOCKET} from "../../ApiConstant";
 import WebSocketService from "../../service/WebSocketService";
 import {JwtService} from "../../service/JwtService";
+import ToastPopup from "../common/ToastPopup";
+import {jsPDF} from "jspdf";
+
+const printGreetingForm = (form) => {
+    const ticketData = {
+        hospitalName: "Benh vien da lieu Minh Phuc",
+        ...form,
+    };
+
+    const createAndPrintPDF = () => {
+        const doc = new jsPDF();
+
+        // Nội dung PDF
+        doc.setFontSize(20);
+        doc.text(ticketData.hospitalName, 105, 20, { align: 'center' });
+
+        doc.setFontSize(16);
+        doc.text('PHIEU SO THU TU DOI KHAM', 105, 40, { align: 'center' });
+
+        doc.setFontSize(30);
+        doc.text(`So Thu Tu: ${ticketData.examinedNumber}`, 105, 70, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.text(`Ten Benh Nhan: ${ticketData.fullName.firstName + " " + ticketData.fullName.middleName + " " + ticketData.fullName.lastName}`, 20, 100);
+        doc.text(`Phong Kham: ${ticketData.roomName}`, 20, 120);
+
+        doc.setFontSize(12);
+        doc.text('Xin vui long doi den khi so cua ban duoc goi de vao kham.', 105, 140, { align: 'center' });
+
+        // Mở hộp thoại in
+        doc.autoPrint();
+        window.open(doc.output('bloburl'), '_blank');
+    };
+
+    createAndPrintPDF()
+}
 
 const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     const [provinces, setProvinces] = useState(new Map())
@@ -12,11 +48,17 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     const [numberPhone, setNumberPhone] = useState(null)
     const [address, setAddress] = useState({})
     const [symptom, setSymptom] = useState(null)
-    const [workingSchedule, setWorkingSchedule] = useState(null)
-    // const [errorValidate, setErrorValidate] = useState({patient: {fullName: {}, address: {}}})
+    const [workingScheduleId, setWorkingScheduleId] = useState(null)
     const [errorValidate, setErrorValidate] = useState({})
     const [webSocket, setWebSocket] = useState(new WebSocketService())
     const [createdExaminationForm, setCreatedExaminationForm] = useState(null)
+    const [toast, setToast] = useState(null)
+    const currentFullName = useRef(null)
+    const currentRoom = useRef(null)
+
+    const hideToast = () => {
+        setToast(null)
+    }
 
     const getAllProvince = () => {
         SendApiService.getRequest(HOSPITAL_INFORMATION.ADDRESS.getUrl(), {}, response => {
@@ -33,15 +75,15 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
     const receivedCreatedExaminationForm = (message) => {
         const data = JSON.parse(message)
-        alert(data.message)
-        console.log(data.data)
-        setCreatedExaminationForm(data.data)
+        setToast({message: data.message, type: 'ok'})
+        console.log(data.data, currentRoom.current)
+        setCreatedExaminationForm({...data.data, fullName: currentFullName.current, roomName: currentRoom.current})
     }
 
     const connectToWebsocket = () => {
         const topics = [WEBSOCKET.updatedNumberExaminationForm(JwtService.geUserFromToken())]
         webSocket.connectAndSubscribe(topics, (message) => {
-            receivedCreatedExaminationForm (message)
+            receivedCreatedExaminationForm(message)
         })
     }
 
@@ -86,6 +128,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     }
 
     const onClickSave = () => {
+        currentFullName.current = fullName
+
         const examinationForm = {
             patient: {
                 fullName: fullName,
@@ -93,27 +137,25 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 address: address
             },
             symptom: symptom,
-            workingSchedule: workingSchedule
+            workingScheduleId: workingScheduleId
         }
 
-        console.log(examinationForm)
         SendApiService.postRequest(Greeting.ExaminationForm.firstTime(), examinationForm, {}, response => {
-
+            setErrorValidate({})
         }, error => {
             if(error.status === 400){
                 setErrorValidate(error.response.data.fields)
-                console.log(error.response.data.fields)
             }
         })
     }
 
     return (
         <>
-            <table>
+            <table className="w-full border-collapse border border-gray-300 text-sm">
                 <thead><tr></tr></thead>
                 <tbody>
                 <tr>
-                    <td><h3>Thông tin liên hệ</h3></td>
+                    <td colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông tin liên hệ</h3></td>
                 </tr>
 
                 <tr>
@@ -122,8 +164,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Họ:</td>
-                    <td><input onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/></td>
+                    <td className="pr-1 font-medium text-gray-700 text-left w-32">Họ:</td>
+                    <td className="pl-1"><input className="w-full border border-gray-300 rounded-md p-2 mb-4" onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/></td>
                 </tr>
 
                 <tr>
@@ -132,8 +174,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Tên đệm:</td>
-                    <td><input onChange={(e) => setFullName({...fullName, middleName: e.target.value})}/></td>
+                    <td className="pr-1 font-medium text-gray-700 text-left w-32">Tên đệm:</td>
+                    <td className="pl-1"><input className="w-full border border-gray-300 rounded-md p-2" onChange={(e) => setFullName({...fullName, middleName: e.target.value})}/></td>
                 </tr>
 
                 <tr>
@@ -227,20 +269,22 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td></td>
-                    <td className="text-red-500 text-sm font-medium">{errorValidate['workingSchedule']}</td>
+                    <td className="text-red-500 text-sm font-medium">{errorValidate['workingScheduleId']}</td>
                 </tr>
 
                 <tr>
                     <td>Chọn phòng khám:</td>
                     <td>
-                        <select onChange={e => setWorkingSchedule(e.target.value)}>
+                        <select onChange={e => {
+                            currentRoom.current = e.target.options[e.target.selectedIndex].text;
+                            setWorkingScheduleId(e.target.value)
+                        }}>
                             <option>----------</option>
                             {[...workingScheduleMap].map(([key, value]) => {
                                 const fullName = value.doctor.fullName
                                 const fullNameStr = fullName.lastName + ' ' + fullName.middleName + ' ' + fullName.firstName
                                 return <option key={key}
-                                               value={value.id}>Phòng {workingRoomsMap.get(value.roomId).name} - bác
-                                    sĩ {fullNameStr}</option>
+                                               value={value.id}>Phòng {workingRoomsMap.get(value.roomId).name} - bác sĩ {fullNameStr}</option>
                             })}
                         </select>
                     </td>
@@ -258,7 +302,14 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tbody>
             </table>
 
-            <button onClick={() => onClickSave()}>Lưu thông tin</button>
+            {!createdExaminationForm &&
+                <button onClick={() => onClickSave()}>Lưu thông tin</button>}
+
+
+            {toast && <ToastPopup message={toast.message} type={toast.type} onClose={hideToast}/>}
+
+            {createdExaminationForm &&
+                <button onClick={() => printGreetingForm(createdExaminationForm)}>In phiếu khám bệnh</button>}
         </>
     )
 }
