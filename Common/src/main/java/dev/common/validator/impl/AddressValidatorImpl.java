@@ -1,8 +1,8 @@
 package dev.common.validator.impl;
 
 import dev.common.client.AddressClient;
-import dev.common.dto.request.CheckAddressRequest;
-import dev.common.dto.request.CreatePatientAddressRequest;
+import dev.common.dto.request.CheckAddressCommonRequest;
+import dev.common.dto.request.CreateWithAddressCommonRequest;
 import dev.common.validator.AddressValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.ObjectUtils;
 
 @RequiredArgsConstructor
-public class AddressValidatorImpl implements ConstraintValidator<AddressValidator, CreatePatientAddressRequest> {
+public class AddressValidatorImpl implements ConstraintValidator<AddressValidator, CreateWithAddressCommonRequest> {
     private final AddressClient client;
 
     @Override
-    public boolean isValid(CreatePatientAddressRequest request, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(CreateWithAddressCommonRequest request, ConstraintValidatorContext constraintValidatorContext) {
         if(ObjectUtils.isEmpty(request))
             return true;
 
@@ -29,7 +29,7 @@ public class AddressValidatorImpl implements ConstraintValidator<AddressValidato
             return true;
         }
 
-        CheckAddressRequest checkRequest = CheckAddressRequest.builder()
+        CheckAddressCommonRequest checkRequest = CheckAddressCommonRequest.builder()
                                                 .provinceId(request.getProvinceId())
                                                 .districtId(request.getDistrictId())
                                                 .communeId(request.getCommuneId())

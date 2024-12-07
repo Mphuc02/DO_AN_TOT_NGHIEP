@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CreateFullNameRequest {
+public class CreateWithFullNameCommonRequest {
     @NotEmpty(message = "Tên không được bỏ trống")
     @Size(max = 100, message = "Tên được phép tối đa 100 ký tự")
     private String firstName;

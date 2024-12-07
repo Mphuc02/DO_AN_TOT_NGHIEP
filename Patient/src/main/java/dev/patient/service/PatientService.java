@@ -3,7 +3,7 @@ package dev.patient.service;
 import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.dto.request.CreateNewPatientRequest;
+import dev.common.dto.request.CreateNewPatientCommonRequest;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 import dev.common.dto.response.patient.PatientResponse;
 import dev.common.exception.BaseException;
@@ -61,7 +61,7 @@ public class PatientService {
     }
 
     @KafkaListener(topics = CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC, groupId = PATIENT_GROUP)
-    public void createPatientFromGreeting(CreateNewPatientRequest request){
+    public void createPatientFromGreeting(CreateNewPatientCommonRequest request){
         log.info(String.format("Receive request create patient from kafka: %s", gson.toJson(request)));
 
         Patient patient = patientMapperUtil.createRequestToEntity(request);

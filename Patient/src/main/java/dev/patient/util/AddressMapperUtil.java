@@ -1,6 +1,6 @@
 package dev.patient.util;
 
-import dev.common.dto.request.CreatePatientAddressRequest;
+import dev.common.dto.request.CreateWithAddressCommonRequest;
 import dev.common.dto.response.address.AddressResponse;
 import dev.patient.entity.Address;
 import org.mapstruct.Mapper;
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapperUtil {
-    Address createRequestToEntity(CreatePatientAddressRequest request);
+    Address createRequestToEntity(CreateWithAddressCommonRequest request);
     AddressResponse mapEntityToResponse(Address address);
 }

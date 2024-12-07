@@ -11,9 +11,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CommonRegisterEmployeeRequest {
+public class RegisterEmployeeCommonRequest {
     private UUID id;
-    private CreateFullNameRequest fullName;
+    private CreateWithFullNameCommonRequest fullName;
     private String introduce;
     private Date dateOfBirth;
     private List<Role> roles;

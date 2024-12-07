@@ -1,6 +1,6 @@
 package dev.employee.dto.request;
 
-import dev.common.dto.request.UpdateFullNameRequest;
+import dev.common.dto.request.UpdateWithFullNameRequest;
 import dev.common.validator.DateOfBirthValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
@@ -21,7 +21,7 @@ public class UpdateEmployeeRequest {
     private Date dateOfBirth;
 
     @Valid
-    private UpdateFullNameRequest fullName;
+    private UpdateWithFullNameRequest fullName;
 
     @Valid
     private List<UpdateEmployeeRoleRequest> addRoles;

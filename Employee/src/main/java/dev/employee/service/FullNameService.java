@@ -1,7 +1,7 @@
 package dev.employee.service;
 
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.request.UpdateFullNameRequest;
+import dev.common.dto.request.UpdateWithFullNameRequest;
 import dev.common.exception.NotFoundException;
 import dev.employee.entity.FullName;
 import dev.employee.repository.FullNameRepository;
@@ -19,7 +19,7 @@ public class FullNameService {
     private final FullNameUtil fullNameUtil;
 
     @Transactional
-    public void update(UpdateFullNameRequest request){
+    public void update(UpdateWithFullNameRequest request){
         FullName findToUpdate = findById(request.getId());
         fullNameUtil.updateRequestToEntity(request, findToUpdate);
         fullNameRepository.save(findToUpdate);

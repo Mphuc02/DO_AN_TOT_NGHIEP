@@ -1,8 +1,6 @@
 package dev.common.dto.response.address;
 
-import dev.common.dto.response.address.CommuneResponse;
 import lombok.*;
-
 import java.util.List;
 import java.util.UUID;
 

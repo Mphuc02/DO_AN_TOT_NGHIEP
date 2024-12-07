@@ -12,13 +12,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CreateNewPatientRequest {
+public class CreateNewPatientCommonRequest {
     @Setter(AccessLevel.NONE)
     private UUID id = UUID.randomUUID();
 
     @NotNull(message = "Họ và tên không được bỏ trống")
     @Valid
-    private CreateFullNameRequest fullName;
+    private CreateWithFullNameCommonRequest fullName;
 
     @NotEmpty(message = "Số điện thoại không được bỏ trống")
     private String numberPhone;
@@ -26,7 +26,7 @@ public class CreateNewPatientRequest {
     @Valid
     @NotNull(message = "Địa chỉ không được bỏ trống")
     @AddressValidator
-    private CreatePatientAddressRequest address;
+    private CreateWithAddressCommonRequest address;
 
     private UUID examinationFormID;
 }

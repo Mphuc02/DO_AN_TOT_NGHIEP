@@ -1,7 +1,7 @@
 package dev.hospitalinformation.service;
 
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.request.CheckAddressRequest;
+import dev.common.dto.request.CheckAddressCommonRequest;
 import dev.common.dto.response.address.CommuneResponse;
 import dev.common.dto.response.address.DistrictResponse;
 import dev.common.exception.NotFoundException;
@@ -27,7 +27,7 @@ public class ProvinceService {
     private final DistrictUtil districtUtil;
     private final CommuneUtil communeUtil;
 
-    public boolean checkAddress(CheckAddressRequest request){
+    public boolean checkAddress(CheckAddressCommonRequest request){
         return provinceRepository.checkAddress(request.getProvinceId().toString(),
                                                     request.getDistrictId().toString(),
                                                     request.getCommuneId().toString()) > 0;

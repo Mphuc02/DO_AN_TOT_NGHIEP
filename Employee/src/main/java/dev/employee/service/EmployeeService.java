@@ -3,7 +3,7 @@ package dev.employee.service;
 import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.request.RegisterEmployeeCommonRequest;
 import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.model.Role;
@@ -47,7 +47,7 @@ public class EmployeeService {
 
     @KafkaListener(topics = "${kafka.topics.create-employee-topic}", groupId = "${kafka.group-id.account}")
 //        public void save(ConsumerRecord<String, Object> request){ Way1
-    public void save(@Payload CommonRegisterEmployeeRequest request){
+    public void save(@Payload RegisterEmployeeCommonRequest request){
         log.info(String.format("Receive request save Employee from Kafka with value: %s", gson.toJson(request)));
         Employee entity = employeeUtil.createRequestToEntity(request);
         employeeRepository.save(entity);

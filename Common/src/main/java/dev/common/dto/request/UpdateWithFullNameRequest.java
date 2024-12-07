@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class UpdateFullNameRequest {
+public class UpdateWithFullNameRequest {
     @NotNull(message = "Id của tên không được bỏ trống")
     private UUID id;
 

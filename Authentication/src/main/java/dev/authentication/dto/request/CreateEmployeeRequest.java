@@ -1,7 +1,7 @@
 package dev.authentication.dto.request;
 
-import dev.common.dto.request.CreateFullNameRequest;
-import dev.common.dto.request.CreatePermissionRequest;
+import dev.common.dto.request.CreateWithFullNameCommonRequest;
+import dev.common.dto.request.CreateWithPermissionRequest;
 import dev.common.validator.DateOfBirthValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -33,9 +33,9 @@ public class CreateEmployeeRequest {
 
     @NotNull(message = "Họ và tên không được bỏ trống")
     @Valid
-    private CreateFullNameRequest fullName;
+    private CreateWithFullNameCommonRequest fullName;
 
     @Valid
     @NotEmpty(message = "Phải có ít nhất 1 quyền")
-    private List<CreatePermissionRequest> permissions;
+    private List<CreateWithPermissionRequest> permissions;
 }

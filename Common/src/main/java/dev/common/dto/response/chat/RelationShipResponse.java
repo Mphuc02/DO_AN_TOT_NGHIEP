@@ -18,4 +18,5 @@ public class RelationShipResponse {
     private String doctorName;
     private LocalDateTime lastContact;
     private LocalDateTime firstContact;
+    private String lastMessage;
 }

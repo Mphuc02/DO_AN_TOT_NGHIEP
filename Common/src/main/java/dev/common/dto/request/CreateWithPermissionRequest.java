@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CreatePermissionRequest {
+public class CreateWithPermissionRequest {
     @NotNull(message = "Chức vụ không được bỏ trống")
     @NotAdminPermissionValidator
     private Role role;

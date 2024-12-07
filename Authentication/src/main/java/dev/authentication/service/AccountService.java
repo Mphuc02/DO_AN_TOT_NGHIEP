@@ -12,8 +12,8 @@ import dev.authentication.dto.response.AuthenticationResponse;
 import dev.authentication.repository.AccountRepository;
 import dev.authentication.util.AccountUtil;
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.request.CommonRegisterEmployeeRequest;
-import dev.common.dto.request.CreateNewPatientRequest;
+import dev.common.dto.request.RegisterEmployeeCommonRequest;
+import dev.common.dto.request.CreateNewPatientCommonRequest;
 import dev.common.exception.DuplicateException;
 import dev.common.exception.FailAuthenticationException;
 import dev.common.exception.NotPermissionException;
@@ -127,7 +127,7 @@ public class AccountService {
 
         Account entity = accountUtil.mapFromRegisterEmployeeRequest(request);
         entity = accountRepository.save(entity);
-        CommonRegisterEmployeeRequest registerRequest = accountUtil.createRegisterEmployeeRequest(request, entity.getId());
+        RegisterEmployeeCommonRequest registerRequest = accountUtil.createRegisterEmployeeRequest(request, entity.getId());
         registerRequest.setOwner(auditingUtil.getUserLogged().getId());
         kafkaTemplate.send(createEmployeeTopic, registerRequest);
     }
@@ -183,7 +183,7 @@ public class AccountService {
 
     @KafkaListener(topics = KafkaTopicsConstrant.CREATE_PATIENT_ACCOUNT_FROM_GREETING_TOPIC,
                     groupId = KafkaTopicsConstrant.AUTHENTICATION_GROUP)
-    public void saveAccountFromGreeting(CreateNewPatientRequest request){
+    public void saveAccountFromGreeting(CreateNewPatientCommonRequest request){
         UUID userId = (UUID) redisService.getValue(USER_PHONE_PREFIX(request.getNumberPhone()), UUID.class);
         if(ObjectUtils.isEmpty(userId) ||
             !userId.equals(request.getId())){

@@ -1,6 +1,6 @@
 package dev.patient.util;
 
-import dev.common.dto.request.CreateNewPatientRequest;
+import dev.common.dto.request.CreateNewPatientCommonRequest;
 import dev.common.dto.response.patient.PatientResponse;
 import dev.patient.entity.Patient;
 import org.mapstruct.Mapper;
@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface PatientMapperUtil {
-    Patient createRequestToEntity(CreateNewPatientRequest request);
+    Patient createRequestToEntity(CreateNewPatientCommonRequest request);
     PatientResponse mapEntityToResponse(Patient patient);
     List<PatientResponse> mapEntitiesToResponses(List<Patient> patients);
 }

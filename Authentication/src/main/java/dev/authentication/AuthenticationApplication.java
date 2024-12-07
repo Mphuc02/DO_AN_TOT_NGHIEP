@@ -2,8 +2,8 @@ package dev.authentication;
 
 import dev.authentication.entity.Account;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.dto.request.CommonRegisterEmployeeRequest;
-import dev.common.dto.request.CreateFullNameRequest;
+import dev.common.dto.request.CreateWithFullNameCommonRequest;
+import dev.common.dto.request.RegisterEmployeeCommonRequest;
 import dev.common.model.Role;
 import dev.authentication.repository.AccountRepository;
 import dev.common.constant.PackageConstant;
@@ -56,12 +56,12 @@ public class AuthenticationApplication implements CommandLineRunner {
 
         List<Role> roles = List.of(Role.ADMIN);
 
-        CreateFullNameRequest request = new CreateFullNameRequest("Phuc",
+        CreateWithFullNameCommonRequest request = new CreateWithFullNameCommonRequest("Phuc",
                                                                 "Minh",
                                                                    "Phuc");
 
         admin = accountRepository.save(admin);
-        CommonRegisterEmployeeRequest registerRequest = CommonRegisterEmployeeRequest.builder()
+        RegisterEmployeeCommonRequest registerRequest = RegisterEmployeeCommonRequest.builder()
                         .id(admin.getId())
                         .fullName(request)
                         .introduce("Người quản lý trang web")

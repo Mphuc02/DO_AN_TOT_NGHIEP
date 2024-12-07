@@ -1,6 +1,6 @@
 package dev.employee.util;
 
-import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.request.RegisterEmployeeCommonRequest;
 import dev.common.dto.response.user.EmployeeResponse;
 import dev.common.model.Role;
 import dev.employee.dto.request.UpdateEmployeeRequest;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeUtil {
     private final FullNameUtil fullNameUtil;
-    public Employee createRequestToEntity(CommonRegisterEmployeeRequest request){
+    public Employee createRequestToEntity(RegisterEmployeeCommonRequest request){
         Employee employee = Employee.builder()
                 .id(request.getId())
                 .introduce(request.getIntroduce())

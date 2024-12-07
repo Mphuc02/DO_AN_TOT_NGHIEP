@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CheckAddressRequest {
+public class CheckAddressCommonRequest {
     @NotNull(message = "Tỉnh không đuợc bỏ trống")
     private UUID provinceId;
 

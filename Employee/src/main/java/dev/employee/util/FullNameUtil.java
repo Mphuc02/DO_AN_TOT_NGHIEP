@@ -1,7 +1,7 @@
 package dev.employee.util;
 
-import dev.common.dto.request.CreateFullNameRequest;
-import dev.common.dto.request.UpdateFullNameRequest;
+import dev.common.dto.request.CreateWithFullNameCommonRequest;
+import dev.common.dto.request.UpdateWithFullNameRequest;
 import dev.common.dto.response.user.FullNameCommonResponse;
 import dev.employee.entity.Employee;
 import dev.employee.entity.FullName;
@@ -10,7 +10,7 @@ import org.springframework.util.ObjectUtils;
 
 @Component
 public class FullNameUtil {
-    public FullName createRequestToEntity(CreateFullNameRequest request, Employee employee){
+    public FullName createRequestToEntity(CreateWithFullNameCommonRequest request, Employee employee){
         return FullName.builder()
                 .firstName(reFormatName(request.getFirstName()))
                 .middleName(reFormatName(request.getMiddleName()))
@@ -28,7 +28,7 @@ public class FullNameUtil {
                 .build();
     }
 
-    public void updateRequestToEntity(UpdateFullNameRequest request, FullName entity){
+    public void updateRequestToEntity(UpdateWithFullNameRequest request, FullName entity){
         if(!ObjectUtils.isEmpty(request.getFirstName()))
             entity.setFirstName(reFormatName(request.getFirstName()));
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CreatePatientAddressRequest {
+public class CreateWithAddressCommonRequest {
     @NotEmpty(message = "Tên phố không được bỏ trống")
     private String street;
 

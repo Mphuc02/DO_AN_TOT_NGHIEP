@@ -1,7 +1,7 @@
 package dev.greeting.util;
 
 import dev.common.dto.request.CreateExaminationResultCommonRequest;
-import dev.common.dto.request.CreateNewPatientRequest;
+import dev.common.dto.request.CreateNewPatientCommonRequest;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.greeting.dto.request.CreateForWithPatientInforRequest;
 import dev.greeting.dto.request.CreateFormForFirstTimePatientRequest;
@@ -33,7 +33,7 @@ public interface ExaminationFormMapperUtil {
     CreateExaminationResultCommonRequest buildCreateExaminationResultRequest(ExaminationForm form);
 
     @Named(value = "mapPatientId")
-    default UUID mapPatientId(CreateNewPatientRequest request){
+    default UUID mapPatientId(CreateNewPatientCommonRequest request){
         return request.getId();
     }
 }

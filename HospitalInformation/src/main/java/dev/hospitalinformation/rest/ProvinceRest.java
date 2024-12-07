@@ -2,7 +2,7 @@ package dev.hospitalinformation.rest;
 
 import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
 import static dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.request.CheckAddressRequest;
+import dev.common.dto.request.CheckAddressCommonRequest;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.hospitalinformation.service.ProvinceService;
 import jakarta.validation.Valid;
@@ -39,7 +39,7 @@ public class ProvinceRest {
     }
 
     @PostMapping(CHECK_ADDRESS)
-    public ResponseEntity<Boolean> checkAddress(@Valid @RequestBody CheckAddressRequest request,
+    public ResponseEntity<Boolean> checkAddress(@Valid @RequestBody CheckAddressCommonRequest request,
                                                 BindingResult result){
         if(result.hasErrors()){
             throw new ObjectIllegalArgumentException(result.getAllErrors(), HOSPITAL_INFORMATION_EXCEPTION.FAIL_CHECK_ADDRESS);

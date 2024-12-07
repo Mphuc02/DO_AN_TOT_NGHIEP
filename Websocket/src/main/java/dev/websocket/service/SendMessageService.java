@@ -1,7 +1,7 @@
 package dev.websocket.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
-import dev.common.dto.request.CommonRegisterEmployeeRequest;
+import dev.common.dto.request.RegisterEmployeeCommonRequest;
 import dev.common.dto.response.chat.MessageResponse;
 import dev.common.dto.response.examination_form.ExaminationFormResponse;
 import dev.common.dto.response.payment.InvoiceResponse;
@@ -22,7 +22,7 @@ public class SendMessageService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @KafkaListener(topics = CREATE_EMPLOYEE_TOPIC, groupId = WEBSOCKET_GROUP)
-    public void handle(CommonRegisterEmployeeRequest request) {
+    public void handle(RegisterEmployeeCommonRequest request) {
         log.info("Received message from topic: create-employee-account with owner:" +request.getOwner());
         Message message = Message.buildOkMessage(MessageTemplate.CREATED_EMPLOYEE_ACCOUNT);
         this.messagingTemplate.convertAndSend(Topic.createEmployeeTopic(request.getOwner()), message);

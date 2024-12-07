@@ -1,7 +1,7 @@
 package dev.medicine.validator.impl;
 
 import dev.common.client.AddressClient;
-import dev.common.dto.request.CheckAddressRequest;
+import dev.common.dto.request.CheckAddressCommonRequest;
 import dev.medicine.dto.request.save.SaveAddressRequest;
 import dev.medicine.validator.AddressValidator;
 import jakarta.validation.ConstraintValidator;
@@ -23,7 +23,7 @@ public class AddressValidatorImpl implements ConstraintValidator<AddressValidato
         ObjectUtils.isEmpty(request.getCommuneId()))
             return true;
 
-        CheckAddressRequest checkRequest = CheckAddressRequest.builder()
+        CheckAddressCommonRequest checkRequest = CheckAddressCommonRequest.builder()
                                                 .provinceId(request.getProvinceId())
                                                 .districtId(request.getDistrictId())
                                                 .communeId(request.getCommuneId())
