@@ -26,6 +26,7 @@ import {ExaminationManagement} from "../components/doctor/examination/Examinatio
 import {ExaminatingPatient} from "../components/doctor/examination/ExaminatingPatient";
 import {Message} from "../components/patient/Message";
 import {DoctorMessage} from "../components/doctor/DoctorMessage";
+import {PayForInvoice, Payment} from "../components/receipt/Payment";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -66,6 +67,8 @@ const publicRoutes = [
     {path: RoutesConstant.RECEIPT.LOGIN, component: ReceiptLogin, layout: ReceiptLoginLayout},
     {path: RoutesConstant.RECEIPT.RECEIPT_PATIENT, component: ReceiptPatient, layout: ReceiptLayout},
     {path: RoutesConstant.RECEIPT.PRINT_NUMBER_TICKET, component: PrintTicket, layout: ReceiptLayout},
+    {path: RoutesConstant.RECEIPT.PAYMENT, component: Payment, layout: ReceiptLayout},
+    {path: RoutesConstant.RECEIPT.PAY_FOR_INVOICE, component: PayForInvoice, layout: ReceiptLayout},
 ]
 
 export {publicRoutes}

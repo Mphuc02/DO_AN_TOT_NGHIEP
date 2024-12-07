@@ -302,4 +302,18 @@ const Chat = class {
     }
 }
 
-export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult, Chat, MinioUrl}
+const PaymentApi = class {
+    static getUrl = () => {
+        return HOST.getHost() + "/api/invoices"
+    }
+
+    static getUnPaid = () => {
+        return this.getUrl() + "/unpaid"
+    }
+
+    static byId = (id) => {
+        return this.getUrl() + `/${id}`
+    }
+}
+
+export {HOST, AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET, MEDICINE, HOSPITAL_INFORMATION, WORKING_SCHEDULE, AI, PATIENT, Greeting, ExaminationResult, Chat, MinioUrl, PaymentApi}

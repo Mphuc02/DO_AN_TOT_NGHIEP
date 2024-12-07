@@ -40,6 +40,10 @@ class RoutesConstant{
         static RECEIPT_PATIENT = '/employee/receipt'
         static PAYMENT = "/employee/receipt/payment"
         static PRINT_NUMBER_TICKET = "/employee/receipt/print-number-ticket"
+        static PAY_FOR_INVOICE = "/employee/receipt/payment/:id"
+        static payForInvoice = (id) => {
+            return `/employee/receipt/payment/${id}`
+        }
     }
 }
 
