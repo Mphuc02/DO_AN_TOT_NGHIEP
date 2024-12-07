@@ -2,6 +2,8 @@ package dev.payment.service;
 
 import com.google.gson.Gson;
 import static dev.common.constant.ExceptionConstant.PAYMENT_EXCEPTION;
+
+import dev.common.constant.ExceptionConstant;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
 import dev.common.dto.request.PayMedicineInCashCommonRequest;
@@ -24,6 +26,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -54,6 +58,15 @@ public class InvoiceService {
 
     public List<InvoiceResponse> findAll(){
        return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
+    }
+
+    public Page<InvoiceResponse> getUnPaid(Pageable pageable){
+        return invoiceRepository.findUnPaidInvoice(pageable).map(invoiceMapperUtil::mapEntityToResponse);
+    }
+
+    public InvoiceResponse findById(UUID id){
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
+        return invoiceMapperUtil.mapEntityToResponse(invoice);
     }
 
     @KafkaListener(topics = KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)

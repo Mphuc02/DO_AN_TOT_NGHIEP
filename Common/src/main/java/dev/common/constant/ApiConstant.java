@@ -108,6 +108,7 @@ public class ApiConstant {
 
         public static final String INVOICE_URL = "/api/invoices";
         public static final String PAY_IN_CASH = "/pay-in-cash/{id}";
+        public static final String UN_PAID = "/unpaid";
     }
 
     public static final class CHAT{

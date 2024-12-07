@@ -10,7 +10,7 @@ public class RoleHierarchyConfiguration {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl r = new RoleHierarchyImpl();
-        r.setHierarchy("ADMIN > USER\nDOCTOR > USER");
+        r.setHierarchy("ADMIN > USER\nDOCTOR > USER\nRECEPTION_STAFF > USER");
         return r;
     }
 }

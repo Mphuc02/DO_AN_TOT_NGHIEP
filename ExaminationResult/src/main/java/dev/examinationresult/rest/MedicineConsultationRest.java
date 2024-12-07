@@ -40,7 +40,7 @@ public class MedicineConsultationRest {
         return ResponseEntity.ok(service.update(request, id));
     }
 
-    @PreAuthorize(AuthorizationConstant.DOCTOR)
+    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN_DOCTOR)
     @GetMapping(ID)
     public ResponseEntity<MedicineConsultationFormResponse> getById(@PathVariable UUID id){
         return ResponseEntity.ok(service.findById(id));
