@@ -156,6 +156,10 @@ class HOSPITAL_INFORMATION{
         static getByDistrictId = (id) => {
             return this.getUrl() + `/by-district/${id}`
         }
+
+        static getDetail = () => {
+            return this.getUrl() + "/get-address-detail"
+        }
     }
 }
 
@@ -313,6 +317,10 @@ const PaymentApi = class {
 
     static byId = (id) => {
         return this.getUrl() + `/${id}`
+    }
+
+    static payInCash = (id) => {
+        return this.getUrl() + `/pay-in-cash/${id}`
     }
 }
 
