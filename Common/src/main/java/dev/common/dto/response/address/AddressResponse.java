@@ -12,6 +12,9 @@ public class AddressResponse {
     private UUID id;
     private String street;
     private UUID provinceId;
+    private String provinceName;
     private UUID districtId;
+    private String districtName;
     private UUID communeId;
-}
+    private String communeName
+;}

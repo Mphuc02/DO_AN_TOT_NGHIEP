@@ -36,7 +36,7 @@ public class MedicineService {
     private final MedicineRepository medicineRepository;
     private final MedicineMapperUtil medicineMapperUtil;
     private final ExportInvoiceDetailRepository exportInvoiceDetailRepository;
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value(KafkaTopicsConstrant.PAID_MEDICINE_INVOICE)
     private String paidMedicineInvoiceTopic;

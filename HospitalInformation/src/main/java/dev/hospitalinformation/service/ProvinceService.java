@@ -2,10 +2,13 @@ package dev.hospitalinformation.service;
 
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.request.CheckAddressCommonRequest;
+import dev.common.dto.response.address.AddressResponse;
 import dev.common.dto.response.address.CommuneResponse;
 import dev.common.dto.response.address.DistrictResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.dto.response.address.ProvinceResponse;
+import dev.hospitalinformation.dto.GetAddressDTO;
+import dev.hospitalinformation.dto.request.GetAddressDetailRequest;
 import dev.hospitalinformation.repository.CommuneRepository;
 import dev.hospitalinformation.repository.DistrictRepository;
 import dev.hospitalinformation.repository.ProvinceRepository;
@@ -49,6 +52,15 @@ public class ProvinceService {
         return provinceUtil.entityToResponse(provinceRepository.findById(id)
                                                 .orElseThrow(() ->
                                                             new NotFoundException(HOSPITAL_INFORMATION_EXCEPTION.PROVINCE_ID_NOT_FOUND)));
+    }
+
+    public AddressResponse getAddressDetail(GetAddressDetailRequest request){
+        GetAddressDTO address = provinceRepository.getAddressDetail(request);
+        return AddressResponse.builder()
+                .provinceName(address.getProvinceName())
+                .districtName(address.getDistrictName())
+                .communeName(address.getCommuneName())
+                .build();
     }
 
 //    @Transactional

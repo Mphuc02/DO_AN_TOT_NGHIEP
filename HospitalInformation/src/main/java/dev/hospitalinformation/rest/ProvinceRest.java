@@ -3,8 +3,11 @@ package dev.hospitalinformation.rest;
 import static dev.common.constant.ApiConstant.HOSPITAL_INFORMATION.*;
 import static dev.common.constant.ExceptionConstant.*;
 import dev.common.dto.request.CheckAddressCommonRequest;
+import dev.common.dto.response.address.AddressResponse;
 import dev.common.exception.ObjectIllegalArgumentException;
+import dev.hospitalinformation.dto.request.GetAddressDetailRequest;
 import dev.hospitalinformation.service.ProvinceService;
+import feign.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,11 @@ public class ProvinceRest {
             throw new ObjectIllegalArgumentException(result.getAllErrors(), HOSPITAL_INFORMATION_EXCEPTION.FAIL_CHECK_ADDRESS);
         }
         return ResponseEntity.ok(provinceService.checkAddress(request));
+    }
+
+    @PostMapping(GET_ADDRESS_DETAIL)
+    public ResponseEntity<AddressResponse> getAddressDetail(@RequestBody GetAddressDetailRequest request){
+        return ResponseEntity.ok(provinceService.getAddressDetail(request));
     }
 
 //    @GetMapping("/test")

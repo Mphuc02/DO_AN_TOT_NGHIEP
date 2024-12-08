@@ -28,6 +28,7 @@ public class ApiConstant {
         public static final String GET_BY_IDS = "/find-by-ids";
         public static final String CHECK_DISEASES_EXIST = "/check";
         public static final String DISEASE_URL = "/api/diseases";
+        public static final String GET_ADDRESS_DETAIL = "/get-address-detail";
     }
 
     public static final class FACULTY_URL{
