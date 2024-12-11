@@ -33,6 +33,8 @@ public class Account implements UserDetails {
     private String email;
     private Date createdAt;
 
+    private String avatar;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));

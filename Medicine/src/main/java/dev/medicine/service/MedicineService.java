@@ -25,6 +25,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -144,5 +145,17 @@ public class MedicineService {
                                                                 .details(detailsResponse)
                                                                 .build();
         kafkaTemplate.send(paidMedicineInvoiceTopic, paidInvoiceResponse);
+    }
+
+    public BigDecimal calculateMedicinesCost(List<PayMedicineDetailCommonRequest> requests){
+        List<UUID> medicineIds = requests.stream().map(PayMedicineDetailCommonRequest::getMedicineId).toList();
+        Map<UUID, Medicine> medicineMap = medicineRepository.findAllById(medicineIds).stream().collect(Collectors.toMap(k -> k.getId(), v -> v));
+        BigDecimal cost = BigDecimal.ZERO;
+        for(PayMedicineDetailCommonRequest request: requests){
+            BigDecimal medicineCost = medicineMap.get(request.getMedicineId()).getPrice().multiply(new BigDecimal(request.getQuantity()));
+            cost = cost.add(medicineCost);
+        }
+
+        return cost;
     }
 }

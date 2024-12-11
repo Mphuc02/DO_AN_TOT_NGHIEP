@@ -2,7 +2,7 @@ package dev.patient.util;
 
 import dev.common.dto.request.CreateWithFullNameCommonRequest;
 import dev.common.dto.request.UpdateWithFullNameRequest;
-import dev.common.dto.response.user.FullNameCommonResponse;
+import dev.common.dto.response.employee.FullNameCommonResponse;
 import dev.common.dto.response.patient.FullNameResponse;
 import dev.patient.entity.FullName;
 import org.mapstruct.*;

@@ -87,6 +87,7 @@ public class ApiConstant {
         public static final String SUPPLIER_URL = "/api/v1/suppliers";
         public static final String IMPORT_INVOICE_URL = "/api/v1/import-invoices";
         public static final String SEARCH = "/search";
+        public static final String CALCULATE_MEDICINES_COST = "/calculate-medicines-cost";
     }
 
     public static final class PATIENT{
@@ -110,6 +111,8 @@ public class ApiConstant {
         public static final String INVOICE_URL = "/api/invoices";
         public static final String PAY_IN_CASH = "/pay-in-cash/{id}";
         public static final String UN_PAID = "/unpaid";
+        public static final String PAY_BY_VNPAY = "/pay-by-vnpay/{id}";
+        public static final String VNPAY_CALL_BACK = "/vnpay-call-back";
     }
 
     public static final class CHAT{

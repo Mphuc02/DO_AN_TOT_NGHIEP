@@ -2,6 +2,7 @@ package dev.medicine.rest;
 
 import static dev.common.constant.ApiConstant.MEDICINE_URL.*;
 import dev.common.constant.ExceptionConstant.*;
+import dev.common.dto.request.PayMedicineDetailCommonRequest;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateMedicineRequest;
 import dev.medicine.dto.request.create.CreatePatientMedicineInvoiceRequest;
@@ -71,5 +72,10 @@ public class MedicineRest {
             throw new ObjectIllegalArgumentException(result.getAllErrors(), MEDICINE_EXCEPTION.FAIL_VALIDATION_MEDICINE);
         }
         return ResponseEntity.ok(medicineService.update(request, id));
+    }
+
+    @PostMapping(CALCULATE_MEDICINES_COST)
+    public ResponseEntity<Object> calculateMedicinesCost(@RequestBody List<PayMedicineDetailCommonRequest> medicines){
+        return ResponseEntity.ok(medicineService.calculateMedicinesCost(medicines));
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.RegisterEmployeeCommonRequest;
-import dev.common.dto.response.user.EmployeeResponse;
+import dev.common.dto.response.employee.EmployeeResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.model.Role;
 import dev.common.util.AuditingUtil;

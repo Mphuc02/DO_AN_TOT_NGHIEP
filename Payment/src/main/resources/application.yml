@@ -63,3 +63,13 @@ minio:
     url: http://localhost:9000
     user-name: root
     pass-word: 123456789
+    
+payment:
+    vnPay:
+        url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+        tmnCode: MTCLW0O7
+        secretKey: ENBZDMRPIYX6PTV3UM7E6IPNM74X7BUU
+        returnUrl: http://localhost:9011/api/invoices/vnpay-call-back
+        version: 2.1.0
+        command: pay
+        orderType: other

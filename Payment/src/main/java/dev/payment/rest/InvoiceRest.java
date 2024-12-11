@@ -1,14 +1,16 @@
 package dev.payment.rest;
 
 import static dev.common.constant.ApiConstant.PAYMENT.*;
-import dev.payment.dto.request.PayInCashRequest;
+import dev.payment.dto.request.PaymentRequest;
 import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.service.InvoiceService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -35,8 +37,19 @@ public class InvoiceRest {
     }
 
     @PutMapping(PAY_IN_CASH)
-    public ResponseEntity<Object> payInCash(@PathVariable UUID id, @RequestBody PayInCashRequest request){
+    public ResponseEntity<Object> payInCash(@PathVariable UUID id, @Validated @RequestBody PaymentRequest request){
         invoiceService.handlePayInCash(id, request);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(PAY_BY_VNPAY)
+    public ResponseEntity<Object> payByVnpay(HttpServletRequest request, @PathVariable UUID id, @RequestBody PaymentRequest paymentRequest){
+        return ResponseEntity.ok(invoiceService.payByVnPay(request, id, paymentRequest));
+    }
+
+    @GetMapping(VNPAY_CALL_BACK)
+    public ResponseEntity<Object> vnpayCallBack(HttpServletRequest request){
+        String invoiceUrl = invoiceService.callBackFromVnPay(request);
+        return ResponseEntity.ok(invoiceUrl);
     }
 }

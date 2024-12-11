@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PayInCashRequest {
+public class PaymentRequest {
     @Valid
     private List<PayMedicineDetailCommonRequest> details;
 }

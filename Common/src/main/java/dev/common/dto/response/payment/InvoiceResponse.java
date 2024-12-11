@@ -19,5 +19,6 @@ public class InvoiceResponse {
     private BigDecimal examinationCost;
     private LocalDateTime createdAt;
     private LocalDateTime paidAt;
+    private String method;
     private List<InvoiceDetailResponse> details;
 }

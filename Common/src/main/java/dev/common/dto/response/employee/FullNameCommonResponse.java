@@ -1,4 +1,4 @@
-package dev.common.dto.response.user;
+package dev.common.dto.response.employee;
 
 import lombok.*;
 
