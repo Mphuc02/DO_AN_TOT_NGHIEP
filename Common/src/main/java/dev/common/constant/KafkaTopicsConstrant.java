@@ -17,6 +17,7 @@ public class KafkaTopicsConstrant {
     public static final String UPDATE_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.update-number-examination-form-topic}";
     public static final String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC = "${kafka.topics.updated-number-examination-form-topic}";
     public static final String PAY_MEDICINE_IN_CASH = "${kafka.topics.pay-medicine-in-cash}";
+    public static final String PAY_MEDICINE_ONLINE = "${kafka.topics.pay-medicine-online}";
     public static final String REQUEST_DETECT_IMAGE_TOPIC = "${kafka.topics.detect-topic}";
     public static final String DETECTED_IMAGE_TOPIC = "${kafka.topics.detected-topic}";
     public static final String NEW_MESSAGE_TOPIC = "${kafka.topics.new-message}";

@@ -18,6 +18,10 @@ public class RedisService {
         redisTemplate.opsForValue().set(key, gson.toJson(data), TIME_EXPIRATION, TimeUnit.MINUTES);
     }
 
+    public void setValue(String key, Object data, int ttl){
+        redisTemplate.opsForValue().set(key, gson.toJson(data), ttl, TimeUnit.MINUTES);
+    }
+
     public Object getValue(String key, Class<? extends Object> clazz){
         Object value = redisTemplate.opsForValue().get(key);
         if(value == null)

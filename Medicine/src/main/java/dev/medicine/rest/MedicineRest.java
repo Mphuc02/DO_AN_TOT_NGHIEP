@@ -2,10 +2,9 @@ package dev.medicine.rest;
 
 import static dev.common.constant.ApiConstant.MEDICINE_URL.*;
 import dev.common.constant.ExceptionConstant.*;
-import dev.common.dto.request.PayMedicineDetailCommonRequest;
+import dev.common.dto.request.ExportMedicineDetailCommonRequest;
 import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateMedicineRequest;
-import dev.medicine.dto.request.create.CreatePatientMedicineInvoiceRequest;
 import dev.medicine.dto.request.update.UpdateMedicineRequest;
 import dev.common.dto.response.medicine.MedicineResponse;
 import dev.medicine.service.MedicineService;
@@ -44,17 +43,6 @@ public class MedicineRest {
         return ResponseEntity.ok(medicineService.checkMedicinesExist(ids));
     }
 
-    @PostMapping(CREATE_PATIENT_MEDICINE_INVOICE)
-    public ResponseEntity<Object> createMedicineInvoiceDetail(@Valid @RequestBody CreatePatientMedicineInvoiceRequest request,
-                                                              BindingResult result){
-        if(result.hasErrors()){
-            throw new ObjectIllegalArgumentException(result.getAllErrors(), MEDICINE_EXCEPTION.FAIL_VALIDATION_PATIENT_MEDICINE_INVOICE);
-        }
-
-        medicineService.createPatientMedicineInvoice(request);
-        return ResponseEntity.ok("ok");
-    }
-
     @PostMapping()
     public ResponseEntity<MedicineResponse> save(@Valid @RequestBody CreateMedicineRequest request,
                                                  BindingResult result){
@@ -75,7 +63,7 @@ public class MedicineRest {
     }
 
     @PostMapping(CALCULATE_MEDICINES_COST)
-    public ResponseEntity<Object> calculateMedicinesCost(@RequestBody List<PayMedicineDetailCommonRequest> medicines){
+    public ResponseEntity<Object> calculateMedicinesCost(@RequestBody List<ExportMedicineDetailCommonRequest> medicines){
         return ResponseEntity.ok(medicineService.calculateMedicinesCost(medicines));
     }
 }

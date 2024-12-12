@@ -31,9 +31,6 @@ public class Medicine {
     @ManyToOne(fetch = FetchType.LAZY)
     private Origin origin;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "medicine")
-    private List<ImportInvoiceDetail> invoicesDetails;
-
     public Medicine(UUID id) {
         this.id = id;
     }

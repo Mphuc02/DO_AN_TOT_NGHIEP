@@ -2,12 +2,12 @@ package dev.common.client;
 
 import static dev.common.constant.ApiConstant.MEDICINE_URL.*;
 
-import dev.common.dto.request.PayMedicineDetailCommonRequest;
+import dev.common.dto.request.ExportMedicineDetailCommonRequest;
+import dev.common.dto.response.payment.CalculatedMedicinesCost;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,5 +18,5 @@ public interface MedicineClient {
     Set<UUID> checkMedicinesExist(@RequestBody List<UUID> ids);
 
     @PostMapping(CALCULATE_MEDICINES_COST)
-    BigDecimal calculateMedicinesCost(@RequestBody List<PayMedicineDetailCommonRequest> medicines);
+    CalculatedMedicinesCost calculateMedicinesCost(@RequestBody List<ExportMedicineDetailCommonRequest> medicines);
 }

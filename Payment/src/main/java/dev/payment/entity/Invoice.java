@@ -21,7 +21,10 @@ public class Invoice {
     private UUID employeeId;
     private BigDecimal examinationCost;
     private LocalDateTime createdAt;
+    private String onlinePaymentStatus;
     private LocalDateTime paidAt;
+    private String paymentMethod;
+    private BigDecimal totalCost;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "invoice")
     private List<InvoiceDetail> details;

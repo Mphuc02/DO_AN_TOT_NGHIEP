@@ -1,6 +1,6 @@
 package dev.payment.dto.request;
 
-import dev.common.dto.request.PayMedicineDetailCommonRequest;
+import dev.common.dto.request.ExportMedicineDetailCommonRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,5 @@ import java.util.List;
 @Setter
 public class PaymentRequest {
     @Valid
-    private List<PayMedicineDetailCommonRequest> details;
+    private List<ExportMedicineDetailCommonRequest> details;
 }

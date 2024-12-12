@@ -55,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             UUID tokenId = jwtUtil.getTokenId(jwt);
-            String findInvalidToken = (String) redisService.getValue(RedisKeyConstrant.INVALID_TOKEN_KEY(tokenId),
+            String findInvalidToken = (String) redisService.getValue(RedisKeyConstrant.invalidTokenKey(tokenId),
                     String.class);
             if(!ObjectUtils.isEmpty(findInvalidToken))
                 throw new JwtException("Jwt has been revoked");

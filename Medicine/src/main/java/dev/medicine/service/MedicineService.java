@@ -2,19 +2,16 @@ package dev.medicine.service;
 
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.dto.request.PayMedicineDetailCommonRequest;
-import dev.common.dto.request.PayMedicineInCashCommonRequest;
+import dev.common.dto.request.ExportMedicineCommonRequest;
+import dev.common.dto.request.ExportMedicineDetailCommonRequest;
 import dev.common.dto.response.medicine.PaidMedicineCommonResponse;
 import dev.common.dto.response.medicine.PaidMedicineDetailCommonResponse;
+import dev.common.dto.response.payment.CalculatedMedicinesCost;
 import dev.common.exception.NotFoundException;
-import dev.common.exception.ObjectIllegalArgumentException;
 import dev.medicine.dto.request.create.CreateMedicineRequest;
-import dev.medicine.dto.request.create.CreatePatientMedicineInvoiceRequest;
 import dev.medicine.dto.request.update.UpdateMedicineRequest;
 import dev.common.dto.response.medicine.MedicineResponse;
-import dev.medicine.entity.ExportInvoiceDetail;
 import dev.medicine.entity.Medicine;
-import dev.medicine.repository.ExportInvoiceDetailRepository;
 import dev.medicine.repository.MedicineRepository;
 import dev.medicine.util.MedicineMapperUtil;
 import jakarta.transaction.Transactional;
@@ -26,9 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +31,6 @@ import java.util.stream.Collectors;
 public class MedicineService {
     private final MedicineRepository medicineRepository;
     private final MedicineMapperUtil medicineMapperUtil;
-    private final ExportInvoiceDetailRepository exportInvoiceDetailRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value(KafkaTopicsConstrant.PAID_MEDICINE_INVOICE)
@@ -70,41 +64,6 @@ public class MedicineService {
     }
 
     @Transactional
-    public void createPatientMedicineInvoice(CreatePatientMedicineInvoiceRequest request){
-        List<Medicine> medicines = new ArrayList<>();
-        AtomicInteger index = new AtomicInteger(0);
-        Map<Object, Object> errorField = new HashMap<>();
-        List<ExportInvoiceDetail> details = request.getDetails().stream()
-                                .map(detail -> {
-                                    Optional<Medicine> medicineOptional = medicineRepository.findById(detail.getMedicineId());
-                                    if(medicineOptional.isEmpty()){
-                                        errorField.put(String.format("details[%s].medicineId", index.get()), MEDICINE_EXCEPTION.MEDICINE_NOT_FOUND);
-                                        throw new ObjectIllegalArgumentException(errorField, MEDICINE_EXCEPTION.FAIL_VALIDATION_PATIENT_MEDICINE_INVOICE);
-                                    }
-
-                                    Medicine medicine = medicineOptional.get();
-                                    if(medicine.getQuantity() < detail.getQuantity()){
-                                        errorField.put(String.format("details[%s].quantity", index.get()), MEDICINE_EXCEPTION.QUANTITY_REQUEST_EXCEED_STOCK);
-                                        throw new ObjectIllegalArgumentException(errorField, MEDICINE_EXCEPTION.FAIL_VALIDATION_PATIENT_MEDICINE_INVOICE);
-                                    }
-
-                                    medicine.subtractQuantity(detail.getQuantity());
-                                    medicines.add(medicine);
-                                    index.incrementAndGet();
-
-                                    return ExportInvoiceDetail.builder()
-                                            .createdAt(LocalDateTime.now())
-                                            .invoiceId(request.getInvoiceId())
-                                            .medicine(medicine)
-                                            .price(medicine.getPrice())
-                                            .build();
-                                }).toList();
-
-        exportInvoiceDetailRepository.saveAll(details);
-        medicineRepository.saveAll(medicines);
-    }
-
-    @Transactional
     public MedicineResponse save(CreateMedicineRequest request){
         Medicine medicine = medicineMapperUtil.mapCreateRequestToEntity(request);
         medicine.setQuantity(0);
@@ -123,12 +82,25 @@ public class MedicineService {
 
     @Transactional
     @KafkaListener(topics = KafkaTopicsConstrant.PAY_MEDICINE_IN_CASH, groupId = KafkaTopicsConstrant.MEDICINE_GROUP)
-    public void handlePayMedicineInCash(PayMedicineInCashCommonRequest request){
-        List<UUID> medicineIds = request.getDetails().stream().map(PayMedicineDetailCommonRequest::getMedicineId).toList();
+    public void handlePayMedicineInCash(ExportMedicineCommonRequest request){
+        PaidMedicineCommonResponse response = handleSubtractQuantityMedicine(request);
+        kafkaTemplate.send(paidMedicineInvoiceTopic, response);
+    }
+
+    @Transactional
+    @KafkaListener(topics = KafkaTopicsConstrant.PAY_MEDICINE_ONLINE, groupId = KafkaTopicsConstrant.MEDICINE_GROUP)
+    public void handlePayMedicineOnline(ExportMedicineCommonRequest request){
+        PaidMedicineCommonResponse response = handleSubtractQuantityMedicine(request);
+        response.setPaidOnline(true);
+        kafkaTemplate.send(paidMedicineInvoiceTopic, response);
+    }
+
+    private PaidMedicineCommonResponse handleSubtractQuantityMedicine(ExportMedicineCommonRequest request){
+        List<UUID> medicineIds = request.getDetails().stream().map(ExportMedicineDetailCommonRequest::getMedicineId).toList();
         Map<UUID, Medicine> medicines = medicineRepository.findAllById(medicineIds).stream().collect(Collectors.toMap(Medicine::getId, v -> v));
 
         List<PaidMedicineDetailCommonResponse> detailsResponse = new ArrayList<>();
-        for(PayMedicineDetailCommonRequest detail: request.getDetails()){
+        for(ExportMedicineDetailCommonRequest detail: request.getDetails()){
             Medicine medicine = medicines.get(detail.getMedicineId());
             medicine.setQuantity(medicine.getQuantity() - detail.getQuantity());
 
@@ -139,23 +111,33 @@ public class MedicineService {
                     .build();
             detailsResponse.add(medicineResponse);
         }
-
-        PaidMedicineCommonResponse paidInvoiceResponse = PaidMedicineCommonResponse.builder()
-                                                                .invoiceId(request.getInvoiceId())
-                                                                .details(detailsResponse)
-                                                                .build();
-        kafkaTemplate.send(paidMedicineInvoiceTopic, paidInvoiceResponse);
+        return PaidMedicineCommonResponse.builder()
+                .invoiceId(request.getInvoiceId())
+                .details(detailsResponse)
+                .build();
     }
 
-    public BigDecimal calculateMedicinesCost(List<PayMedicineDetailCommonRequest> requests){
-        List<UUID> medicineIds = requests.stream().map(PayMedicineDetailCommonRequest::getMedicineId).toList();
+    public CalculatedMedicinesCost calculateMedicinesCost(List<ExportMedicineDetailCommonRequest> requests){
+        List<UUID> medicineIds = requests.stream().map(ExportMedicineDetailCommonRequest::getMedicineId).toList();
         Map<UUID, Medicine> medicineMap = medicineRepository.findAllById(medicineIds).stream().collect(Collectors.toMap(k -> k.getId(), v -> v));
         BigDecimal cost = BigDecimal.ZERO;
-        for(PayMedicineDetailCommonRequest request: requests){
-            BigDecimal medicineCost = medicineMap.get(request.getMedicineId()).getPrice().multiply(new BigDecimal(request.getQuantity()));
+
+        CalculatedMedicinesCost calculatedMedicinesCost = new CalculatedMedicinesCost();
+        List<PaidMedicineDetailCommonResponse> medicineDetails = new ArrayList<>();
+        for(ExportMedicineDetailCommonRequest request: requests){
+            Medicine medicine = medicineMap.get(request.getMedicineId());
+            BigDecimal medicineCost = medicine.getPrice().multiply(new BigDecimal(request.getQuantity()));
             cost = cost.add(medicineCost);
+
+            medicineDetails.add(PaidMedicineDetailCommonResponse.builder()
+                    .medicineId(request.getMedicineId())
+                    .quantity(request.getQuantity())
+                    .price(medicine.getPrice())
+                    .build());
         }
 
-        return cost;
+        calculatedMedicinesCost.setCost(cost);
+        calculatedMedicinesCost.setDetails(medicineDetails);
+        return calculatedMedicinesCost;
     }
 }

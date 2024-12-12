@@ -51,6 +51,7 @@ kafka:
     topics:
         pay-medicine-in-cash: pay_medicine_in_cash
         paid-medicine-invoice: paid_medicine_invoice
+        pay-medicine-online: pay_medicine_online
     group-id:
         medicine: medicine
         

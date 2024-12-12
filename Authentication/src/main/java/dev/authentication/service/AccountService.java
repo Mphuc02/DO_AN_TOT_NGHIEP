@@ -148,12 +148,12 @@ public class AccountService {
     public String exchangeToken(ExchangeTokenRequest request){
         UUID refreshTokenId = jwtUtil.getTokenId(request.getToken());
 
-        String checkRevokedToken = (String) redisService.getValue(RedisKeyConstrant.INVALID_TOKEN_KEY(refreshTokenId), String.class);
+        String checkRevokedToken = (String) redisService.getValue(RedisKeyConstrant.invalidTokenKey(refreshTokenId), String.class);
         if(!ObjectUtils.isEmpty(checkRevokedToken))
             throw new NotPermissionException("This token has been revoked");
 
         if(invalidateTokenRepository.existsById(refreshTokenId)) {
-            redisService.setValue(RedisKeyConstrant.INVALID_TOKEN_KEY(refreshTokenId), String.class);
+            redisService.setValue(RedisKeyConstrant.invalidTokenKey(refreshTokenId), String.class);
             throw new NotPermissionException("This token has been revoked");
         }
 
@@ -176,8 +176,8 @@ public class AccountService {
 
         invalidateTokenRepository.save(invalidRefreshToken);
 
-        redisService.setValue(INVALID_TOKEN_KEY(refreshTokenId), new java.util.Date());
-        redisService.setValue(INVALID_TOKEN_KEY(accessTokenId), new java.util.Date());
+        redisService.setValue(invalidTokenKey(refreshTokenId), new java.util.Date());
+        redisService.setValue(invalidTokenKey(accessTokenId), new java.util.Date());
         SecurityContextHolder.clearContext();
     }
 

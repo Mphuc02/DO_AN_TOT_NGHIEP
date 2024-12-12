@@ -6,9 +6,11 @@ import static dev.common.constant.ExceptionConstant.PAYMENT_EXCEPTION;
 import dev.common.client.MedicineClient;
 import dev.common.constant.KafkaTopicsConstrant;
 import dev.common.dto.request.CreateInvoiceCommonRequest;
-import dev.common.dto.request.PayMedicineInCashCommonRequest;
+import dev.common.dto.request.ExportMedicineCommonRequest;
+import dev.common.dto.request.ExportMedicineDetailCommonRequest;
 import dev.common.dto.response.medicine.PaidMedicineCommonResponse;
 import dev.common.dto.response.medicine.PaidMedicineDetailCommonResponse;
+import dev.common.dto.response.payment.CalculatedMedicinesCost;
 import dev.common.exception.BaseException;
 import dev.common.util.AuditingUtil;
 import dev.payment.config.VnPayConfig;
@@ -18,6 +20,7 @@ import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.entity.ExaminationCost;
 import dev.payment.entity.Invoice;
 import dev.payment.entity.InvoiceDetail;
+import dev.payment.model.InvoiceStatus;
 import dev.payment.repository.ExaminationCostRepository;
 import dev.payment.repository.InvoiceDetailRepository;
 import dev.payment.repository.InvoiceRepository;
@@ -34,8 +37,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,6 +61,9 @@ public class InvoiceService {
 
     @Value(KafkaTopicsConstrant.PAY_MEDICINE_IN_CASH)
     private String payMedicineInCashTopic;
+
+    @Value(KafkaTopicsConstrant.PAY_MEDICINE_ONLINE)
+    private String payMedicineOnline;
 
     @Value(KafkaTopicsConstrant.COMPLETED_PAYMENT_INVOICE)
     private String completedPaidInvoice;
@@ -104,35 +108,42 @@ public class InvoiceService {
         }
 
         invoiceRepository.saveAndFlush(invoice);
-        PayMedicineInCashCommonRequest payMedicineInCashRequest = PayMedicineInCashCommonRequest.builder()
+        ExportMedicineCommonRequest exportMedicineCommonRequest = ExportMedicineCommonRequest.builder()
                 .invoiceId(invoice.getId())
                 .details(request.getDetails())
                 .build();
 
-        kafkaTemplate.send(payMedicineInCashTopic, payMedicineInCashRequest);
+        kafkaTemplate.send(payMedicineInCashTopic, exportMedicineCommonRequest);
     }
 
     @Transactional
     @KafkaListener(topics = KafkaTopicsConstrant.PAID_MEDICINE_INVOICE, groupId = KafkaTopicsConstrant.PAYMENT_GROUP)
     public void handlePaidMedicineInvoice(PaidMedicineCommonResponse medicineInvoice){
         Invoice invoice = invoiceRepository.findById(medicineInvoice.getInvoiceId()).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
-        List<InvoiceDetail> invoiceDetails = new ArrayList<>();
-        for(PaidMedicineDetailCommonResponse medicineInvoiceDetail: medicineInvoice.getDetails()){
-            InvoiceDetail invoiceDetail = InvoiceDetail.builder()
-                    .invoice(invoice)
-                    .price(medicineInvoiceDetail.getPrice())
-                    .quantity(medicineInvoiceDetail.getQuantity())
-                    .medicineId(medicineInvoiceDetail.getMedicineId())
-                    .build();
-            invoiceDetails.add(invoiceDetail);
+
+        if(!medicineInvoice.isPaidOnline()){
+            List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+            for(PaidMedicineDetailCommonResponse medicineInvoiceDetail: medicineInvoice.getDetails()){
+                InvoiceDetail invoiceDetail = InvoiceDetail.builder()
+                        .invoice(invoice)
+                        .price(medicineInvoiceDetail.getPrice())
+                        .quantity(medicineInvoiceDetail.getQuantity())
+                        .medicineId(medicineInvoiceDetail.getMedicineId())
+                        .build();
+                invoiceDetails.add(invoiceDetail);
+            }
+
+            invoice.setPaidAt(LocalDateTime.now());
+            InvoiceResponse invoiceResponse = invoiceMapperUtil.mapEntityToResponse(invoiceRepository.save(invoice));
+            List<InvoiceDetailResponse> detailsResponse = invoiceDetailMapperUtil.mapEntitiesToResponses(invoiceDetailRepository.saveAllAndFlush(invoiceDetails));
+            invoiceResponse.setDetails(detailsResponse);
+
+            kafkaTemplate.send(completedPaidInvoice, invoiceResponse);
+        }else{
+            InvoiceResponse invoiceResponse = invoiceMapperUtil.mapEntityToResponse(invoice);
+            kafkaTemplate.send(completedPaidInvoice, invoiceResponse);
         }
 
-        invoice.setPaidAt(LocalDateTime.now());
-        InvoiceResponse invoiceResponse = invoiceMapperUtil.mapEntityToResponse(invoiceRepository.save(invoice));
-        List<InvoiceDetailResponse> detailsResponse = invoiceDetailMapperUtil.mapEntitiesToResponses(invoiceDetailRepository.saveAllAndFlush(invoiceDetails));
-        invoiceResponse.setDetails(detailsResponse);
-
-        kafkaTemplate.send(completedPaidInvoice, invoiceResponse);
     }
 
     public String payByVnPay(HttpServletRequest request, UUID invoiceId, PaymentRequest paymentRequest) {
@@ -143,10 +154,25 @@ public class InvoiceService {
 
         long amount = invoice.getExaminationCost().longValue();
         if(paymentRequest.getDetails() != null && !paymentRequest.getDetails().isEmpty()){
-            BigDecimal medicineCost = medicineClient.calculateMedicinesCost(paymentRequest.getDetails());
-            amount += medicineCost.longValue();
+            CalculatedMedicinesCost medicineCost = medicineClient.calculateMedicinesCost(paymentRequest.getDetails());
+            amount += medicineCost.getCost().longValue();
+
+            List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+            for(PaidMedicineDetailCommonResponse medicineInvoiceDetail: medicineCost.getDetails()){
+                InvoiceDetail invoiceDetail = InvoiceDetail.builder()
+                        .invoice(invoice)
+                        .price(medicineInvoiceDetail.getPrice())
+                        .quantity(medicineInvoiceDetail.getQuantity())
+                        .medicineId(medicineInvoiceDetail.getMedicineId())
+                        .build();
+                invoiceDetails.add(invoiceDetail);
+            }
+            invoice.setDetails(invoiceDetails);
+            invoice.setOnlinePaymentStatus(InvoiceStatus.WAITING_PAY_ONLINE.getValue());
+            invoiceRepository.save(invoice);
         }
 
+        //Todo: Số tiền tính toán chưa đúng
         String bankCode = request.getParameter("bankCode");
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig(invoiceId);
         vnpParamsMap.put("vnp_Amount", String.valueOf(amount * 100));
@@ -163,16 +189,34 @@ public class InvoiceService {
     }
 
     public String callBackFromVnPay(HttpServletRequest request){
+        UUID invoiceId = UUID.fromString(request.getParameter("vnp_OrderInfo"));
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
         String status = request.getParameter("vnp_ResponseCode");
+        log.info("received call back from vnpay with order id " + invoiceId + " with status = " + status);
         if(!status.equals("00")){
+            invoice.setOnlinePaymentStatus(InvoiceStatus.PAY_ONLINE_FAIL.getValue());
 
+            invoiceRepository.save(invoice);
+            invoiceDetailRepository.deleteAll(invoice.getDetails());
+            return buildCallBackPaymentUrl(invoiceId, status);
         }
 
-        UUID invoiceId = UUID.fromString(request.getParameter("vnp_TxnRef"));
-        return invoiceId;
+        List<ExportMedicineDetailCommonRequest> medicineDetailRequest = invoiceDetailMapperUtil.mapEntitiesToMedicineDetailRequest(invoice.getDetails());
+        invoice.setPaidAt(LocalDateTime.now());
+        invoice.setOnlinePaymentStatus(InvoiceStatus.PAY_ONLINE_SUCCESS.getValue());
+        invoiceRepository.save(invoice);
+
+        ExportMedicineCommonRequest exportMedicineCommonRequest = ExportMedicineCommonRequest.builder()
+                .invoiceId(invoice.getId())
+                .details(medicineDetailRequest)
+                .build();
+
+        kafkaTemplate.send(payMedicineOnline, exportMedicineCommonRequest);
+
+        return buildCallBackPaymentUrl(invoiceId, status);
     }
 
     private String buildCallBackPaymentUrl(UUID invoiceId, String status){
-        return String.format("http://localhost:3000/employee/receipt/");
+        return String.format("http://localhost:3000/employee/receipt/payment/%s?status=%s", invoiceId, status);
     }
 }

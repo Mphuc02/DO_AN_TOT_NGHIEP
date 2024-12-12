@@ -1,7 +1,7 @@
 package dev.payment.util;
 
 import dev.common.dto.request.CreateInvoiceCommonRequest;
-import dev.common.dto.request.PayMedicineInCashCommonRequest;
+import dev.common.dto.request.ExportMedicineCommonRequest;
 import dev.payment.dto.request.PaymentRequest;
 import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.entity.Invoice;
@@ -17,5 +17,5 @@ public interface InvoiceMapperUtil {
     Invoice mapCreateRequestToEntity(CreateInvoiceCommonRequest request);
     List<InvoiceResponse> mapEntitiesToResponses(List<Invoice> invoices);
     InvoiceResponse mapEntityToResponse(Invoice invoice);
-    PayMedicineInCashCommonRequest mapToPaymentMedicine(PaymentRequest request);
+    ExportMedicineCommonRequest mapToPaymentMedicine(PaymentRequest request);
 }

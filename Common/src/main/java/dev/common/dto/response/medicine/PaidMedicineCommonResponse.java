@@ -13,4 +13,5 @@ import java.util.UUID;
 public class PaidMedicineCommonResponse {
     private UUID invoiceId;
     private List<PaidMedicineDetailCommonResponse> details;
+    private boolean isPaidOnline = false;
 }

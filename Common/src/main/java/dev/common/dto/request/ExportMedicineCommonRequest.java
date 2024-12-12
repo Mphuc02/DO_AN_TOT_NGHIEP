@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class PayMedicineInCashCommonRequest {
+public class ExportMedicineCommonRequest {
     private UUID invoiceId;
-    private List<PayMedicineDetailCommonRequest> details;
+    private List<ExportMedicineDetailCommonRequest> details;
 }

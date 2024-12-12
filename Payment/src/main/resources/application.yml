@@ -56,6 +56,8 @@ kafka:
         pay-medicine-in-cash: pay_medicine_in_cash
         paid-medicine-invoice: paid_medicine_invoice
         completed-payment-invoice: completed_payment_invoice
+        pay-medicine-online: pay_medicine_online
+    
     group-id:
         payment-group: payment_group
         

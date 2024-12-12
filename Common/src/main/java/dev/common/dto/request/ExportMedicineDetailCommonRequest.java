@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PayMedicineDetailCommonRequest {
+public class ExportMedicineDetailCommonRequest {
     private UUID medicineId;
     private Integer quantity;
 }
