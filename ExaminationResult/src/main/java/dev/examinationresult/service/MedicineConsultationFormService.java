@@ -53,7 +53,10 @@ public class MedicineConsultationFormService {
     }
 
     public MedicineConsultationFormResponse findById(UUID id){
-        MedicineConsultationForm form = formRepository.findById(id).orElseThrow(() -> BaseException.buildNotFound().message(EXAMINATION_RESULT_EXCEPTION.CONSULTATION_FORM_NOT_FOUND).build());
+        MedicineConsultationForm form = formRepository.findById(id).orElse(null);
+        if(form == null){
+            return null;
+        }
         return formMapperUtil.mapEntityToResponse(form);
     }
 

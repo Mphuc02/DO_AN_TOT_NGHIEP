@@ -66,4 +66,9 @@ public class MedicineRest {
     public ResponseEntity<Object> calculateMedicinesCost(@RequestBody List<ExportMedicineDetailCommonRequest> medicines){
         return ResponseEntity.ok(medicineService.calculateMedicinesCost(medicines));
     }
+
+    @PostMapping(GET_BY_IDS)
+    public ResponseEntity<Object> getByIds(@RequestBody List<UUID> ids){
+        return ResponseEntity.ok(medicineService.getByIds(ids));
+    }
 }

@@ -75,7 +75,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponse create(CreateAppointmentRequest request){
+    public AppointmentResponse  create(CreateAppointmentRequest request){
         if(appointmentRepository.existsByPatientIdAndAppointmentDate(auditingUtil.getUserLogged().getId(), request.getAppointmentDate())){
             ErrorField error = new ErrorField(PATIENT_EXCEPTION.DUPLICATE_APPOINTMENT_DATE, CreateAppointmentRequest.Fields.appointmentDate);
             throw BaseException.buildBadRequest().addField(error).build();

@@ -27,7 +27,7 @@ public interface ExaminationFormMapperUtil {
 
     ExaminationForm createRequestWithAppointmentToEntity(CreateFormWithAppointmentRequest request);
 
-    ExaminationFormResponse entityToResponse(ExaminationForm entity);
+    ExaminationFormResponse mapEntityToResponse(ExaminationForm entity);
     List<ExaminationFormResponse> entitiesToResponses(List<ExaminationForm> entities);
 
     CreateExaminationResultCommonRequest buildCreateExaminationResultRequest(ExaminationForm form);

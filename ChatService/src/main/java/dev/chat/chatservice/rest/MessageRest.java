@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import java.util.UUID;
 @RequestMapping(CHAT_URL)
 public class MessageRest {
     private final MessageService messageService;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @GetMapping(RECEIVER_ID)
     @PreAuthorize(AuthorizationConstant.USER)
@@ -33,7 +31,8 @@ public class MessageRest {
     @PostMapping()
     @PreAuthorize(AuthorizationConstant.USER)
     public ResponseEntity<Object> sendMessage(@Validated @RequestBody CreateMessageRequest request){
-        return ResponseEntity.ok(messageService.sendMessage(request));
+        messageService.sendMessage(request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(SEND_IMAGE)

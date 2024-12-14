@@ -73,7 +73,7 @@ public class InvoiceService {
     }
 
     public Page<InvoiceResponse> getUnPaid(Pageable pageable){
-        return invoiceRepository.findUnPaidInvoice(pageable).map(invoiceMapperUtil::mapEntityToResponse);
+            return invoiceRepository.findUnPaidInvoice(pageable).map(invoiceMapperUtil::mapEntityToResponse);
     }
 
     public InvoiceResponse findById(UUID id){
@@ -146,8 +146,13 @@ public class InvoiceService {
 
     }
 
+    @Transactional
     public String payByVnPay(HttpServletRequest request, UUID invoiceId, PaymentRequest paymentRequest) {
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
+        if(invoice.getDetails() != null){
+            invoiceDetailRepository.deleteAll(invoice.getDetails());
+            invoice.setDetails(null);
+        }
         if(invoice.getPaidAt() != null){
             throw BaseException.buildBadRequest().message(PAYMENT_EXCEPTION.PAID_INVOICE).build();
         }
@@ -172,7 +177,6 @@ public class InvoiceService {
             invoiceRepository.save(invoice);
         }
 
-        //Todo: Số tiền tính toán chưa đúng
         String bankCode = request.getParameter("bankCode");
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig(invoiceId);
         vnpParamsMap.put("vnp_Amount", String.valueOf(amount * 100));
@@ -188,6 +192,7 @@ public class InvoiceService {
         return vnPayConfig.getVnp_PayUrl() + "?" + queryUrl;
     }
 
+    @Transactional
     public String callBackFromVnPay(HttpServletRequest request){
         UUID invoiceId = UUID.fromString(request.getParameter("vnp_OrderInfo"));
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> BaseException.buildNotFound().message(PAYMENT_EXCEPTION.INVOICE_NOT_FOUND).build());
@@ -196,8 +201,9 @@ public class InvoiceService {
         if(!status.equals("00")){
             invoice.setOnlinePaymentStatus(InvoiceStatus.PAY_ONLINE_FAIL.getValue());
 
-            invoiceRepository.save(invoice);
             invoiceDetailRepository.deleteAll(invoice.getDetails());
+            invoice.setDetails(null);
+            invoiceRepository.save(invoice);
             return buildCallBackPaymentUrl(invoiceId, status);
         }
 

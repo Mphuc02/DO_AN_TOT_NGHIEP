@@ -57,7 +57,7 @@ public class MessageService {
     }
 
     @Transactional
-    public MessageResponse sendMessage(CreateMessageRequest request){
+    public void sendMessage(CreateMessageRequest request){
         AuthenticatedUser user = auditingUtil.getUserLogged();
         log.info("Received create message from topic with senderId: " + user.getId() + ", receiverId: " + request.getReceiverId());
 
@@ -75,7 +75,6 @@ public class MessageService {
         MessageResponse response = messageMapper.mapEntityToResponse(message);
         response.setRelationShipId(relationShip.getId());
         kafkaTemplate.send(newMessageTopic, response);
-        return response;
     }
 
     @Transactional

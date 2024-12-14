@@ -48,7 +48,7 @@ public class ExaminationFormService {
     private String UPDATED_NUMBER_EXAMINATION_FORM_TOPIC;
 
     @Transactional
-    public ExaminationFormResponse saveFirstTimePatient(CreateFormForFirstTimePatientRequest request){
+    public void saveFirstTimePatient(CreateFormForFirstTimePatientRequest request){
         ExaminationForm entity = examinationFormMapperUtil.createRequestWithFirstTimePatientToEntity(request);
         request.getPatient().setExaminationFormID(entity.getId());
         AuthenticatedUser employee = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -58,7 +58,6 @@ public class ExaminationFormService {
 
         request.getPatient().setExaminationFormID(entity.getId());
         kafkaTemplate.send(CREATE_PATIENT_TOPIC, request.getPatient());
-        return examinationFormMapperUtil.entityToResponse(entity);
     }
 
     public List<ExaminationFormResponse> findReceivedPatientsToday(){
@@ -76,7 +75,7 @@ public class ExaminationFormService {
         entity = examinationFormRepository.save(entity);
 
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, examinationFormMapperUtil.buildCreateExaminationResultRequest(entity));
-        return examinationFormMapperUtil.entityToResponse(entity);
+        return examinationFormMapperUtil.mapEntityToResponse(entity);
     }
 
     @Transactional
@@ -89,7 +88,7 @@ public class ExaminationFormService {
         CreateExaminationResultCommonRequest createExaminationResultRequest =  examinationFormMapperUtil.buildCreateExaminationResultRequest(entity);
         createExaminationResultRequest.setSymptom(request.getSymptom());
         kafkaTemplate.send(CREATE_EXAMINATION_RESULT_TOPIC, createExaminationResultRequest);
-        return examinationFormMapperUtil.entityToResponse(entity);
+        return examinationFormMapperUtil.mapEntityToResponse(entity);
     }
 
     //Todo: dang loi khong goi sang examination result
@@ -107,7 +106,7 @@ public class ExaminationFormService {
         form.setExaminedNumber(request.getExaminedNumber());
         examinationFormRepository.save(form);
 
-        ExaminationFormResponse updatedResponse = examinationFormMapperUtil.entityToResponse(form);
+        ExaminationFormResponse updatedResponse = examinationFormMapperUtil.mapEntityToResponse(form);
         kafkaTemplate.send(UPDATED_NUMBER_EXAMINATION_FORM_TOPIC, updatedResponse);
     }
 }

@@ -5,6 +5,7 @@ import dev.payment.dto.request.PaymentRequest;
 import dev.common.dto.response.payment.InvoiceResponse;
 import dev.payment.service.InvoiceService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,14 +45,14 @@ public class InvoiceRest {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(PAY_BY_VNPAY)
+    @PutMapping(PAY_BY_VNPAY)
     public ResponseEntity<Object> payByVnpay(HttpServletRequest request, @PathVariable UUID id, @RequestBody PaymentRequest paymentRequest){
         return ResponseEntity.ok(invoiceService.payByVnPay(request, id, paymentRequest));
     }
 
     @GetMapping(VNPAY_CALL_BACK)
-    public ResponseEntity<Object> vnpayCallBack(HttpServletRequest request){
+    public void vnpayCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String invoiceUrl = invoiceService.callBackFromVnPay(request);
-        return ResponseEntity.ok(invoiceUrl);
+        response.sendRedirect(invoiceUrl);
     }
 }

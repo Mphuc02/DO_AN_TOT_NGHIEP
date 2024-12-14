@@ -33,7 +33,8 @@ public class ExaminationFormRest {
     @PreAuthorize(AuthorizationConstant.RECEIPT)
     @PostMapping(FIRST_TIME)
     public ResponseEntity<Object> save(@Validated @RequestBody CreateFormForFirstTimePatientRequest request){
-        return ResponseEntity.ok(examinationFormService.saveFirstTimePatient(request));
+        examinationFormService.saveFirstTimePatient(request);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize(AuthorizationConstant.RECEIPT)

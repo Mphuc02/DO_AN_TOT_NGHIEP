@@ -88,6 +88,7 @@ public class ApiConstant {
         public static final String IMPORT_INVOICE_URL = "/api/v1/import-invoices";
         public static final String SEARCH = "/search";
         public static final String CALCULATE_MEDICINES_COST = "/calculate-medicines-cost";
+        public static final String GET_BY_IDS = "/get-by-ids";
     }
 
     public static final class PATIENT{

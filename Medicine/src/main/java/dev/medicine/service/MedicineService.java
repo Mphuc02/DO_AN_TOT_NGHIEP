@@ -140,4 +140,8 @@ public class MedicineService {
         calculatedMedicinesCost.setDetails(medicineDetails);
         return calculatedMedicinesCost;
     }
+
+    public List<MedicineResponse> getByIds(List<UUID> ids){
+        return medicineMapperUtil.mapEntitiesFromResponses(medicineRepository.findAllById(ids));
+    }
 }
