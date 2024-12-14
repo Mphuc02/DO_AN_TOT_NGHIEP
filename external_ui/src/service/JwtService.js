@@ -15,7 +15,11 @@ class JwtService{
             if (decodedToken.exp && decodedToken.exp < currentTime) {
                 console.log("Refresh Token đã hết hạn");
                 localStorage.removeItem('refresh-token')
-                localStorage.removeItem('access-token')
+                localStorage.removeItem('access-token');
+                localStorage.removeItem('receipt')
+                localStorage.removeItem('doctor')
+                localStorage.removeItem('patient')
+                localStorage.removeItem('admin')
                 return null;
             } else {
                 // Token còn hiệu lực, thực hiện các thao tác cần thiết

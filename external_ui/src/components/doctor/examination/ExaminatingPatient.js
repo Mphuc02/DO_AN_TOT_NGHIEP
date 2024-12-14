@@ -164,9 +164,13 @@ const Examination = ({examinationResult}) => {
     }
 
     const handlePrintExaminationResult = () => {
+        console.log(examinationResult)
         const hospitalName = 'Benh vien da lieu Minh Phuc'
         const fullName = examinationResult.patient.fullName
-        const dateOfBirth = examinationResult.patient.dateOfBirth.split('-').reverse().join('-')
+        let dateOfBirth = examinationResult.patient.dateOfBirth
+        if(dateOfBirth){
+            dateOfBirth = examinationResult.patient.dateOfBirth.split('-').reverse().join('-')
+        }
 
         const doc = new jsPDF();
 
@@ -182,8 +186,8 @@ const Examination = ({examinationResult}) => {
         doc.text(`Ten benh nhan: ${fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}`, 20, 70);
         doc.text(`Nam sinh: ${dateOfBirth}`, 20, 80)
         doc.text('Que quan: ', 20,90)
-        doc.text(`Trieu chung: ${examinationResultResponse.symptom}`, 20, 100)
-        doc.text(`Dieu tri: ${examinationResultResponse.treatment}`, 20, 110)
+        doc.text(`Trieu chung: ${examinationResult.symptom}`, 20, 100)
+        doc.text(`Dieu tri: ${examinationResult.treatment}`, 20, 110)
         doc.text('Ket qua kham benh:', 20, 130)
 
         const header = ['Số thứ tự', 'Tên bệnh', 'Kết quả'];
@@ -292,13 +296,13 @@ const Examination = ({examinationResult}) => {
                         }
 
                         const errorAtIndex = `details[${index}].diseaseDescription`
-                        return <>
+                        return <div key={key}>
                                     <tr>
                                         <td></td>
                                         <td>{error[errorAtIndex]}</td>
                                     </tr>
 
-                                    <tr key={key}>
+                                    <tr >
                                         <td>{value.name}</td>
                                         <td><textarea onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
                                         </td>
@@ -306,7 +310,7 @@ const Examination = ({examinationResult}) => {
                                             <button onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button>
                                         </td>
                                     </tr>
-                                </>
+                                </div>
                     })}
                 </tbody>
             </table>
@@ -314,10 +318,10 @@ const Examination = ({examinationResult}) => {
             <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal}
                                 diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
 
-            {!examinationResultResponse &&
+            {!examinationResult.examinatedAt &&
                 <button onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>}
 
-            {examinationResultResponse &&
+            {examinationResult.examinatedAt &&
                 <button onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
         </div>
     )
