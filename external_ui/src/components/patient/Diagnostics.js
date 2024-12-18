@@ -322,7 +322,7 @@ const Diagnostics = () => {
     };
 
     return (
-        <div>
+        <div className={"mt-10"}>
             <h2>Chuẩn đoán bệnh thông qua hình ảnh</h2>
 
             {imageDetails.map((image, index) => (

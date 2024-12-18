@@ -92,7 +92,6 @@ const PayForInvoice = (id) => {
 
         totalMoney.current -= newMedicine.quantity * newMedicine.medicine.price
         if(quantity < 0){
-            totalMoney.current += newMedicine.medicine.price
             consultedMedicinesMap.set(medicineId, {...newMedicine, quantity: 0})
         }
         else if(quantity > newMedicine.medicine.quantity){
@@ -172,7 +171,7 @@ const PayForInvoice = (id) => {
 
                 return <p className="mt-3 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300">{VNPAY.errorCode.get(status)}</p>
             })()}
-            <table className="table-auto w-full max-w-[800px] border-collapse border border-gray-300">
+            <table className="table-auto w-full max-w-[800px] border-collapse border border-gray-300 mt-10">
                 <thead>
                 <tr></tr>
                 </thead>
@@ -304,9 +303,12 @@ const PayForInvoice = (id) => {
             </table>
 
             <p>Tổng tiền thanh toán: {totalMoney.current}</p>
-            {!invoice.paidAt && <button onClick={() => handlePayInCash()}>Thanh toán</button>}
-            {!invoice.paidAt && <button onClick={() => handlePayByVnpay()}>Thanh toán qua ví điện tử VNPAY</button>}
-            {invoice.paidAt && <button>In hóa đơn</button>}
+            {!invoice.paidAt &&
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => handlePayInCash()}>Thanh toán</button>}
+            {!invoice.paidAt &&
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-10 ml-10" onClick={() => handlePayByVnpay()}>Thanh toán qua ví điện tử VNPAY</button>}
+            {invoice.paidAt &&
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10">In hóa đơn</button>}
         </div>
     )
 }
@@ -351,35 +353,42 @@ const UnPaidInvoice = () => {
     }, []);
 
     return (
-        <table border={1}>
-            <thead>
-                <tr>
-                    <td>Số thứ tự</td>
-                    <td>Tên bệnh nhận</td>
-                    <td>Giá khám bệnh</td>
-                    <td>Thời gian tạo hóa đơn</td>
-                </tr>
+        <table className="table-auto border-collapse border border-gray-300 w-full text-left">
+            <thead className="bg-gray-200">
+            <tr>
+                <th className="border border-gray-300 px-4 py-2">Số thứ tự</th>
+                <th className="border border-gray-300 px-4 py-2">Tên bệnh nhân</th>
+                <th className="border border-gray-300 px-4 py-2">Giá khám bệnh</th>
+                <th className="border border-gray-300 px-4 py-2">Thời gian tạo hóa đơn</th>
+            </tr>
             </thead>
             <tbody>
-                {[...invoicesMap].map(([key, value], index) => {
-                    if(!value.patient){
-                        return null
-                    }
+            {[...invoicesMap].map(([key, value], index) => {
+                if (!value.patient) {
+                    return null;
+                }
 
-                    const fullName = value.patient.fullName
-                    const fullNameStr = `${fullName.lastName} ${fullName.middleName} ${fullName.firstName}`
+                const fullName = value.patient.fullName;
+                const fullNameStr = `${fullName.lastName} ${fullName.middleName} ${fullName.firstName}`;
 
-                    return <tr key={key}
-                               className="hover:cursor-pointer hover:bg-gray-100 transition"
-                                onClick={() => navigate(RoutesConstant.RECEIPT.payForInvoice(key))}>
-                                <td>{index + 1}</td>
-                                <td>{fullNameStr}</td>
-                                <td>{value.examinationCost}</td>
-                                <td>{FormatCreatedDate(value.createdAt)}</td>
-                            </tr>
-                })}
+                return (
+                    <tr
+                        key={key}
+                        className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
+                        onClick={() => navigate(RoutesConstant.RECEIPT.payForInvoice(key))}
+                    >
+                        <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
+                        <td className="border border-gray-300 px-4 py-2">{fullNameStr}</td>
+                        <td className="border border-gray-300 px-4 py-2 text-right">
+                            {value.examinationCost.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">{FormatCreatedDate(value.createdAt)}</td>
+                    </tr>
+                );
+            })}
             </tbody>
         </table>
+
     )
 }
 
@@ -403,7 +412,7 @@ const Payment = () => {
                 </div>
             </div>
 
-            {selectedTab === 1 && <UnPaidInvoice />}
+            {selectedTab === 1 && <UnPaidInvoice/>}
         </div>
     )
 }

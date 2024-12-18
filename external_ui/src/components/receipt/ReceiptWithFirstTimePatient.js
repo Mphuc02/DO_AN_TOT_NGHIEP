@@ -164,8 +164,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td className="pr-1 font-medium text-gray-700 text-left w-32">Họ:</td>
-                    <td className="pl-1"><input className="w-full border border-gray-300 rounded-md p-2 mb-4" onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Họ:</td>
+                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/></td>
                 </tr>
 
                 <tr>
@@ -174,8 +174,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td className="pr-1 font-medium text-gray-700 text-left w-32">Tên đệm:</td>
-                    <td className="pl-1"><input className="w-full border border-gray-300 rounded-md p-2" onChange={(e) => setFullName({...fullName, middleName: e.target.value})}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên đệm:</td>
+                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, middleName: e.target.value})}/></td>
                 </tr>
 
                 <tr>
@@ -184,8 +184,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Tên bệnh nhân:</td>
-                    <td><input onChange={(e) => setFullName({...fullName, firstName: e.target.value})}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên bệnh nhân:</td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, firstName: e.target.value})}/></td>
                 </tr>
 
                 <tr>
@@ -194,12 +194,12 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Số điện thoại:</td>
-                    <td><input onChange={(e) => setNumberPhone(e.target.value)}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Số điện thoại:</td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setNumberPhone(e.target.value)}/></td>
                 </tr>
 
                 <tr>
-                    <td>Địa chỉ</td>
+                    <td colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300">Địa chỉ</td>
                     <td></td>
                 </tr>
 
@@ -209,9 +209,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Tỉnh/Thành phố:</td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tỉnh/Thành phố:</td>
                     <td>
-                        <select onChange={(e) => onChangeProvince(e.target.value)}>
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => onChangeProvince(e.target.value)}>
                             <option>----------</option>
                             {[...provinces].map(([key, value]) => {
                                 return <option key={key} value={key}>{value.name}</option>
@@ -226,9 +226,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Quận/Huyện:</td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Quận/Huyện:</td>
                     <td>
-                        <select onChange={(e) => onChangeDistrict(e.target.value)}>
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => onChangeDistrict(e.target.value)}>
                             <option>----------</option>
                             {[...districts].map(([key, value]) => {
                                 return <option key={key} value={key}>{value.name}</option>
@@ -243,8 +243,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Xã/Phường:</td>
-                    <td><select onChange={(e) => setAddress({...address, communeId: e.target.value})}>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Xã/Phường:</td>
+                    <td><select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setAddress({...address, communeId: e.target.value})}>
                         <option>----------</option>
                         {[...communes].map(([key, value]) => {
                             return <option key={key} value={key}>{value.name}</option>
@@ -258,12 +258,12 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Số nhà:</td>
-                    <td><textarea onChange={e => setAddress({...address, street: e.target.value})}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Số nhà:</td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={e => setAddress({...address, street: e.target.value})}/></td>
                 </tr>
 
                 <tr>
-                    <td><h3>Thông tin khám bệnh</h3></td>
+                    <td  colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông tin khám bệnh</h3></td>
                     <td></td>
                 </tr>
 
@@ -273,9 +273,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Chọn phòng khám:</td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Chọn phòng khám:</td>
                     <td>
-                        <select onChange={e => {
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={e => {
                             currentRoom.current = e.target.options[e.target.selectedIndex].text;
                             setWorkingScheduleId(e.target.value)
                         }}>
@@ -296,14 +296,14 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 </tr>
 
                 <tr>
-                    <td>Triệu chứng</td>
-                    <td><textarea onChange={e => setSymptom(e.target.value)}/></td>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Triệu chứng</td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={e => setSymptom(e.target.value)}/></td>
                 </tr>
                 </tbody>
             </table>
 
             {!createdExaminationForm &&
-                <button onClick={() => onClickSave()}>Lưu thông tin</button>}
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => onClickSave()}>Lưu thông tin</button>}
 
 
             {toast && <ToastPopup message={toast.message} type={toast.type} onClose={hideToast}/>}

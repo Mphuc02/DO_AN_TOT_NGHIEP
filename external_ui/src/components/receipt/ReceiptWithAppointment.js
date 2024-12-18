@@ -73,7 +73,6 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
             return
 
         sendingApi = true
-        //Todo: Sau bỏ fix cứng số thứ tự
         createExaminationForm.appointmentId = appointment.id
         createExaminationForm.numberCall = 1
         SendApiService.postRequest(Greeting.ExaminationForm.withAppointment(), createExaminationForm, {'Content-type': 'application/json'}, (response) => {
@@ -182,10 +181,10 @@ const CreateExaminationFormModal = ({ isOpen, onClose, appointment, roomsMap, wo
                     </tbody>
                 </table>
                 {!createdExaminationForm &&
-                    <button onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>}
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-5" onClick={() => handleCreateExaminationForm()}>Tạo phiếu khám bệnh</button>}
 
                 {createdExaminationForm &&
-                    <button onClick={() => printGreetingForm(createdExaminationForm, appointment)}>In phiếu khám bệnh</button>}
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-5" onClick={() => printGreetingForm(createdExaminationForm, appointment)}>In phiếu khám bệnh</button>}
             </div>
         </div>
     )
@@ -282,36 +281,42 @@ const ReceiptWithAppointment = ({workingScheduleMap, workingRoomsMap}) => {
 
     return (
         <div>
-            <h2>Tiếp đón với lịch hẹn</h2>
-            <table border="1">
-                <thead>
+            <table className="table-auto border-collapse border border-gray-300 w-full text-left">
+                <thead className="bg-gray-100">
                 <tr>
-                    <td>Số thứ tự</td>
-                    <td>Tên bệnh nhân</td>
-                    <td>Triệu chứng</td>
+                    <th className="border border-gray-300 px-4 py-2">Số thứ tự</th>
+                    <th className="border border-gray-300 px-4 py-2">Tên bệnh nhân</th>
+                    <th className="border border-gray-300 px-4 py-2">Triệu chứng</th>
                 </tr>
                 </thead>
                 <tbody>
-                {[...appointmentsMap].map(([key, appointment]) => (
-                    <tr key={appointment.id} className={styles.cursorPointer}
-                        onClick={() => handleCreateExaminationForm(appointment)}>
-                        <td></td>
-                        <td>{(() => {
-                            const patient = patientsMap.get(appointment.patientId)
-                            if (!patient)
-                                return ''
-                            else {
-                                const fullName = patient.fullName
+                {[...appointmentsMap].map(([key, appointment], index) => (
+                    <tr
+                        key={appointment.id}
+                        className="cursor-pointer hover:bg-gray-50"
+                        onClick={() => handleCreateExaminationForm(appointment)}
+                    >
+                        <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
+                        <td className="border border-gray-300 px-4 py-2">
+                            {(() => {
+                                const patient = patientsMap.get(appointment.patientId);
+                                if (!patient) return '';
+                                const fullName = patient.fullName;
                                 return `${fullName.firstName || ''} ${fullName.middleName || ''} ${fullName.lastName || ''}`;
-                            }
-                        })()}</td>
-                        <td>{appointment.description}</td>
+                            })()}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">{appointment.description}</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
-            <CreateExaminationFormModal  isOpen={isCreateModalOpen} onClose={closeCreateModal} appointment={selectedAppointment} roomsMap={workingRoomsMap} workingSchedule={workingScheduleMap} diseasesMap={diseasesMap} appointmentsMap={appointmentsMap} createdExaminationForm={createdExaminationForm} />
+
+            <CreateExaminationFormModal isOpen={isCreateModalOpen} onClose={closeCreateModal}
+                                        appointment={selectedAppointment} roomsMap={workingRoomsMap}
+                                        workingSchedule={workingScheduleMap} diseasesMap={diseasesMap}
+                                        appointmentsMap={appointmentsMap}
+                                        createdExaminationForm={createdExaminationForm}/>
         </div>
     )
 }

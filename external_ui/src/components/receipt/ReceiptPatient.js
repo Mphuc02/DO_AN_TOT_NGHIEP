@@ -65,12 +65,16 @@ function ReceiptPatient(){
 
     return (
         <div>
-            <h2>Tiếp đón bệnh nhân</h2>
+            <h2 className="text-xl font-bold text-green-600 mb-4">Tiếp đón bệnh nhân</h2>
             <div className={styles.divFlex}>
-                <div onClick={() => setSelectedTab(1)}>Bệnh nhân lần đầu khám</div>
-                <div onClick={() => setSelectedTab(2)}>Bệnh nhân không có lịch hẹn</div>
-                <div onClick={() => setSelectedTab(3)}>Bệnh nhân có lịch hẹn</div>
-                <div onClick={() => setSelectedTab(4)}>Danh sách bệnh nhân tiếp đón hôm nay</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 1 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSelectedTab(1)}>Bệnh nhân lần đầu khám</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 2 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSelectedTab(2)}>Bệnh nhân không có lịch hẹn</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 3 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSelectedTab(3)}>Bệnh nhân có lịch hẹn</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 4 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSelectedTab(4)}>Danh sách bệnh nhân tiếp đón hôm nay</div>
             </div>
 
             {selectedTab === 1 && <ReceiptWithFirstTimePatient workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap} />}

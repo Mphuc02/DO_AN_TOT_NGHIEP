@@ -4,6 +4,7 @@ import styles from '../Header.module.css'
 import {useEffect, useState} from "react";
 import {JwtService} from '../../../service/JwtService'
 import RoutesConstant from "../../../RoutesConstant";
+import logo from "../../../imgs/logo.jpg"
 
 function Header({doctor}) {
     const [thisDoctor, setThisDoctor] = useState(null)
@@ -37,13 +38,13 @@ function Header({doctor}) {
                     </button>
                     <a href="https://flowbite.com" className="flex ms-2 md:me-24">
                         <img
-                            src="https://flowbite.com/docs/images/logo.svg"
-                            className="h-8 me-3"
-                            alt="FlowBite Logo"
+                            className="w-16 h-16 mr-2 rounded-full"
+                            src={logo}
+                            alt="logo"
                         />
                         <span
                             className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-green-700">
-          Bệnh viện da liễu Minh Phúc
+          Phòng khám da liễu Minh Phúc
         </span>
                     </a>
                 </div>
