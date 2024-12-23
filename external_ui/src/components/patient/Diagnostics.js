@@ -104,7 +104,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <button className={styles.closeButton} onClick={onClose}>&times;</button>
-                <h1>Tạo thông tin lịch hẹn</h1>
+                <h1 className="text-xl font-bold text-green-600 mb-4">Tạo thông tin lịch hẹn</h1>
 
                 <table>
                     <tbody>
@@ -114,9 +114,10 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
                         </tr>
 
                         <tr>
-                            <td>Chọn bác sĩ:</td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-50 mb-4">Chọn bác sĩ:</td>
                             <td>
                                 <select
+                                    className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
                                     onChange={(e) => setAppointment({...appointment, doctorId: e.target.value})}>
                                     <option value={""}>-----------</option>
                                     {doctorsInDay.map((doctor, index) => (
@@ -136,8 +137,9 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
                             <td>{errorAppointment.appointmentDate}</td>
                         </tr>
                         <tr>
-                            <td>Ngày đặt lịch(Định dạng: tháng-ngày-năm):</td>
-                            <td><input value={appointment.appointmentDate}
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-50 mb-4">Ngày đặt lịch(Định dạng: tháng-ngày-năm):</td>
+                            <td><input className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={appointment.appointmentDate}
                                        onChange={(e) => setAppointment({...appointment, appointmentDate: e.target.value})}
                                        type={"date"} min={formattedTomorrow}/></td>
                         </tr>
@@ -147,8 +149,9 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
                             <td>{errorAppointment.description}</td>
                         </tr>
                         <tr>
-                            <td>Triệu chứng</td>
-                            <td><textarea value={appointment.description} onChange={(e) => setAppointment({...appointment, description: e.target.value})}/></td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-50 mb-4">Triệu chứng</td>
+                            <td><textarea className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={appointment.description} onChange={(e) => setAppointment({...appointment, description: e.target.value})}/></td>
                         </tr>
 
                         <tr>
@@ -156,7 +159,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
                             <td>{errorAppointment.diseasesIds}</td>
                         </tr>
                         <tr>
-                            <td>Danh sách các bệnh được chuẩn đoán</td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-50 mb-4">Danh sách các bệnh được chuẩn đoán</td>
                             <td>
                                 {[...diseases].map(([key, value]) => (
                                     <div key={key}>{value}</div>
@@ -166,7 +169,7 @@ const CreateAppointmentModal = ({ isOpen, onClose, diseases, doctorsMap, imageDe
                     </tbody>
                 </table>
 
-                <button onClick={() => handleCreateAppointment()}>Tạo lịch hẹn</button>
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => handleCreateAppointment()}>Tạo lịch hẹn</button>
             </div>
         </div>
     );
@@ -321,63 +324,70 @@ const Diagnostics = () => {
         setIsCreateModelOpen(false);
     };
 
+
     return (
         <div className={"mt-10"}>
-            <h2>Chuẩn đoán bệnh thông qua hình ảnh</h2>
-
+            <h2 className="text-xl font-bold text-green-600 mb-4">Chuẩn đoán bệnh thông qua hình ảnh</h2>
             {imageDetails.map((image, index) => (
-                <div key={index}>
+                <div key={index} className="mb-6">
                     {index === 0 && (
-                        <div className={styles.divFlex}>
-                            <div>
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="space-y-2">
                                 <input
                                     type="file"
                                     ref={fileInputRef}
                                     accept="image/*"
                                     onChange={handleImageChange}
-                                />
+                                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
 
-                                <button onClick={() => handleDiagnosticButton()}>Chuẩn đoán</button>
+                                <button
+                                    onClick={() => handleDiagnosticButton()}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
+                                    Chuẩn đoán
+                                </button>
                             </div>
 
-                            <button onClick={() => handleAddImage()}>Thêm ảnh</button>
+                            <button
+                                onClick={() => handleAddImage()}
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition">
+                                Thêm ảnh
+                            </button>
                         </div>
                     )}
 
-                    <div className={styles.divFlex}>
-                        <div>
-                            <p>Ảnh đã chọn</p>
+                    <div className="flex flex-col lg:flex-row items-start lg:items-stretch bg-gray-100 p-4 rounded-lg shadow space-y-4 lg:space-y-0 lg:space-x-6">
+                        <div className="flex-1 space-y-2">
+                            <p className="font-medium text-gray-700">Ảnh đã chọn</p>
                             {imageDetails[index].previewImage && (
-                                <img className={styles.previewImage} src={imageDetails[index].previewImage}
-                                     alt="Ảnh đã chọn"/>
+                                <img
+                                    className="w-full h-100 object-cover rounded-lg border border-gray-300"
+                                    src={imageDetails[index].previewImage}
+                                    alt="Ảnh đã chọn"
+                                />
                             )}
                         </div>
 
-                        <div>
-                            <p>Kết quả chuẩn đoán</p>
+                        <div className="flex-1 space-y-2">
+                            <p className="font-medium text-gray-700">Kết quả chuẩn đoán</p>
                             {imageDetails[index].processedImage && (
-                                <img className={styles.previewImage} src={imageDetails[index].processedImage}
-                                     alt="Ảnh đã chọn"/>
+                                <img
+                                    className="w-full h-100 object-cover rounded-lg border border-gray-300"
+                                    src={imageDetails[index].processedImage}
+                                    alt="Kết quả chuẩn đoán"
+                                />
                             )}
                         </div>
 
-                        <button onClick={() => handleDeleteImageClick(index)}>Xóa ảnh</button>
+                        <button
+                            onClick={() => handleDeleteImageClick(index)}
+                            className="self-center px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition">
+                            Xóa ảnh
+                        </button>
                     </div>
                 </div>
             ))}
 
-            {detectedDiseasesMap.size > 0 && (
-                <div>
-                    <div>Dưới đây là danh sách các bệnh phát hiện được</div>
-                    <ul>
-
-                        {[...detectedDiseasesMap].map(([key, value]) => (
-                            <li key={key}>{value}</li>
-                        ))}
-                    </ul>
-                </div>)}
-
-            <button onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
+            <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
             <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseasesMap} doctorsMap={doctorsMap} imageDetails={imageDetails}/>
         </div>
     )

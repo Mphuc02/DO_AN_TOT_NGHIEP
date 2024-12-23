@@ -252,6 +252,11 @@ const PayForInvoice = (id) => {
                 </thead>
                 <tbody>
                 {[...consultedMedicinesMap].map(([key, value], index) => {
+                    console.log('medicine', value)
+                    if(!value.medicine){
+                        return null
+                    }
+
                     if (totalMoney.current === invoice.examinationCost) {
                         totalMoney.current += value.quantity * value.medicine.price
                     }

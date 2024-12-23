@@ -415,7 +415,6 @@ const WorkingScheduleInMonth = () => {
     }
 
     let index = 0
-    console.log(schedules)
 
     return (
         <div>
