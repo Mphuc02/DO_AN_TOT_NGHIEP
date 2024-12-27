@@ -309,7 +309,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
             {toast && <ToastPopup message={toast.message} type={toast.type} onClose={hideToast}/>}
 
             {createdExaminationForm &&
-                <button onClick={() => printGreetingForm(createdExaminationForm)}>In phiếu khám bệnh</button>}
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                        onClick={() => printGreetingForm(createdExaminationForm)}>In phiếu khám bệnh</button>}
         </>
     )
 }

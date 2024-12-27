@@ -2,13 +2,25 @@ import Header from "../../header/doctor/Header";
 import SideBar from "../../sideBar/doctor/SideBar";
 import styles from '../style.module.css'
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import RoutesConstant from "../../../RoutesConstant";
 
 function AdminLayout({children}){
     const [doctor, setDoctor] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const json = localStorage.getItem('doctor')
-        setDoctor(JSON.parse(json))
+        const doctor = JSON.parse(localStorage.getItem('doctor'))
+
+        if(!doctor || !doctor.roles.includes('DOCTOR')){
+            localStorage.removeItem('access-token')
+            localStorage.removeItem('refresh-token')
+            localStorage.removeItem('doctor')
+
+            navigate(RoutesConstant.DOCTOR.LOGIN)
+        }else {
+            setDoctor(doctor)
+        }
     }, []);
 
     return(

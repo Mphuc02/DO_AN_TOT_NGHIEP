@@ -46,11 +46,15 @@ const WaitingExaminationPatientList = () => {
 
     return (
         <div>
-            <table border={1}>
-                <thead>
+            <table className="table-auto border-collapse border border-gray-300 w-full text-left"
+                border={1}>
+                <thead className="bg-gray-200">
                     <tr>
-                        <td>Số thứ tự</td>
-                        <td>Tên bệnh nhân</td>
+                        <td className="border border-gray-300 px-4 py-2">Số thứ tự</td>
+                        <td className="border border-gray-300 px-4 py-2">Tên bệnh nhân</td>
+                        <td className="border border-gray-300 px-4 py-2">Ngày sinh</td>
+                        <td className="border border-gray-300 px-4 py-2">Giới tính</td>
+                        <td className="border border-gray-300 px-4 py-2">Địa chỉ</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,8 +67,8 @@ const WaitingExaminationPatientList = () => {
                     const url = RoutesConstant.DOCTOR.EXAMINING_PATIENT_WITH_ID(waitingPatient.id)
                     console.log(url)
                     return <tr key={waitingPatient.id} onClick={() => navigate(url)} className={styles.cursorPointer}>
-                                <td>{waitingPatient.examinedNumber}</td>
-                                <td>{fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName}</td>
+                                <td className="border border-gray-300 px-4 py-2 text-center">{waitingPatient.examinedNumber}</td>
+                                <td className="border border-gray-300 px-4 py-2 text-center">{fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName}</td>
                             </tr>
                 })}
                 </tbody>

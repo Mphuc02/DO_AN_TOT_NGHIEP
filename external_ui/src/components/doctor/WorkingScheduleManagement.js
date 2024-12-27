@@ -86,7 +86,7 @@ const CreateModal = ({ isOpen, onClose, roomMap, date }) => {
 
                 {/* Tiêu đề */}
                 <h1 className="text-green-600 text-2xl font-semibold mb-4 text-center">
-                    Tạo thông tin lịch khám
+                    Đăng ký lịch làm việc
                 </h1>
 
                 {/* Nội dung */}

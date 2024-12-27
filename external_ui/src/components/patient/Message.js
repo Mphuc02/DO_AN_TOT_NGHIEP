@@ -207,7 +207,7 @@ const ChatWindow = ({relationShip, callBack}) => {
                     <label htmlFor="comment" className="sr-only">Your comment</label>
                     <textarea id="comment" rows="4"
                               className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                              placeholder="Nhập bình luận"
+                              placeholder="Nhập tin nhắn"
                               value={content} onChange={(e) => setContent(e.target.value)}></textarea>
                 </div>
                 <div className="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -334,7 +334,7 @@ const Message = () => {
     return (
         <div className="flex">
             {/* Danh sách liên hệ */}
-            <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 h-full sticky top-0 overflow-y-auto h-screen">
+            <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 h-full sticky top-0 overflow-y-auto h-screen mt-5">
                 <h2 className="text-lg font-bold mb-4">Danh sách liên hệ</h2>
                 <ul>
                     {[...relationShipMap].map(([key, value]) => {
@@ -356,7 +356,7 @@ const Message = () => {
             </div>
 
             {/* Khung chat */}
-            <div className="w-3/4 flex-grow h-full overflow-y-auto">
+            <div className="w-3/4 flex-grow h-full overflow-y-auto mt-5">
                 <ChatWindow
                     relationShip={selectedRelationShip}
                     webSocket={webSocket}

@@ -37,26 +37,34 @@ const SelectDiseaseModal = ({isOpen, onClose, diseasesMap, selectCallBack}) => {
             <div className={styles.modalContent}>
                 <button className={styles.closeButton} onClick={onClose}>&times;</button>
 
-                <table>
+                <tr>
+                    <td>Nhập tên bệnh:</td>
+                    <td><input className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               value={queryString} onChange={(e) => {
+                        setQueryString(e.target.value)
+                    }}/></td>
+                </tr>
+
+                <table className="table-auto  w-full text-left">
                     <thead></thead>
                     <tbody>
-                        <tr>
-                            <td>Nhập tên bệnh: </td>
-                            <td><input value={queryString} onChange={(e) => {setQueryString(e.target.value)}}/></td>
-                        </tr>
+                    <tr className="bg-gray-200">
+                        <td className="border border-gray-300 px-4 py-2">Tên bệnh</td>
+                        <td className="border border-gray-300 px-4 py-2">Mô tả</td>
+                    </tr>
 
-                        <tr>
-                            <td>Tên bệnh</td>
-                            <td>Mô tả</td>
+                    {queriedDiseases.map(disease => {
+                        return <tr key={disease.id}>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{disease.name}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{disease.description}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                <button
+                                    className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                    onClick={() => selectCallBack(disease.id)}>Chọn bệnh này
+                                </button>
+                            </td>
                         </tr>
-
-                        {queriedDiseases.map(disease => {
-                            return <tr key={disease.id}>
-                                        <td>{disease.name}</td>
-                                        <td>{disease.description}</td>
-                                        <td><button onClick={() => selectCallBack(disease.id)}>Chọn bệnh này</button></td>
-                                    </tr>
-                        })}
+                    })}
                     </tbody>
                 </table>
             </div>
@@ -154,6 +162,7 @@ const Examination = ({examinationResult}) => {
         SendApiService.putRequest(ExaminationResult.ExaminationResultUrl.findById(thisExaminationResult.id), examinationResult,{ }, response => {
                 setError({})
                 setExaminationResultResponse(response.data)
+                window.location.reload()
             }, error => {
                 isClickSaveButton = false
                 if(error.status === 400){
@@ -207,11 +216,10 @@ const Examination = ({examinationResult}) => {
 
         doc.autoPrint();
         window.open(doc.output('bloburl'), '_blank');
-
     }
 
     return (
-        <div>
+        <div className="mt-5">
             <table>
                 <thead>
                     <tr>
@@ -221,8 +229,8 @@ const Examination = ({examinationResult}) => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Bệnh nhân:</td>
-                        <td>{(() => {
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Bệnh nhân:</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">{(() => {
                            if(!thisExaminationResult || !thisExaminationResult.patient){
                                return <p></p>
                            }
@@ -232,13 +240,13 @@ const Examination = ({examinationResult}) => {
                     </tr>
 
                     <tr>
-                        <td>Triệu chứng: </td>
-                        <td>{thisExaminationResult.symptom}</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Triệu chứng: </td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">{thisExaminationResult.symptom}</td>
                     </tr>
                 </tbody>
             </table>
 
-            <table>
+            {thisExaminationResult && thisExaminationResult.images && <table>
                 <thead>
                     <tr><td>Hình ảnh chuẩn đoán</td></tr>
                     <tr>
@@ -260,7 +268,7 @@ const Examination = ({examinationResult}) => {
                         ));
                     })()}
                 </tbody>
-            </table>
+            </table> }
 
             <table>
                 <thead>
@@ -272,46 +280,66 @@ const Examination = ({examinationResult}) => {
                 <tbody>
                     <tr>
                         <td></td>
-                        <td>{error.treatment}</td>
+                        <td className="text-red-500 text-sm font-medium">{error.treatment}</td>
                     </tr>
 
                     <tr>
-                        <td>Điều trị:</td>
-                        <td><textarea onChange={(e) => setTreatment(e.target.value)}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Điều trị:</td>
+                        {!examinationResult.examinatedAt && <td colSpan={2}><input className="w-1000 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setTreatment(e.target.value)}/></td>}
+                        {examinationResult.examinatedAt && <td colSpan={2}>{examinationResult.treatment}</td>}
                     </tr>
 
                     <tr>
-                        <td>Các bệnh phát hiện: </td>
-                        <td><button onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Các bệnh mắc phải: </td>
+
+                        {!examinationResult.examinatedAt && <td><button className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>}
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td>{error.details}</td>
+                        <td className="text-red-500 text-sm font-medium">{error.details}</td>
                     </tr>
 
-                    {[...selectedDiseasesMap].map(([key, value], index) => {
-                        if(!value){
-                            return ''
-                        }
+                </tbody>
+            </table>
 
-                        const errorAtIndex = `details[${index}].diseaseDescription`
-                        return <div key={key}>
-                                    <tr>
-                                        <td></td>
-                                        <td>{error[errorAtIndex]}</td>
-                                    </tr>
+            <table border={1}>
+                <tbody>
+                {[...selectedDiseasesMap].map(([key, value], index) => {
+                    if(!value){
+                        return ''
+                    }
 
-                                    <tr >
-                                        <td>{value.name}</td>
-                                        <td><textarea onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
-                                        </td>
-                                        <td>
-                                            <button onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button>
-                                        </td>
-                                    </tr>
-                                </div>
-                    })}
+                    const errorAtIndex = `details[${index}].diseaseDescription`
+                    return <>
+                        <tr>
+                            <td></td>
+                            <td className="text-red-500 text-sm font-medium">{error[errorAtIndex]}</td>
+                        </tr>
+
+                        <tr >
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">{value.name}</td>
+                            <td><input
+                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
+                            </td>
+                            <td>
+                                <button className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+                                        onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button>
+                            </td>
+                        </tr>
+                    </>
+                })}
+                {examinationResult.details && examinationResult.details.map(disease => {
+                    if(!disease){
+                        return null
+                    }
+                    return <tr key={disease.id}>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">{diseasesMap.get(disease.diseaseId).name}:</td>
+                            <td>{disease.diseaseDescription}</td>
+                    </tr>
+                })}
                 </tbody>
             </table>
 
@@ -319,10 +347,12 @@ const Examination = ({examinationResult}) => {
                                 diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
 
             {!examinationResult.examinatedAt &&
-                <button onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>}
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                        onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>}
 
             {examinationResult.examinatedAt &&
-                <button onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                        onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
         </div>
     )
 }
@@ -388,15 +418,19 @@ const ExaminatingPatient = () => {
     }, []);
 
     return (
-        <div>
-            <Link to={RoutesConstant.DOCTOR.EXAMINATION_MANAGEMENT}>Quay lại danh sách bệnh nhân chờ khám</Link>
-            <h2>Khám bệnh cho bệnh nhân</h2>
-
+        <div className="mt-10">
+            <h2 className="text-xl font-bold text-green-600 mb-4">Khám bệnh cho bệnh nhân</h2>
+            <Link className="bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                to={RoutesConstant.DOCTOR.EXAMINATION_MANAGEMENT}>Quay lại danh sách bệnh nhân chờ khám</Link>
             <div className={styles.divFlex}>
-                <div className={styles.cursorPointer} onClick={() => setSeletedTab(1)}>Khám bệnh</div>
-                <div className={styles.cursorPointer} onClick={() => setSeletedTab(2)}>Các lần khám trước</div>
-                <div className={styles.cursorPointer} onClick={() => setSeletedTab(3)}>Phiếu tư vấn thuốc</div>
-                <div className={styles.cursorPointer} onClick={() => setSeletedTab(4)}>Tạo phiếu hẹn khám lại</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 1 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSeletedTab(1)}>Khám bệnh</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 2 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSeletedTab(2)}>Các lần khám trước</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 3 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSeletedTab(3)}>Phiếu tư vấn thuốc</div>
+                <div className={`cursor-pointer py-2 px-4 rounded-lg transition-colors ${selectedTab === 4 ? 'bg-green-500 text-white' : 'hover:bg-gray-200'}`}
+                    onClick={() => setSeletedTab(4)}>Tạo phiếu hẹn khám lại</div>
             </div>
 
             {selectedTab === 1 && <Examination examinationResult={examinationResult}/>}

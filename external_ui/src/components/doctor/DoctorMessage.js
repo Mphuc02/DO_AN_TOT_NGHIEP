@@ -331,7 +331,7 @@ const DoctorMessage = () => {
     }, []);
 
     return (
-        <div className="flex">
+        <div className="flex mt-10">
             {/* Danh sách liên hệ */}
             <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 h-full sticky top-0 overflow-y-auto h-screen">
                 <h2 className="text-lg font-bold mb-4">Danh sách liên hệ</h2>

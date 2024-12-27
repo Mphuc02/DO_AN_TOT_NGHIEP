@@ -11,10 +11,8 @@ function ReceiptLayout({children}){
 
     useEffect(() => {
         const receipt = JSON.parse(localStorage.getItem('receipt'))
-        if(!receipt){
-            return
-        }
-        if(!receipt.roles.includes('RECEPTION_STAFF')){
+
+        if(!receipt || !receipt.roles.includes('RECEPTION_STAFF')){
             localStorage.removeItem('access-token')
             localStorage.removeItem('refresh-token')
             localStorage.removeItem('receipt')

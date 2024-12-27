@@ -37,13 +37,15 @@ const ChooseMedicineModal = ({isOpen, onClose, onChooseMedicine}) => {
                     <label>Tìm kiếm thuốc:</label>
                     <input onChange={(e) => setValueSearch(e.target.value)}/>
 
-                    <table border={1}>
-                        <thead>
+                    <table className="table-auto border-collapse border border-gray-300 w-full text-left"
+                        border={1}>
+                        <thead className="bg-gray-200">
                         <tr>
-                            <td>Số thứ tự</td>
-                            <td>Tên thuốc</td>
-                            <td>Mô tả</td>
-                            <td>Nguồn gốc</td>
+                            <td className="border border-gray-300 px-4 py-2">Số thứ tự</td>
+                            <td className="border border-gray-300 px-4 py-2">Tên thuốc</td>
+                            <td className="border border-gray-300 px-4 py-2">Mô tả</td>
+                            <td className="border border-gray-300 px-4 py-2">Nguồn gốc</td>
+                            <td className="border border-gray-300 px-4 py-2"></td>
                         </tr>
                         </thead>
                         <tbody>
@@ -54,7 +56,9 @@ const ChooseMedicineModal = ({isOpen, onClose, onChooseMedicine}) => {
                                 <td>{value.name}</td>
                                 <td>{value.description}</td>
                                 <td>{value.origin.name}</td>
-                                <td><button onClick={() => onChooseMedicine(value)}>Chọn thuốc này</button></td>
+                                <td><button
+                                    className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 mt-5"
+                                    onClick={() => onChooseMedicine(value)}>Chọn thuốc này</button></td>
                             </tr>
                         })}
                         </tbody>
@@ -185,19 +189,22 @@ const MedicineConsultation = ({}) => {
 
     return (
         <div>
-            <button onClick={() => openChooseMedicineModal()}>Chọn thuốc</button>
+            <button
+                className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onClick={() => openChooseMedicineModal()}>Chọn thuốc</button>
             <ChooseMedicineModal isOpen={isOpenChooseMedicineModal} onClose={onCloseChooseMedicineModal}
                                  onChooseMedicine={onChooseMedicine}/>
 
-            <table>
-                <thead>
-                <tr>
-                    <td>Số thứ tự</td>
-                    <td>Tên thuốc</td>
-                    <td>Số lượng trong kho</td>
-                    <td>Cách dùng</td>
-                    <td>Số lượng tư vấn</td>
-                </tr>
+            <table className="table-auto border-collapse border border-gray-300 w-full text-left">
+                <thead className="bg-gray-200">
+                    <tr>
+                        <td className="border border-gray-300 px-4 py-2">Số thứ tự</td>
+                        <td className="border border-gray-300 px-4 py-2">Tên thuốc</td>
+                        <td className="border border-gray-300 px-4 py-2">Số lượng trong kho</td>
+                        <td className="border border-gray-300 px-4 py-2">Cách dùng</td>
+                        <td className="border border-gray-300 px-4 py-2">Số lượng tư vấn</td>
+                        <td className="border border-gray-300 px-4 py-2"></td>
+                    </tr>
                 </thead>
                 <tbody>
                 {[...selectedMedicinesMap].map(([key, value], index) => {
@@ -217,11 +224,15 @@ const MedicineConsultation = ({}) => {
                             <td>{index + 1}</td>
                             <td>{value.name}</td>
                             <td>{value.quantity}</td>
-                            <td><input value={value.treatment}
+                            <td><input
+                                className="w-3/4 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={value.treatment}
                                        onChange={(e) => onChangeUsageMedicine(key, e.target.value)}/></td>
                             <td><input type={"number"} onChange={(e) => onChangeQuantity(key, e.target.value)}/></td>
                             <td>
-                                <button onClick={() => onRemoveMedicine(key)}>Xóa</button>
+                                <button
+                                    className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                    onClick={() => onRemoveMedicine(key)}>Xóa</button>
                             </td>
                         </tr>
                     </>
@@ -230,7 +241,9 @@ const MedicineConsultation = ({}) => {
             </table>
 
             <PrintableComponent ref={printRef}/>
-            {!formResponse && <button onClick={() => {
+            {!formResponse && <button
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                onClick={() => {
                 onClickCreateConsultationForm()
             }}>Tạo phiếu tư vấn thuốc</button>}
             {formResponse && <button onClick={() => handleDownloadPdf()}>In phiếu tư vấn</button>}
