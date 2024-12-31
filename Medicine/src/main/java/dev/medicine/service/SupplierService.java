@@ -20,7 +20,7 @@ public class SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapperUtil supplierMapperUtil;
 
-    public List<SupplierResponse> getAll(){
+    public List<SupplierResponse> search(){
         return supplierMapperUtil.mapEntitiesToResponses(supplierRepository.findAll());
     }
 

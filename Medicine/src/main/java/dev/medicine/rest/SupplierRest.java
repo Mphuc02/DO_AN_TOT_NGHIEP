@@ -22,8 +22,8 @@ public class SupplierRest {
     private final SupplierService supplierService;
 
     @GetMapping
-    public ResponseEntity<List<SupplierResponse>> getAll(){
-        return ResponseEntity.ok(supplierService.getAll());
+    public ResponseEntity<List<SupplierResponse>> search(){
+        return ResponseEntity.ok(supplierService.search());
     }
 
     @PostMapping()

@@ -20,8 +20,8 @@ public class ImportInvoiceRest {
     private final ImportInvoiceService importInvoiceService;
 
     @GetMapping()
-    public ResponseEntity<List<ImportInvoiceResponse>> getAll(){
-        return ResponseEntity.ok(importInvoiceService.getAll());
+    public ResponseEntity<List<ImportInvoiceResponse>> search(){
+        return ResponseEntity.ok(importInvoiceService.search());
     }
 
     @PostMapping()

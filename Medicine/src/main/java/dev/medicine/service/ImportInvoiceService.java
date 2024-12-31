@@ -26,7 +26,7 @@ public class ImportInvoiceService {
     private final ImportInvoiceDetailRepository detailRepository;
     private final MedicineRepository medicineRepository;
 
-    public List<ImportInvoiceResponse> getAll(){
+    public List<ImportInvoiceResponse> search(){
         return invoiceMapperUtil.mapEntitiesToResponses(invoiceRepository.findAll());
     }
 
