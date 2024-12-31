@@ -108,16 +108,14 @@ function SideBar(){
                     <li>
                         <button
                             onClick={() => onClickLogout()}
-                            className="flex items-center p-2 text-red-900 bg-red-50 rounded-lg hover:bg-red-100 group"
-                        >
+                            className="w-full flex items-center p-2 text-red-900 bg-red-50 rounded-lg hover:bg-red-100 group">
                             <svg
                                 className="w-5 h-5 text-red-600 group-hover:text-red-800"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
-                                strokeWidth="2"
-                            >
+                                strokeWidth="2">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"

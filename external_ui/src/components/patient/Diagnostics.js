@@ -387,6 +387,18 @@ const Diagnostics = () => {
                 </div>
             ))}
 
+            {detectedDiseasesMap.size > 0 && (
+                <div>
+                    <div>Dưới đây là danh sách các bệnh phát hiện được:</div>
+                    <ul className="list-disc pl-5 text-red-500">
+                        {[...detectedDiseasesMap].map(([key, value]) => (
+                            <li key={key}>{value}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+
             <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => openCreateModal()}>Tạo lịch hẹn khám bệnh</button>
             <CreateAppointmentModal isOpen={isCreateModalOpen} onClose={closeCreateModal} diseases={detectedDiseasesMap} doctorsMap={doctorsMap} imageDetails={imageDetails}/>
         </div>

@@ -1,16 +1,18 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {MEDICINE} from "../../ApiConstant";
 import {JwtService} from "../../service/JwtService";
 import iconUpdate from '../../imgs/update.png'
 import styles from '../../layouts/body/style.module.css'
+import RoutesConstant from "../../RoutesConstant";
 
 let countError = 0;
 let page
 const MedicineManagement = () => {
     page = 'list'
     const [medicines, setMedicines] = useState([])
+    const navigate = useNavigate()
 
     const getMedicines = async () => {
         if(countError === 5)
@@ -37,30 +39,35 @@ const MedicineManagement = () => {
         getMedicines()
     }, [page]);
 
+
     return (
         <>
-            <h2>Quản lý thông tin thông tin thuốc</h2>
-            <Link to={'create'}>Thêm thông tin thuốc</Link>
-            <table border={1}>
-                <thead>
+            <h2
+                className="text-xl font-bold text-green-600 mb-4" >Quản lý thông tin thông tin thuốc</h2>
+            <Link to={'create'}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Thêm thông tin thuốc</Link>
+            <table border={1}
+                   className="table-auto border-collapse border border-gray-300 w-full text-left mt-10">
+                <thead
+                    className="bg-gray-200">
                     <tr>
-                        <th>Id</th>
-                        <th>Tên</th>
-                        <th>Gía bán hiện tại</th>
-                        <th>Số lượng còn trong kho</th>
-                        <th>Nguồn gốc</th>
-                        <th>Chỉnh sửa</th>
+                        <th className="border border-gray-300 px-4 py-2">Id</th>
+                        <th className="border border-gray-300 px-4 py-2">Tên</th>
+                        <th className="border border-gray-300 px-4 py-2">Giá bán hiện tại</th>
+                        <th className="border border-gray-300 px-4 py-2">Số lượng còn trong kho</th>
+                        <th className="border border-gray-300 px-4 py-2">Nguồn gốc</th>
                     </tr>
                 </thead>
                 <tbody>
                     {medicines.map((medicine, index) => (
-                        <tr key={index}>
-                            <td>{medicine.id}</td>
-                            <td>{medicine.name}</td>
-                            <td>{medicine.price}</td>
-                            <td>{medicine.quantity}</td>
-                            <td>{medicine.origin.name}</td>
-                            <td><Link className={styles.updateLink} to={'update/' + medicine.id}><img className={styles.update_icon} src={iconUpdate}/></Link></td>
+                        <tr key={index}
+                            className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
+                            onClick={() => navigate(RoutesConstant.ADMIN.UPDATE_MEDICINE(medicine.id))}>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{medicine.id}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{medicine.name}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{medicine.price}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{medicine.quantity}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{medicine.origin.name}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -151,30 +158,34 @@ const CreateMedicine = () => {
     return(
         <>
             <div>
-                <Link to={'/admin/medicine-management'}>Quản lý thông tin thuốc</Link>
-                <p> >> Thêm mới thông tin thuốc</p>
+                <Link to={'/admin/medicine-management'}
+                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thuốc</Link>
+                <span className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới thông tin thuốc</span>
             </div>
             <div>
                 <table>
                     <tbody>
                         <tr>
                             <td></td>
-                            <td><p>{medicineError.name}</p></td>
+                            <td><p className="text-red-500 text-sm font-medium">{medicineError.name}</p></td>
                         </tr>
                         <tr>
-                            <td>Tên</td>
-                            <td><input value={medicine.name} onChange={(e) => {
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên</td>
+                            <td><input
+                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={medicine.name} onChange={(e) => {
                                 setMedicice({...medicine, name: e.target.value})
                             }}/></td>
                         </tr>
 
                         <tr>
                             <td></td>
-                            <td><p>{medicineError.price}</p></td>
+                            <td><p className="text-red-500 text-sm font-medium">{medicineError.price}</p></td>
                         </tr>
                         <tr>
-                            <td>Gía bán</td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Giá bán</td>
                             <td><input type={"number"} value={medicine.price}
+                                       className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
                                 onChange={(e) => {
                                     setMedicice({...medicine, price: e.target.value})
                                 }}/></td>
@@ -182,20 +193,21 @@ const CreateMedicine = () => {
 
                         <tr>
                             <td></td>
-                            <td><p>{medicineError.description}</p></td>
+                            <td><p className="text-red-500 text-sm font-medium">{medicineError.description}</p></td>
                         </tr>
                         <tr>
-                            <td>Mô tả</td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Mô tả</td>
                             <td><input value={medicine.description}
+                                       className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
                                 onChange={e => setMedicice({...medicine, description: e.target.value})}/></td>
                         </tr>
 
                         <tr>
                             <td></td>
-                            <td><p>{medicineError.originId}</p></td>
+                            <td><p className="text-red-500 text-sm font-medium">{medicineError.originId}</p></td>
                         </tr>
                         <tr>
-                            <td>Nguồn gốc</td>
+                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Nguồn gốc:</td>
                             {origins.map((origin, index) => (
                                 <td key={index}>
                                     <label>
@@ -212,7 +224,9 @@ const CreateMedicine = () => {
                     </tbody>
                 </table>
 
-                <button onClick={() => handleCreateMedicine()}>Lưu</button>
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                    onClick={() => handleCreateMedicine()}>Lưu</button>
             </div>
         </>
     )
@@ -319,30 +333,35 @@ const UpdateMedicine = () => {
     return (
         <>
             <div>
-                <Link to={'/admin/medicine-management'}>Quản lý thông tin thuốc</Link>
-                <p> >> Cập nhật thông tin thuốc</p>
+                <Link to={'/admin/medicine-management'}
+                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thuốc</Link>
+                <span className="text-xl font-bold text-green-600 mb-4"> ⟶ Cập nhật thông tin thuốc</span>
             </div>
             <div>
                 <table>
                     <tbody>
                     <tr>
                         <td></td>
-                        <td><p>{medicineError.name}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{medicineError.name}</p></td>
                     </tr>
                     <tr>
-                        <td>Tên</td>
-                        <td><input value={medicine.name} onChange={(e) => {
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên</td>
+                        <td><input
+                            className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                            value={medicine.name} onChange={(e) => {
                             setMedicine({...medicine, name: e.target.value})
                         }}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{medicineError.price}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{medicineError.price}</p></td>
                     </tr>
                     <tr>
-                        <td>Gía bán</td>
-                        <td><input type={"number"} value={medicine.price}
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Giá bán</td>
+                        <td><input
+                            className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                            type={"number"} value={medicine.price}
                                    onChange={(e) => {
                                        setMedicine({...medicine, price: e.target.value})
                                    }}/></td>
@@ -350,20 +369,22 @@ const UpdateMedicine = () => {
 
                     <tr>
                         <td></td>
-                        <td><p>{medicineError.description}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{medicineError.description}</p></td>
                     </tr>
                     <tr>
-                        <td>Mô tả</td>
-                        <td><input value={medicine.description}
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Mô tả</td>
+                        <td><input
+                            className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                            value={medicine.description}
                                    onChange={e => setMedicine({...medicine, description: e.target.value})}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{medicineError.originId}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{medicineError.originId}</p></td>
                     </tr>
                     <tr>
-                        <td>Nguồn gốc</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Nguồn gốc</td>
                         {origins.map((origin, index) => (
                             <td key={index}>
                                 <label>
@@ -381,7 +402,9 @@ const UpdateMedicine = () => {
                     </tbody>
                 </table>
 
-                <button onClick={() => handleUpdateRequest()}>Lưu</button>
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                    onClick={() => handleUpdateRequest()}>Lưu</button>
             </div>
         </>
     )

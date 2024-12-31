@@ -293,14 +293,11 @@ const PayForInvoice = (id) => {
                             <td className="border border-gray-300 p-3 text-right">
                                 {(value.medicine.price * value.quantity).toLocaleString()} đ
                             </td>
-                            <td className="border border-gray-300 p-3 text-center">
+                            {!invoice.paidAt && <td className="border border-gray-300 p-3 text-center">
                                 <button
                                     onClick={() => onRemoveMedicine(key)}
-                                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-                                >
-                                    Bỏ chọn thuốc này
-                                </button>
-                            </td>
+                                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Bỏ chọn thuốc này</button>
+                            </td>}
                         </tr>
                     </>
                 })}
@@ -309,7 +306,8 @@ const PayForInvoice = (id) => {
 
             <p>Tổng tiền thanh toán: {totalMoney.current}</p>
             {!invoice.paidAt &&
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10" onClick={() => handlePayInCash()}>Thanh toán</button>}
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                        onClick={() => handlePayInCash()}>Thanh toán</button>}
             {!invoice.paidAt &&
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-10 ml-10" onClick={() => handlePayByVnpay()}>Thanh toán qua ví điện tử VNPAY</button>}
             {invoice.paidAt &&

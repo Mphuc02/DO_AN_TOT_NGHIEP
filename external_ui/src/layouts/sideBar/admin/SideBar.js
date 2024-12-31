@@ -37,15 +37,57 @@ function SideBar(){
                 </svg>
                 <span className="ms-3">Quản lý thông tin nhân viên</span></Link></li>
             <li>
-                <Link to={"/admin/medicine-management"}>Quản lý thông tin thuốc</Link>
+                <Link to={"/admin/medicine-management"}
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <svg
+                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M12 2a6 6 0 100 12 6 6 0 000-12zm0 10a4 4 0 110-8 4 4 0 010 8zM2 20a10 10 0 0120 0H2z"/>
+                    </svg>
+                    <span>Quản lý thông tin thuốc</span></Link>
 
                 {currentPath.startsWith('/admin/medicine-management') &&
                     <ul>
                         <li><Link to={'/admin/medicine-management/origin'}>Quản lý nguồn gôc thuốc</Link></li>
                     </ul>}
             </li>
-            <li><Link to={'/admin/examination-room-management'}>Quản lý thông tin phòng khám</Link></li>
-            <li><a href="/admin/">Profile</a></li>
+            <li><Link to={'/admin/examination-room-management'}
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg
+                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 2a6 6 0 100 12 6 6 0 000-12zm0 10a4 4 0 110-8 4 4 0 010 8zM2 20a10 10 0 0120 0H2z"/>
+                </svg>
+                <span>Quản lý thông tin phòng khám</span>
+            </Link></li>
+            <li>
+                <button
+                    onClick={() => onClickLogout()}
+                    className="w-full flex items-center p-2 text-red-900 bg-red-50 rounded-lg hover:bg-red-100 group">
+                    <svg
+                        className="w-5 h-5 text-red-600 group-hover:text-red-800"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 12H3m0 0l4-4m-4 4l4 4m13-4h-6"
+                        />
+                    </svg>
+                    <span className="ml-3">Đăng xuất</span>
+                </button>
+            </li>
         </ul>
     )
 }

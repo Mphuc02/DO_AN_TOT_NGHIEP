@@ -43,7 +43,7 @@ const StatusBar = forwardRef(({ numberOfCircles, labels, callBack }) => {
                                 className={styles.circle}
                                 style={{backgroundColor: getCircleColor(status)}}>
                             </div>
-                            <span className={styles.circleLabel}>{messages[index]}</span>
+                            <span className={styles.circleLabel} style={{color: getCircleColor(status)}}>{messages[index]}</span>
                         </div>
 
                         {index < circleStatus.length - 1 && (

@@ -1,6 +1,5 @@
 import axios from "axios";
 import {AUTHENTICATION} from '../ApiConstant'
-import header from "../layouts/header/admin/Header";
 
 class JwtService{
     static geUserFromToken = () => {
@@ -22,9 +21,19 @@ class JwtService{
                 localStorage.removeItem('admin')
                 return null;
             } else {
+                console.log(decodedToken.exp)
                 // Token còn hiệu lực, thực hiện các thao tác cần thiết
                 return decodedToken.userId
             }
+        }else{
+            console.log("Refresh Token đã hết hạn");
+            localStorage.removeItem('refresh-token')
+            localStorage.removeItem('access-token');
+            localStorage.removeItem('receipt')
+            localStorage.removeItem('doctor')
+            localStorage.removeItem('patient')
+            localStorage.removeItem('admin')
+            return null
         }
     }
 
@@ -42,6 +51,12 @@ class JwtService{
             })
             .catch(error => {
                 console.error('API Error:', error);
+                localStorage.removeItem('refresh-token')
+                localStorage.removeItem('access-token');
+                localStorage.removeItem('receipt')
+                localStorage.removeItem('doctor')
+                localStorage.removeItem('patient')
+                localStorage.removeItem('admin')
             });
     }
 

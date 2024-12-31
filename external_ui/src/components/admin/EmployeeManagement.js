@@ -27,30 +27,33 @@ function EmployeeManagement(){
 
     return (
         <div>
-            <h2>Quản lý thông tin nhân viên</h2>
-            <Link to={'create'}>Thêm mới nhân viên</Link>
-            <table border="1">
-                <thead>
+            <h2 className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin nhân viên</h2>
+            <Link to={'create'}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Thêm mới nhân viên</Link>
+            <table border="1"
+                   className="table-auto border-collapse border border-gray-300 w-full text-left mt-10">
+                <thead
+                    className="bg-gray-200">
                     <tr>
-                        <th>ID</th>
-                        <th>Họ và tên</th>
-                        <th>Giới thiệu</th>
-                        <th>Ngày sinh(yyyy-MM-dd)</th>
-                        <th>Vai trò</th>
-                        <th>Chỉnh sửa</th>
+                        <th className="border border-gray-300 px-4 py-2">ID</th>
+                        <th className="border border-gray-300 px-4 py-2">Họ và tên</th>
+                        <th className="border border-gray-300 px-4 py-2">Giới thiệu</th>
+                        <th className="border border-gray-300 px-4 py-2">Ngày sinh(yyyy-MM-dd)</th>
+                        <th className="border border-gray-300 px-4 py-2">Vai trò</th>
+                        <th className="border border-gray-300 px-4 py-2">Chỉnh sửa</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((user, index) => (
                         <tr key={index}>
-                            <td>{user.id}</td>
-                            <td>{user.fullName.firstName + " " + user.fullName.middleName + " " + user.fullName.lastName}</td>
-                            <td>{user.introduce}</td>
-                            <td>{user.date}</td>
-                            <td>{user.roles.reduce((total, cur) => {
+                            <td className="border border-gray-300 px-4 py-2 text-center">{user.id}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{user.fullName.firstName + " " + user.fullName.middleName + " " + user.fullName.lastName}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{user.introduce}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{user.date}</td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">{user.roles.reduce((total, cur) => {
                                     return total + ROLE.getRole(cur) + ", "
                                 }, '')}</td>
-                            <td>
+                            <td className="border border-gray-300 px-4 py-2 text-center">
                                 <Link className={styles.updateLink} to={'update/' + user.id}>
                                     <img className={styles.update_icon} src={update}/>
                                 </Link>
@@ -206,8 +209,9 @@ function CreateEmployee() {
     return (
         <>
             <div>
-                <Link to={'/admin/employee-management'}>Quản lý thông tin nhân viên</Link>
-                <p> >> Thêm mới nhân viên</p>
+                <Link to={'/admin/employee-management'}
+                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin nhân viên</Link>
+                <span className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới nhân viên</span>
             </div>
 
             <div>
@@ -215,73 +219,90 @@ function CreateEmployee() {
                     <tbody>
                     <tr>
                         <td></td>
-                        <td><p>{firstNameError}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{lastNameError}</p></td>
                     </tr>
                     <tr>
-                        <td><label>Họ</label></td>
-                        <td><input value={firstName} onChange={e => setFirstName(e.target.value)}/></td>
-                    </tr>
-
-                    <tr>
-                        <td></td>
-                        <td><p>{lastNameError}</p></td>
-                    </tr>
-                    <tr>
-                        <td><label>Tên</label></td>
-                        <td><input value={lastName} onChange={e => setLastName(e.target.value)}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Họ</label></td>
+                        <td className="pl-1"><input className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                                    value={firstName} onChange={e => setFirstName(e.target.value)}/>
+                        </td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{middleNameError}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{middleNameError}</p></td>
                     </tr>
                     <tr>
-                        <td><label>Tên đệm</label></td>
-                        <td><input value={middleName} onChange={e => setMiddleName(e.target.value)}/></td>
-                    </tr>
-
-                    <tr>
-                        <td></td>
-                        <td><p>{phoneError}</p></td>
-                    </tr>
-                    <tr>
-                        <td><label>Số điện thoại</label></td>
-                        <td><input value={phone} onChange={e => setPhone(e.target.value)}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Tên đệm</label>
+                        </td>
+                        <td><input value={middleName}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   onChange={e => setMiddleName(e.target.value)}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{emailError}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{firstNameError}</p></td>
                     </tr>
                     <tr>
-                        <td><label>Email</label></td>
-                        <td><input value={email} onChange={e => setEmail(e.target.value)}/></td>
-                    </tr>
-
-                    <tr>
-                        <td></td>
-                        <td><p>{dateError}</p></td>
-                    </tr>
-                    <tr>
-                        <td>Ngày sinh</td>
-                        <td><input type={"date"} value={date} onChange={e => setDate(e.target.value)}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Tên</label></td>
+                        <td><input value={lastName}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   onChange={e => setLastName(e.target.value)}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{descriptionError}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{phoneError}</p></td>
                     </tr>
                     <tr>
-                        <td>Giới thiệu</td>
-                        <td><input value={description} onChange={e => setDescription(e.target.value)}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Số điện
+                            thoại</label></td>
+                        <td><input value={phone}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   onChange={e => setPhone(e.target.value)}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{roleError}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{emailError}</p></td>
                     </tr>
                     <tr>
-                        <td>Vai trò:</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Email</label>
+                        </td>
+                        <td><input value={email}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   onChange={e => setEmail(e.target.value)}/></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><p className="text-red-500 text-sm font-medium">{dateError}</p></td>
+                    </tr>
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Ngày sinh</td>
+                        <td><input type={"date"}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   value={date} onChange={e => setDate(e.target.value)}/></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><p className="text-red-500 text-sm font-medium">{descriptionError}</p></td>
+                    </tr>
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Giới thiệu</td>
+                        <td><input value={description}
+                                   className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                   onChange={e => setDescription(e.target.value)}/></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><p className="text-red-500 text-sm font-medium">{roleError}</p></td>
+                    </tr>
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Vai trò:</td>
                         {roles.map(role => (
                             <td key={role}>
                                 <label>
@@ -291,7 +312,7 @@ function CreateEmployee() {
                                         checked={selectedRoles.includes(role)}
                                         onChange={() => handleRoleChange(role)}
                                     />
-                                    {role}
+                                    <span className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">{role}</span>
                                 </label>
                             </td>
                         ))}
@@ -299,17 +320,19 @@ function CreateEmployee() {
 
                     <tr>
                         <td>
-                            <button onClick={createEmployee}>Lưu</button>
+                            <button
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                                onClick={createEmployee}>Lưu</button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
 
                 <div>
-                    <h1>Quá trình</h1>
-                    <StatusBar numberOfCircles={2} labels={['Tạo tài khoản','Tạo thông tin nhân viên']}
-                        callBack={setStatus}
-                        key={key}
+                    <h1 className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">Quá trình thực hiện</h1>
+                    <StatusBar numberOfCircles={2} labels={['Tạo tài khoản', 'Tạo thông tin nhân viên']}
+                               callBack={setStatus}
+                               key={key}
                     />
                 </div>
             </div>
