@@ -21,7 +21,6 @@ class JwtService{
                 localStorage.removeItem('admin')
                 return null;
             } else {
-                console.log(decodedToken.exp)
                 // Token còn hiệu lực, thực hiện các thao tác cần thiết
                 return decodedToken.userId
             }

@@ -9,7 +9,7 @@ import {FormatCreatedDate} from "../../service/TimeService";
 const ChatWindow = ({relationShip, callBack}) => {
     const [thisRelationShip, setThisRelationShip] = useState({})
     const [pageAble, setPableAble] = useState({page: 0})
-    const [messages, setMessages] = useState(new Map)
+    const [messages, setMessages] = useState(new Map())
     const [content, setContent] = useState('')
     const [previewImage, setPreviewImage] = useState(null)
     const fileInputRef = useRef(null)
@@ -46,9 +46,15 @@ const ChatWindow = ({relationShip, callBack}) => {
     }
 
     useEffect(() => {
+        messages.clear()
+        setThisRelationShip({...relationShip})
+        pageAble.page = 0
         getAllMessage()
-        setThisRelationShip(relationShip)
-    }, [relationShip.id, pageAble.page]);
+    }, [relationShip.id]);
+
+    useEffect(() => {
+        getAllMessage()
+    }, [pageAble.page])
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

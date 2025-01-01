@@ -1,16 +1,17 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import styles from "../../layouts/body/style.module.css";
 import iconUpdate from "../../imgs/update.png";
 import {useEffect, useState} from "react";
 import {HOSPITAL_INFORMATION} from '../../ApiConstant'
 import axios from "axios";
 import {JwtService} from "../../service/JwtService";
+import routesConstant from "../../RoutesConstant";
 
 let page = ''
 let countError = 0
 const ExaminationRoomManagement = () => {
     page = 'list'
-
+    const navigate = useNavigate()
     const [rooms, setRooms] = useState([])
 
     const getRooms = async () => {
@@ -43,22 +44,26 @@ const ExaminationRoomManagement = () => {
 
     return (
         <>
-            <h2>Quản lý thông tin thông tin phòng khám bệnh</h2>
-            <Link to={'create'}>Thêm thông tin phòng khám</Link>
-            <table border={1}>
-                <thead>
+            <h2
+                className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thông tin phòng khám bệnh</h2>
+            <Link
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                to={'create'}>Thêm thông tin phòng khám</Link>
+            <table border={1}
+                   className="table-auto border-collapse border border-gray-300 w-full text-left mt-10">
+                <thead className="bg-gray-200">
                 <tr>
-                    <th>Id</th>
-                    <th>Tên</th>
-                    <th>Chỉnh sửa</th>
+                    <th className="border border-gray-300 px-4 py-2">Id</th>
+                    <th className="border border-gray-300 px-4 py-2">Tên</th>
                 </tr>
                 </thead>
                 <tbody>
                 {rooms.map((room, index) => (
-                    <tr key={index}>
-                        <td>{room.id}</td>
-                        <td>{room.name}</td>
-                        <td><Link className={styles.updateLink} to={'update/' + room.id}><img className={styles.update_icon} src={iconUpdate}/></Link></td>
+                    <tr onClick={() => navigate(routesConstant.ADMIN.UPDATE_ROOM(room.id))}
+                        className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
+                        key={index}>
+                        <td className="border border-gray-300 px-4 py-2 text-center">{room.id}</td>
+                        <td className="border border-gray-300 px-4 py-2 text-center">{room.name}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -105,26 +110,34 @@ const CreateExaminationRoom = () => {
     return (
         <>
             <div>
-                <Link to={'/admin/medicine-management'}>Quản lý thông tin phòng khám bệnh</Link>
-                <p> >> Thêm mới thông tin phòng khám</p>
+                <Link to={'/admin/medicine-management'}
+                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin phòng khám bệnh</Link>
+                <span
+                    className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới thông tin phòng khám</span>
             </div>
             <div>
                 <table>
                     <tbody>
                     <tr>
                         <td></td>
-                        <td><p>{roomError.name}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{roomError.name}</p></td>
                     </tr>
                     <tr>
-                        <td>Tên</td>
-                        <td><input value={room.name} onChange={(e) => {
-                            setRoom({...room, name: e.target.value})
-                        }}/></td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên</td>
+                        <td>
+                            <input
+                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={room.name} onChange={(e) => {
+                                    setRoom({...room, name: e.target.value})
+                            }}/>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
 
-                <button onClick={() => handleCreateRoom()}>Lưu</button>
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                    onClick={() => handleCreateRoom()}>Lưu</button>
             </div>
         </>
     )

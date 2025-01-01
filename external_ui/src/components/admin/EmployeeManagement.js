@@ -1,16 +1,18 @@
 import {useState, useEffect, useRef } from "react";
 import {AUTHENTICATION, EMPLOYYEE, ROLE, WEBSOCKET} from "../../ApiConstant";
 import {JwtService} from "../../service/JwtService";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import WebSocketService from "../../service/WebSocketService";
 import StatusBar from "../common/StatusBar";
 import styles from '../../layouts/body/style.module.css'
 import update from '../../imgs/update.png'
 import {SendApiService} from "../../service/SendApiService";
+import RoutesConstant from "../../RoutesConstant";
 
 let page
 function EmployeeManagement(){
     page = 'list'
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
 
     const getEmployees = async () => {
@@ -40,23 +42,21 @@ function EmployeeManagement(){
                         <th className="border border-gray-300 px-4 py-2">Giới thiệu</th>
                         <th className="border border-gray-300 px-4 py-2">Ngày sinh(yyyy-MM-dd)</th>
                         <th className="border border-gray-300 px-4 py-2">Vai trò</th>
-                        <th className="border border-gray-300 px-4 py-2">Chỉnh sửa</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((user, index) => (
-                        <tr key={index}>
+                        <tr
+                            className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
+                            onClick={() => navigate(RoutesConstant.ADMIN.UPDATE_EMPLOYEE(user.id))}
+                            key={index}>
                             <td className="border border-gray-300 px-4 py-2 text-center">{user.id}</td>
                             <td className="border border-gray-300 px-4 py-2 text-center">{user.fullName.firstName + " " + user.fullName.middleName + " " + user.fullName.lastName}</td>
                             <td className="border border-gray-300 px-4 py-2 text-center">{user.introduce}</td>
                             <td className="border border-gray-300 px-4 py-2 text-center">{user.date}</td>
                             <td className="border border-gray-300 px-4 py-2 text-center">{user.roles.reduce((total, cur) => {
                                     return total + ROLE.getRole(cur) + ", "
-                                }, '')}</td>
-                            <td className="border border-gray-300 px-4 py-2 text-center">
-                                <Link className={styles.updateLink} to={'update/' + user.id}>
-                                    <img className={styles.update_icon} src={update}/>
-                                </Link>
+                                }, '')}
                             </td>
                         </tr>
                     ))}
@@ -223,7 +223,9 @@ function CreateEmployee() {
                     </tr>
                     <tr>
                         <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4"><label>Họ</label></td>
-                        <td className="pl-1"><input className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                        <td className="pl-1">
+                            <input
+                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
                                                     value={firstName} onChange={e => setFirstName(e.target.value)}/>
                         </td>
                     </tr>

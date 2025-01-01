@@ -1,15 +1,17 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import styles from "../../layouts/body/style.module.css";
 import iconUpdate from "../../imgs/update.png";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {MEDICINE} from "../../ApiConstant";
 import {JwtService} from "../../service/JwtService";
+import RoutesConstant from "../../RoutesConstant";
 
 let countError = 0
 let page = ''
 const OriginManagement = () => {
     page = 'list'
+    const navigate = useNavigate()
 
     const [origins, setOrigins] = useState([])
     const getOrigins = async () => {
@@ -41,24 +43,29 @@ const OriginManagement = () => {
 
     return (
         <>
-            <h2>Quản lý thông tin thông tin Nguồn gốc thuôc</h2>
-            <Link to={'create'}>Thêm thông tin Nguồn gốc</Link>
-            <table border={1}>
-                <thead>
+            <h2 className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thông tin Nguồn gốc thuôc</h2>
+            <Link to={'create'}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Thêm thông tin Nguồn gốc</Link>
+            <table
+                className="table-auto border-collapse border border-gray-300 w-full text-left mt-10"
+                border={1}>
+                <thead
+                    className="bg-gray-200">
                 <tr>
-                    <th>Id</th>
-                    <th>Tên</th>
-                    <th>Mô tả</th>
-                    <th>Chỉnh sửa</th>
+                    <th className="border border-gray-300 px-4 py-2">Id</th>
+                    <th className="border border-gray-300 px-4 py-2">Tên</th>
+                    <th className="border border-gray-300 px-4 py-2">Mô tả</th>
                 </tr>
                 </thead>
                 <tbody>
                 {origins.map((origin, index) => (
-                    <tr key={index}>
-                        <td>{origin.id}</td>
-                        <td>{origin.name}</td>
-                        <td>{origin.description}</td>
-                        <td><Link className={styles.updateLink} to={'update/' + origin.id}><img className={styles.update_icon} src={iconUpdate}/></Link></td>
+                    <tr
+                        className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
+                        onClick={() => navigate(RoutesConstant.ADMIN.UPDATE_ORIGIN_MEDICINE(origin.id))}
+                        key={index}>
+                        <td className="border border-gray-300 px-4 py-2 text-center">{origin.id}</td>
+                        <td className="border border-gray-300 px-4 py-2 text-center">{origin.name}</td>
+                        <td className="border border-gray-300 px-4 py-2 text-center">{origin.description}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -112,36 +119,44 @@ const CreateOrigin = () => {
     return (
         <>
             <div>
-                <Link to={'/admin/medicine-management'}>Quản lý thông tin Nguồn gốc thuốc</Link>
-                <p> >> Thêm mới thông tin Nguồn gốc thuốc</p>
+                <Link
+                    className="text-xl font-bold text-green-600 mb-4"
+                    to={RoutesConstant.ADMIN.MEDICINE_MANAGEMENT_ORIGIN}>Quản lý thông tin Nguồn gốc thuốc</Link>
+                <span className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới thông tin Nguồn gốc thuốc</span>
             </div>
             <div>
                 <table>
                     <tbody>
                     <tr>
                         <td></td>
-                        <td><p>{originError.name}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{originError.name}</p></td>
                     </tr>
                     <tr>
-                        <td>Tên</td>
-                        <td><input value={origin.name} onChange={(e) => {
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên</td>
+                        <td><input
+                            className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                            value={origin.name} onChange={(e) => {
                             setOrigin({...origin, name: e.target.value})
                         }}/></td>
                     </tr>
 
                     <tr>
                         <td></td>
-                        <td><p>{originError.description}</p></td>
+                        <td><p className="text-red-500 text-sm font-medium">{originError.description}</p></td>
                     </tr>
                     <tr>
-                        <td>Mô tả</td>
-                        <td><input value={origin.description}
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Mô tả</td>
+                        <td><input
+                            className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                            value={origin.description}
                                    onChange={e => setOrigin({...origin, description: e.target.value})}/></td>
                     </tr>
                     </tbody>
                 </table>
 
-                <button onClick={() => handleCreateOrigin()}>Lưu</button>
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                    onClick={() => handleCreateOrigin()}>Lưu</button>
             </div>
         </>
     )

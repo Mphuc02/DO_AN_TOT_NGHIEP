@@ -15,6 +15,18 @@ class RoutesConstant{
         static UPDATE_MEDICINE = (id) => {
             return this.MEDICINE_MANAGEMENT + "/update/" + id
         }
+
+        static UPDATE_ORIGIN_MEDICINE = (id) => {
+            return this.MEDICINE_MANAGEMENT_ORIGIN + '/update/' + id
+        }
+
+        static UPDATE_EMPLOYEE = (id) => {
+            return this.EMPLOYEE_MANAGEMENT + "/update/" + id
+        }
+
+        static UPDATE_ROOM = (id) => {
+            return this.ROOM_MANAGEMENT + "/update/" + id
+        }
     }
 
     static DOCTOR  = class {
