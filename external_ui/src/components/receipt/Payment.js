@@ -378,8 +378,7 @@ const UnPaidInvoice = () => {
                     <tr
                         key={key}
                         className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
-                        onClick={() => navigate(RoutesConstant.RECEIPT.payForInvoice(key))}
-                    >
+                        onClick={() => navigate(RoutesConstant.RECEIPT.payForInvoice(key))}>
                         <td className="border border-gray-300 px-4 py-2 text-center">{index + 1}</td>
                         <td className="border border-gray-300 px-4 py-2">{fullNameStr}</td>
                         <td className="border border-gray-300 px-4 py-2 text-right">

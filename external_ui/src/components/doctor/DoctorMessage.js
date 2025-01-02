@@ -271,6 +271,7 @@ const DoctorMessage = () => {
     const [page, setPage] = useState(0)
     const [webSocket, setWebSocket] = useState(new WebSocketService())
     const receivedMesageRef = useRef()
+    const updatedRelationShipMap = useRef()
 
     const getPatientInformation = (patientIdsMap) => {
         const ids = []
@@ -304,6 +305,7 @@ const DoctorMessage = () => {
             }
             await getPatientInformation(patientIdsMap)
             setRelationShipMap(tempMap)
+            updatedRelationShipMap.current = tempMap
 
         }, error => {
 
@@ -316,16 +318,20 @@ const DoctorMessage = () => {
             if (receivedMesageRef.current) {
                 receivedMesageRef.current.receivedMessage(message);
             }
+
+            const messageJson = JSON.parse(message).data;
+            let tempMap = updatedRelationShipMap.current
+            const oldRelationShip = tempMap.get(messageJson.relationShipId)
+            tempMap.delete(messageJson.relationShipId)
+            tempMap = new Map([[messageJson.relationShipId, oldRelationShip], ...tempMap])
+            updatedRelationShipMap.current = tempMap
+            setRelationShipMap(tempMap)
         })
     }
 
     const disconnect = () => {
         webSocket.disconnect()
     }
-
-    useEffect(() => {
-
-    }, []);
 
     useEffect(() => {
         findRelationShipOfDoctor()
@@ -339,7 +345,7 @@ const DoctorMessage = () => {
     return (
         <div className="flex mt-10">
             {/* Danh sách liên hệ */}
-            <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 h-full sticky top-0 overflow-y-auto h-screen">
+            <div className="w-1/4 bg-gray-100 border-r border-gray-300 p-4 sticky top-0 h-full  overflow-y-auto h-screen">
                 <h2 className="text-lg font-bold mb-4">Danh sách liên hệ</h2>
                 <ul>
                     {[...relationShipMap].map(([key, value]) => {

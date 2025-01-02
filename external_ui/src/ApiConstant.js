@@ -212,6 +212,14 @@ class PATIENT{
         static doctorCreateAppointment = () => {
             return this.getUrl() + "/create-appointment-by-doctor"
         }
+
+        static getAppointmentsOfPatient = (year, month) => {
+            return this.getUrl() + `/get-appointments-of-patient?year=${year}&month=${month}`
+        }
+
+        static getById = (id) => {
+            return this.getUrl() + "/" + id
+        }
     }
 
     static PATIENT_API = class {
