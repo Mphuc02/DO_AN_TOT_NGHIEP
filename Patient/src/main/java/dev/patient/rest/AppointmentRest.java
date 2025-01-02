@@ -23,6 +23,12 @@ import java.util.UUID;
 public class AppointmentRest {
     private final AppointmentService appointmentService;
 
+    @PreAuthorize(AuthorizationConstant.USER)
+    @GetMapping(GET_APPOINTMENTS_OF_PATIENT)
+    public ResponseEntity<List<AppointmentResponse>> getAppointmentsOfPatient(@RequestParam int year, @RequestParam int month){
+        return ResponseEntity.ok(appointmentService.getAppointmentByTime(year, month));
+    }
+
     @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN)
     @GetMapping(GET_APPOINTMENTS_OF_TODAY)
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsOfToday(){

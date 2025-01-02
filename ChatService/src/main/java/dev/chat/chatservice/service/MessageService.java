@@ -69,6 +69,7 @@ public class MessageService {
         message.setRelationShip(relationShip);
         message = messageRepository.save(message);
 
+        relationShip.setLastContact(LocalDateTime.now());
         relationShip.setLastMessage(message.getContent());
         relationShipRepository.save(relationShip);
 

@@ -46,6 +46,13 @@ public class AppointmentService {
     private final AppointmentImageDetailMapperUtil appointmentImageDetailMapperUtil;
     private final AuditingUtil auditingUtil;
 
+    public List<AppointmentResponse> getAppointmentByTime(int year, int month){
+        UUID patientId = auditingUtil.getUserLogged().getId();
+        LocalDate thisMonth = LocalDate.of(year, month, 1);
+        LocalDate nextMonth = thisMonth.plusMonths(1);
+        return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateBetweenAndPatientIdOrderByAppointmentDate(thisMonth, nextMonth, patientId));
+    }
+
     public List<AppointmentResponse> getAppointmentsOfToday(){
         return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateAndIsExamined(LocalDate.now(), false));
     }

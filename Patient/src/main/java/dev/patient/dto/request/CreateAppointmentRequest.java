@@ -24,6 +24,7 @@ import java.util.UUID;
 @FieldNameConstants
 public class CreateAppointmentRequest {
     @ExistedEmployeeValidator(message = "Bác sĩ không tồn tại", permissions = Role.DOCTOR)
+    @NotNull(message = "Bác sĩ không được bỏ trống")
     private UUID doctorId;
 
     @DateAfterTodayValidator

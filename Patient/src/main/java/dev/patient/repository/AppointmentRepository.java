@@ -10,4 +10,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     boolean existsByExaminationResultId(UUID examinationResultId);
     boolean existsByPatientIdAndAppointmentDate(UUID patientId, LocalDate date);
     List<Appointment> findByAppointmentDateAndIsExamined(LocalDate today, boolean isExamined);
+    List<Appointment> findByAppointmentDateBetweenAndPatientIdOrderByAppointmentDate(LocalDate start, LocalDate end, UUID patientId);
 }
