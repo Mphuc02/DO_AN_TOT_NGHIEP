@@ -1,6 +1,7 @@
 package dev.common.dto.response.patient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.common.dto.response.employee.EmployeeResponse;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,4 +24,6 @@ public class AppointmentResponse {
     private List<AppointmentImageDetailResponse> images;
     private LocalDate appointmentDate;
     private LocalDateTime createdAt;
+    private PatientResponse patient;
+    private EmployeeResponse employee;
 }

@@ -111,7 +111,6 @@ public class ExaminationResultService {
                                                         .orElseThrow(() ->
                                                                 new NotFoundException(EXAMINATION_RESULT_EXCEPTION.RESULT_NOT_FOUND));
 
-        //Todo: Kiểm tra nếu người đã thanh toàn thì sẽ không thể chinh sửa kết quả khám bệnh nữa
         UUID employeeId = ((AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         if(!employeeId.equals(findToUpdate.getEmployeeId()))
             throw new NotPermissionException(EXAMINATION_RESULT_EXCEPTION.NOT_RESULT_OWNER);
@@ -121,7 +120,7 @@ public class ExaminationResultService {
                                             ExaminationResultDetail entity = resultDetailMapperUtil.mapCreateRequestToDetail(detail);
                                             entity.setResult(tempResult);
                                             return entity;
-                                        }).collect(Collectors.toList());
+                                        }).toList();
 
         findToUpdate.setDetails(details);
         findToUpdate.setExaminatedAt(LocalDateTime.now());
@@ -137,5 +136,14 @@ public class ExaminationResultService {
 
 
         return resultMapperUtil.mapEntityToResponse(findToUpdate);
+    }
+
+    public List<ExaminationResultResponse> findHistoriesOfPatient(){
+        UUID patientId = auditingUtil.getUserLogged().getId();
+        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findByPatientIdOrderByCreatedAtDesc(patientId));
+    }
+
+    public List<ExaminationResultResponse> findByPatientId(UUID patientId){
+        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findByPatientIdOrderByCreatedAtDesc(patientId));
     }
 }

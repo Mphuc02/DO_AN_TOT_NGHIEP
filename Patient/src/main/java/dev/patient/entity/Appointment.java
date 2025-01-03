@@ -19,8 +19,6 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    private UUID patientId;
     private UUID doctorId;
     private String description;
     private UUID examinationResultId;
@@ -31,6 +29,10 @@ public class Appointment {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "appointment", fetch = FetchType.LAZY)
     private List<AppointmentImageDetail> images;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
     private LocalDate appointmentDate;
     private LocalDateTime createdAt;

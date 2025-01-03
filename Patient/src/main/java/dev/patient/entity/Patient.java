@@ -6,8 +6,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
-
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,4 +34,11 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     private boolean usingAccount;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
+    private List<Appointment> appointments;
+
+    public Patient(UUID id){
+        this.id = id;
+    }
 }

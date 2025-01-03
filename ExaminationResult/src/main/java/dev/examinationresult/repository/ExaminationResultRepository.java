@@ -20,4 +20,6 @@ public interface ExaminationResultRepository extends JpaRepository<ExaminationRe
         order by er.examinedNumber
     """)
     List<ExaminationResult> findWaitingExaminationPatientsOfDoctor(UUID doctorId, LocalDateTime start, LocalDateTime end);
+
+    List<ExaminationResult> findByPatientIdOrderByCreatedAtDesc(UUID patientId);
 }

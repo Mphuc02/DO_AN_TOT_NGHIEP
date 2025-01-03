@@ -45,4 +45,15 @@ public class ExaminationResultRest {
         return ResponseEntity.ok(examinationResultService.update(request, id));
     }
 
+    @GetMapping(FIND_HISTORIES_OF_PATIENT)
+    @PreAuthorize(AuthorizationConstant.USER)
+    public ResponseEntity<Object> findHistoriesOfPatient(){
+        return ResponseEntity.ok(examinationResultService.findHistoriesOfPatient());
+    }
+
+    @GetMapping(FIND_HISTORIES_BY_PATIENT_ID)
+    @PreAuthorize(AuthorizationConstant.DOCTOR)
+    public ResponseEntity<Object> findHistoriesByPatientId(@PathVariable UUID id){
+        return ResponseEntity.ok(examinationResultService.findByPatientId(id));
+    }
 }

@@ -72,9 +72,10 @@ public class ApiConstant {
         public static final String RESULT_URL = "/api/examination-results";
         public static final String ID = "/{id}";
         public static final String CONSULTATION_FORM = "/api/consultation-form";
-
         public static final String APPOINTMENT_FORM_NEXT_EXAMINATION = "/api/v1/appointment-form-next-examination";
         public static final String FIND_WAITING_EXAMINATION_PATIENTS = "/find/waiting-examination-patients";
+        public static final String FIND_HISTORIES_OF_PATIENT = "/find-histories-of-patient";
+        public static final String FIND_HISTORIES_BY_PATIENT_ID = "/find-by-patient-id/{id}";
     }
 
     public static final class MEDICINE_URL{

@@ -16,6 +16,7 @@ import dev.common.dto.response.patient.AppointmentResponse;
 import dev.patient.entity.Appointment;
 import dev.patient.entity.AppointmentDetail;
 import dev.patient.entity.AppointmentImageDetail;
+import dev.patient.entity.Patient;
 import dev.patient.repository.AppointmentDetailRepository;
 import dev.patient.repository.AppointmentImageDetailRepository;
 import dev.patient.repository.AppointmentRepository;
@@ -104,7 +105,7 @@ public class AppointmentService {
             }
         }
 
-        appointment.setPatientId(auditingUtil.getUserLogged().getId());
+        appointment.setPatient(new Patient(auditingUtil.getUserLogged().getId()));
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setIsExamined(false);
         appointment = appointmentRepository.save(appointment);
@@ -132,7 +133,7 @@ public class AppointmentService {
 
     private Appointment checkPermission(UUID id){
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(() -> new NotFoundException(PATIENT_EXCEPTION.APPOINTMENT_NOT_FOUND));
-        if(!Objects.equals(appointment.getPatientId(), auditingUtil.getUserLogged().getId())){
+        if(!Objects.equals(appointment.getPatient().getId(), auditingUtil.getUserLogged().getId())){
             throw BaseException.buildNotFound().message(PATIENT_EXCEPTION.NOT_PERMISSION_WITH_APPOINTMENT).build();
         }
 
