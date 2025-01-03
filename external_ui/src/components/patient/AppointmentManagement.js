@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {SendApiService} from "../../service/SendApiService";
 import {EMPLOYYEE, HOSPITAL_INFORMATION, PATIENT, WORKING_SCHEDULE} from "../../ApiConstant";
 import ToastPopup from "../common/ToastPopup";
+import {FormatDate} from "../../service/TimeService";
 
 const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
 
@@ -29,7 +30,7 @@ const UpdateModal = ({isOpen, onClose, data, roomMap}) => {
 
     const getWorkingScheduleByDate = async() => {
         // const todayTime =  new Date().toISOString().split("T")[0]
-        SendApiService.getRequest(WORKING_SCHEDULE.getSchedulesByDate(data.appointmentDate), {},  async (response) => {
+        SendApiService.getRequest(WORKING_SCHEDULE.getSchedulesByDate(updatingData.appointmentDate), {},  async (response) => {
             const tempMap = new Map()
             const doctorIdsMap = new Map()
             for(const schedule of response.data){
@@ -60,14 +61,15 @@ const UpdateModal = ({isOpen, onClose, data, roomMap}) => {
     })
 
     useEffect(() => {
-        console.log('data', data)
         getWorkingScheduleByDate()
+    }, [updatingData.appointmentDate]);
+
+    useEffect(() => {
         if (data) {
             setUpdatingData({...data});
         }
         setErrorResponse({})
     }, [data]);
-    console.log(updatingData)
 
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
@@ -119,7 +121,7 @@ const UpdateModal = ({isOpen, onClose, data, roomMap}) => {
                 <table className="w-full">
                     {(() => {
                         const today = new Date();
-                        const appointmentDate = new Date(updatingData.appointmentDate);
+                        const appointmentDate = new Date(data.appointmentDate);
                         const doctor = doctorsMap.get(data.doctorId)
                         if(!doctor){
                             return null
@@ -182,27 +184,14 @@ const UpdateModal = ({isOpen, onClose, data, roomMap}) => {
                                 </td>
                             </tr>
                             <tr>
-                                <td className="font-semibold">Ngày khám:</td>
-                                <td>
-                                    <input
-                                        className="border p-2 rounded-md w-full"
-                                        type="date"
-                                        value={updatingData.appointmentDate}
-                                        onChange={(e) =>
-                                            setUpdatingData({
-                                                ...updatingData,
-                                                appointmentDate: e.target.value,
-                                            })
-                                        }
-                                        min={formattedTomorrow}
-                                    />
-                                </td>
+                                <td className="font-semibold">Ngày khám(ngày/tháng/năm):</td>
+                                <td className="border p-2 rounded-md w-full">{FormatDate(data.appointmentDate)}</td>
                             </tr>
 
                             <tr>
                                 <td>Ghi chú:</td>
                                 <td><input
-                                    className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                    className="w-full rounded-md p-2 mb-2 mt-2"
                                     value={data.description}
                                     onChange={(e) => setUpdatingData({...updatingData, description: e.target.value})}/>
                                 </td>

@@ -275,6 +275,14 @@ class ExaminationResult{
         static findById = (id) => {
             return this.getUrl() + "/" + id
         }
+
+        static findHistoriesOfPatient = () => {
+            return this.getUrl() + "/find-histories-of-patient"
+        }
+
+        static findHistoriesByPatientId = (id) => {
+            return this.getUrl() + `/find-by-patient-id/${id}`
+        }
     }
 
     static MedicineConsultationForm = class {

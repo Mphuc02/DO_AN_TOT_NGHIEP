@@ -19,6 +19,15 @@ const FormatCreatedDate = (input) => {
 
 }
 
+const FormatDate = (input) => {
+    const date = new Date(input);
+    return date.toLocaleString('en-GB',{
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    })
+}
+
 const GetTodayString = () => {
     const timeZone = 'Asia/Ho_Chi_Minh';
 
@@ -33,4 +42,4 @@ const GetTodayString = () => {
     return today
 }
 
-export {GetTodayString, FormatCreatedDate}
+export {GetTodayString, FormatCreatedDate, FormatDate}
