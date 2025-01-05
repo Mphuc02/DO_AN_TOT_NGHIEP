@@ -1,13 +1,12 @@
 package dev.examinationresult.service;
 
 import static dev.common.constant.KafkaTopicsConstrant.*;
+
+import dev.common.client.AppointmentClient;
 import dev.common.client.WorkingScheduleClient;
 import dev.common.constant.ExceptionConstant.*;
 import dev.common.constant.KafkaTopicsConstrant;
-import dev.common.dto.request.CreateExaminationResultCommonRequest;
-import dev.common.dto.request.CreateInvoiceCommonRequest;
-import dev.common.dto.request.CreateRelationShipCommonRequest;
-import dev.common.dto.request.UpdateNumberExaminationFormRequest;
+import dev.common.dto.request.*;
 import dev.common.dto.response.working_schedule.WorkingScheduleResponse;
 import dev.common.exception.NotFoundException;
 import dev.common.exception.NotPermissionException;
@@ -44,6 +43,7 @@ public class ExaminationResultService {
     private final WorkingScheduleClient workingScheduleClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final AuditingUtil auditingUtil;
+    private final AppointmentClient appointmentClient;
 
     @Value(KafkaTopicsConstrant.CREATED_EXAMINATION_RESULT_SUCCESS_TOPIC)
     private String CREATED_EXAMINATION_RESULT_SUCCESS;
@@ -84,8 +84,24 @@ public class ExaminationResultService {
         LocalDate today = LocalDate.now();
         LocalDateTime start = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 0, 0);
         LocalDateTime end = start.plusDays(1);
-        int currentNumberOfThisRoom = examinationResultRepository.countByWorkingScheduleIdAndCreatedAtBetween(request.getWorkingScheduleId(), start, end) + 1;
-        result.setExaminedNumber(currentNumberOfThisRoom);
+
+        if(request.getAppointmentId() != null){
+            GetOrderNumberAppointmentRequest getNumberRequest = new GetOrderNumberAppointmentRequest(request.getAppointmentId(), schedule.getEmployeeId());
+            int number = appointmentClient.getOrderNumberOfAppointment(getNumberRequest);
+            result.setExaminedNumber(number);
+        }else{
+            ExaminationResult lastExaminationResult = examinationResultRepository.getLastResultOfDoctor(result.getEmployeeId(), start, end);
+            int numberAppointments = appointmentClient.countAppointmentTodayOfDoctor(result.getEmployeeId());
+            if(lastExaminationResult == null){
+                result.setExaminedNumber(numberAppointments + 1);
+            }else{
+                if(lastExaminationResult.getExaminedNumber() < numberAppointments){
+                    result.setExaminedNumber(numberAppointments + 1);
+                }else{
+                    result.setExaminedNumber(lastExaminationResult.getExaminedNumber() + 1);
+                }
+            }
+        }
 
         result = examinationResultRepository.save(result);
 
@@ -100,7 +116,7 @@ public class ExaminationResultService {
         //Update number in Examination form
         UpdateNumberExaminationFormRequest updateExaminationFormRequest = UpdateNumberExaminationFormRequest.builder()
                                                                             .id(request.getId())
-                                                                            .examinedNumber(currentNumberOfThisRoom)
+                                                                            .examinedNumber(result.getExaminedNumber())
                                                                             .build();
         kafkaTemplate.send(UPDATE_NUMBER_EXAMINATION_FORM_TOPIC, updateExaminationFormRequest);
     }
@@ -120,7 +136,7 @@ public class ExaminationResultService {
                                             ExaminationResultDetail entity = resultDetailMapperUtil.mapCreateRequestToDetail(detail);
                                             entity.setResult(tempResult);
                                             return entity;
-                                        }).toList();
+                                        }).collect(Collectors.toList());
 
         findToUpdate.setDetails(details);
         findToUpdate.setExaminatedAt(LocalDateTime.now());
@@ -144,6 +160,14 @@ public class ExaminationResultService {
     }
 
     public List<ExaminationResultResponse> findByPatientId(UUID patientId){
-        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findByPatientIdOrderByCreatedAtDesc(patientId));
+        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findExaminedHistoriesOfPatient(patientId));
+    }
+
+    public List<ExaminationResultResponse> getExaminedResultTodayOfDoctor(){
+        UUID doctorId = auditingUtil.getUserLogged().getId();
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = LocalDateTime.of(today.getYear(), today.getMonth(), today.getDayOfMonth(), 0, 0);
+        LocalDateTime end = start.plusDays(1);
+        return resultMapperUtil.mapEntitiesToResponses(examinationResultRepository.findExaminedResultTodayOfDoctor(doctorId, start, end));
     }
 }

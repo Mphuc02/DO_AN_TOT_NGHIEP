@@ -27,20 +27,18 @@ public class MedicineConsultationRest {
 
     @PreAuthorize(AuthorizationConstant.DOCTOR)
     @PostMapping()
-    public ResponseEntity<MedicineConsultationFormResponse> create(@Validated @RequestBody SaveMedicineConsultationFormRequest request,
-                                                                   BindingResult result){
+    public ResponseEntity<MedicineConsultationFormResponse> create(@Validated @RequestBody SaveMedicineConsultationFormRequest request){
         return ResponseEntity.ok(service.create(request));
     }
 
     @PreAuthorize(AuthorizationConstant.DOCTOR)
     @PutMapping(ID)
     public ResponseEntity<MedicineConsultationFormResponse> update(@Validated @RequestBody SaveMedicineConsultationFormRequest request,
-                                                                   BindingResult result,
                                                                    @PathVariable UUID id){
         return ResponseEntity.ok(service.update(request, id));
     }
 
-    @PreAuthorize(AuthorizationConstant.RECEIPT_ADMIN_DOCTOR)
+    @PreAuthorize(AuthorizationConstant.USER)
     @GetMapping(ID)
     public ResponseEntity<MedicineConsultationFormResponse> getById(@PathVariable UUID id){
         return ResponseEntity.ok(service.findById(id));

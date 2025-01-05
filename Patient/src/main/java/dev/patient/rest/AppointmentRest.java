@@ -2,6 +2,7 @@ package dev.patient.rest;
 
 import static dev.common.constant.ApiConstant.PATIENT.*;
 import dev.common.constant.AuthorizationConstant;
+import dev.common.dto.request.GetOrderNumberAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentDetailResponse;
 import dev.common.dto.response.patient.AppointmentImageDetailResponse;
 import dev.patient.dto.request.CreateAppointmentByDoctorRequest;
@@ -64,5 +65,20 @@ public class AppointmentRest {
     public ResponseEntity<Void> delete(@PathVariable UUID id){
         appointmentService.delete(id);
         return null;
+    }
+
+    @PostMapping(COUNT_APPOINTMENT_TODAY_OF_DOCTOR)
+    public ResponseEntity<Integer> countAppointmentTodayOfDoctor(@RequestBody UUID doctorId){
+        return ResponseEntity.ok(appointmentService.countNumberAppointmentTodayOfDoctor(doctorId));
+    }
+
+    @PostMapping(GET_ORDER_NUMBER_OF_APPOINTMENT)
+    public ResponseEntity<Integer> getOrderNumberOfAppointment(@RequestBody GetOrderNumberAppointmentRequest request){
+        return ResponseEntity.ok(appointmentService.getOrderOfAppointment(request));
+    }
+
+    @GetMapping(ID)
+    public ResponseEntity<AppointmentResponse> findById(@PathVariable UUID id){
+        return ResponseEntity.ok(appointmentService.findById(id));
     }
 }

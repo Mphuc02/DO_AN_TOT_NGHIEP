@@ -62,7 +62,7 @@ public class PatientService {
 
     @KafkaListener(topics = CREATED_PATIENT_ACCOUNT_SUCCESS_TOPIC, groupId = PATIENT_GROUP)
     public void createPatientFromGreeting(CreateNewPatientCommonRequest request){
-        log.info(String.format("Receive request create patient from kafka: %s", gson.toJson(request)));
+        log.info("Receive request create patient from kafka:");
 
         Patient patient = patientMapperUtil.createRequestToEntity(request);
         patient.setAddress(addressMapperUtil.createRequestToEntity(request.getAddress()));

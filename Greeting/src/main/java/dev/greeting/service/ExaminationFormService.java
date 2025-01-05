@@ -91,7 +91,6 @@ public class ExaminationFormService {
         return examinationFormMapperUtil.mapEntityToResponse(entity);
     }
 
-    //Todo: dang loi khong goi sang examination result
     @KafkaListener(topics = CREATED_PATIENT_INFORMATION_TOPIC, groupId = GREETING_GROUP)
     public void handleCreatedPatientInformation(UUID examinationFormId){
         log.info(String.format("Received request created Patient information from kafka with id: %s", examinationFormId));

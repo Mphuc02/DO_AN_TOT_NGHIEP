@@ -3,7 +3,7 @@ package dev.patient.service;
 import dev.common.constant.ExceptionConstant.*;
 import static dev.common.constant.KafkaTopicsConstrant.*;
 
-import dev.common.dto.response.patient.AppointmentDetailResponse;
+import dev.common.dto.request.GetOrderNumberAppointmentRequest;
 import dev.common.dto.response.patient.AppointmentImageDetailResponse;
 import dev.common.exception.BaseException;
 import dev.common.exception.NotFoundException;
@@ -30,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -55,7 +52,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentResponse> getAppointmentsOfToday(){
-        return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateAndIsExamined(LocalDate.now(), false));
+        return appointmentMapperUtil.mapEntitiesToResponses(appointmentRepository.findByAppointmentDateAndIsExaminedOrderByCreatedAt(LocalDate.now(), false));
     }
 
     public List<AppointmentImageDetailResponse> findDetailsByAppointmentId(UUID id){
@@ -78,6 +75,7 @@ public class AppointmentService {
         appointment.setDoctorId(auditingUtil.getUserLogged().getId());
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setIsExamined(false);
+        appointment.setPatient(new Patient(request.getPatientId()));
         appointment = appointmentRepository.save(appointment);
         return appointmentMapperUtil.mapEntityToResponse(appointment);
     }
@@ -151,5 +149,21 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> BaseException.buildNotFound().message(PATIENT_EXCEPTION.APPOINTMENT_NOT_FOUND).build());
         appointment.setIsExamined(true);
         appointmentRepository.save(appointment);
+    }
+
+    public int countNumberAppointmentTodayOfDoctor(UUID doctorId){
+        LocalDate today = LocalDate.now();
+        return appointmentRepository.countAppointmentTodayOfDoctor(doctorId, today);
+    }
+
+    public int getOrderOfAppointment(GetOrderNumberAppointmentRequest request){
+        Appointment appointment = appointmentRepository.findById(request.getAppointmentId()).orElseThrow(() -> BaseException.buildNotFound().message(PATIENT_EXCEPTION.APPOINTMENT_NOT_FOUND).build());
+        LocalDate today = LocalDate.now();
+        return appointmentRepository.getOrderNumberOfAppointment(request.getDoctorId(), request.getAppointmentId(), today, appointment.getCreatedAt());
+    }
+
+    public AppointmentResponse findById(UUID id){
+        Appointment appointment = appointmentRepository.findByExaminationResultId(id);
+        return appointment == null ? null : appointmentMapperUtil.mapEntityToResponse(appointment);
     }
 }

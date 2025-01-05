@@ -19,7 +19,7 @@ public class MedicinesConsultationDetailsValidatorImpl implements ConstraintVali
 
     @Override
     public boolean isValid(List<SaveMedicineConsultationFormDetailRequest> requests, ConstraintValidatorContext constraintValidatorContext) {
-        if(ObjectUtils.isEmpty(requests))
+        if(requests == null || requests.isEmpty())
             return true;
 
         List<ErrorField> errorFields = new ArrayList<>();

@@ -76,6 +76,8 @@ public class ApiConstant {
         public static final String FIND_WAITING_EXAMINATION_PATIENTS = "/find/waiting-examination-patients";
         public static final String FIND_HISTORIES_OF_PATIENT = "/find-histories-of-patient";
         public static final String FIND_HISTORIES_BY_PATIENT_ID = "/find-by-patient-id/{id}";
+        public static final String FIND_CONSULTATION_FORM_OF_PATIENT_BY_ID = "/find-consultation-form-of-patient-by-id/{id}";
+        public static final String GET_EXAMINED_RESULT_OF_TODAY_OF_DOCT0R = "/get-examined-result-today-of-doctor";
     }
 
     public static final class MEDICINE_URL{
@@ -105,6 +107,8 @@ public class ApiConstant {
         public static final String DOCTOR_CREATE_APPOINTMENT = "/create-appointment-by-doctor";
         public static final String GET_LOGGED_USER_INFORMATION = "/get-logged-user-information";
         public static final String GET_APPOINTMENTS_OF_PATIENT = "/get-appointments-of-patient";
+        public static final String COUNT_APPOINTMENT_TODAY_OF_DOCTOR = "/count-appointment-today-of-doctor";
+        public static final String GET_ORDER_NUMBER_OF_APPOINTMENT = "/get-order-number-of-appointment";
     }
 
     public static final class PAYMENT{

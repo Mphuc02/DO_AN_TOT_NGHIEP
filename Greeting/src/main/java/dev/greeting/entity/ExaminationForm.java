@@ -17,6 +17,8 @@ public class ExaminationForm {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String symptom;
+
     private UUID patientId;
     private UUID employeeId;
     private Integer examinedNumber;
