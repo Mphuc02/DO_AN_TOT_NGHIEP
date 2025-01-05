@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import {SendApiService} from "../../service/SendApiService";
 import {ExaminationResult, HOSPITAL_INFORMATION, MEDICINE, PATIENT, PaymentApi, VNPAY} from "../../ApiConstant";
-import {FormatCreatedDate} from "../../service/TimeService";
+import {FormatCreatedDate, FormatDate} from "../../service/TimeService";
 import {Link, useNavigate} from "react-router-dom";
 import RoutesConstant from "../../RoutesConstant";
 
@@ -204,11 +204,11 @@ const PayForInvoice = (id) => {
                             </tr>
                             <tr>
                                 <td className="font-medium text-gray-700">Ngày sinh:</td>
-                                <td className="text-gray-900">{patient.dateOfBirth}</td>
+                                <td className="text-gray-900">{FormatDate(patient.dateOfBirth)}</td>
                             </tr>
                             <tr>
                                 <td className="font-medium text-gray-700">Giới tính:</td>
-                                <td className="text-gray-900">{patient.gender}</td>
+                                <td className="text-gray-900">{patient.gender === '1' ? 'Nam' : 'Nữ'}</td>
                             </tr>
                             <tr>
                                 <td className="font-medium text-gray-700">Phí khám bệnh:</td>

@@ -55,6 +55,11 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     const [toast, setToast] = useState(null)
     const currentFullName = useRef(null)
     const currentRoom = useRef(null)
+    const [gender, setGender] = useState(null)
+    const [dateOfBirth, setDateOfBirth] = useState(null)
+
+    const tomorrow = new Date()
+    const formattedTomorrow = tomorrow.toISOString().split('T')[0];
 
     const hideToast = () => {
         setToast(null)
@@ -134,7 +139,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
             patient: {
                 fullName: fullName,
                 numberPhone: numberPhone,
-                address: address
+                address: address,
+                gender: gender,
+                dateOfBirth: dateOfBirth
             },
             symptom: symptom,
             workingScheduleId: workingScheduleId
@@ -155,7 +162,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 <thead><tr></tr></thead>
                 <tbody>
                 <tr>
-                    <td colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông tin liên hệ</h3></td>
+                    <td colSpan="2"
+                        className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông
+                        tin liên hệ</h3></td>
                 </tr>
 
                 <tr>
@@ -165,7 +174,9 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Họ:</td>
-                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/></td>
+                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                                onChange={(e) => setFullName({...fullName, lastName: e.target.value})}/>
+                    </td>
                 </tr>
 
                 <tr>
@@ -175,7 +186,11 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên đệm:</td>
-                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, middleName: e.target.value})}/></td>
+                    <td className="pl-1"><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                                onChange={(e) => setFullName({
+                                                    ...fullName,
+                                                    middleName: e.target.value
+                                                })}/></td>
                 </tr>
 
                 <tr>
@@ -185,7 +200,37 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tên bệnh nhân:</td>
-                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setFullName({...fullName, firstName: e.target.value})}/></td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               onChange={(e) => setFullName({...fullName, firstName: e.target.value})}/></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td className="text-red-500 text-sm font-medium">{errorValidate['patient.gender']}</td>
+                </tr>
+
+                <tr>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Giới tính:</td>
+                    <td>
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                onChange={(e) => setGender(e.target.value)}>
+                            <option>----------</option>
+                            <option value={1}>Nam</option>
+                            <option value={2}>Nữ</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td className="text-red-500 text-sm font-medium">{errorValidate['patient.dateOfBirth']}</td>
+                </tr>
+
+                <tr>
+                    <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Ngày sinh:</td>
+                    <td><input type={"date"}
+                               max={formattedTomorrow}
+                               onChange={e => setDateOfBirth(e.target.value)}/></td>
                 </tr>
 
                 <tr>
@@ -195,11 +240,14 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Số điện thoại:</td>
-                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setNumberPhone(e.target.value)}/></td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               onChange={(e) => setNumberPhone(e.target.value)}/></td>
                 </tr>
 
                 <tr>
-                    <td colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300">Địa chỉ</td>
+                    <td colSpan="2"
+                        className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300">Địa chỉ
+                    </td>
                     <td></td>
                 </tr>
 
@@ -211,7 +259,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Tỉnh/Thành phố:</td>
                     <td>
-                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => onChangeProvince(e.target.value)}>
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                onChange={(e) => onChangeProvince(e.target.value)}>
                             <option>----------</option>
                             {[...provinces].map(([key, value]) => {
                                 return <option key={key} value={key}>{value.name}</option>
@@ -228,7 +277,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Quận/Huyện:</td>
                     <td>
-                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => onChangeDistrict(e.target.value)}>
+                        <select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                onChange={(e) => onChangeDistrict(e.target.value)}>
                             <option>----------</option>
                             {[...districts].map(([key, value]) => {
                                 return <option key={key} value={key}>{value.name}</option>
@@ -244,7 +294,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Xã/Phường:</td>
-                    <td><select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setAddress({...address, communeId: e.target.value})}>
+                    <td><select className="border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                onChange={(e) => setAddress({...address, communeId: e.target.value})}>
                         <option>----------</option>
                         {[...communes].map(([key, value]) => {
                             return <option key={key} value={key}>{value.name}</option>
@@ -259,11 +310,14 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Số nhà:</td>
-                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={e => setAddress({...address, street: e.target.value})}/></td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               onChange={e => setAddress({...address, street: e.target.value})}/></td>
                 </tr>
 
                 <tr>
-                    <td  colSpan="2" className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông tin khám bệnh</h3></td>
+                    <td colSpan="2"
+                        className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"><h3>Thông
+                        tin khám bệnh</h3></td>
                     <td></td>
                 </tr>
 
@@ -284,7 +338,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
                                 const fullName = value.doctor.fullName
                                 const fullNameStr = fullName.lastName + ' ' + fullName.middleName + ' ' + fullName.firstName
                                 return <option key={key}
-                                               value={value.id}>Phòng {workingRoomsMap.get(value.roomId).name} - bác sĩ {fullNameStr}</option>
+                                               value={value.id}>Phòng {workingRoomsMap.get(value.roomId).name} - bác
+                                    sĩ {fullNameStr}</option>
                             })}
                         </select>
                     </td>
@@ -297,7 +352,8 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Triệu chứng</td>
-                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={e => setSymptom(e.target.value)}/></td>
+                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               onChange={e => setSymptom(e.target.value)}/></td>
                 </tr>
                 </tbody>
             </table>

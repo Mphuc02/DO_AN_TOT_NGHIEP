@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {SendApiService} from "../../service/SendApiService";
-import {EMPLOYYEE, ExaminationResult, MEDICINE} from "../../ApiConstant";
-import {FormatCreatedDate} from "../../service/TimeService";
+import {SendApiService} from "../../../service/SendApiService";
+import {EMPLOYYEE, ExaminationResult, MEDICINE, PATIENT} from "../../../ApiConstant";
+import {FormatCreatedDate} from "../../../service/TimeService";
 
 const MedicineConsultationModal = ({isOpen, onClose, id}) => {
     const [form, setForm] = useState(null)
@@ -94,39 +94,28 @@ const MedicineConsultationModal = ({isOpen, onClose, id}) => {
     );
 };
 
-const ExaminationResultHistories = () => {
+const PatientExaminationHistories = ({examinationResult}) => {
     const [histories, setHistories] = useState([])
-    const [doctorsMap, setDoctorsMap] = useState(new Map())
     const [isOpen, setIsOpen] = useState(null)
     const [examinationResultId, setExaminationResultId] = useState(null)
+    const [patient, setPatient] = useState(null)
 
-    const getDoctors = (histories, doctorIdsSet) => {
-        return new Promise((resolve, reject) => {
-            SendApiService.postRequest(EMPLOYYEE.findByIds(), [...doctorIdsSet], {}, response => {
-                const tempDoctorsMap = new Map()
-                for (const doctor of response.data) {
-                    tempDoctorsMap.set(doctor.id, doctor)
-                }
-                for (const history of histories) {
-                    history.doctor = tempDoctorsMap.get(history.employeeId)
-                }
-                setDoctorsMap(tempDoctorsMap)
-                resolve()
-            }, error => {
-                reject()
-            })
+    const getPatient = () => {
+        SendApiService.getRequest(PATIENT.PATIENT_API.byId(examinationResult.patientId), {} , response => {
+            setPatient(response.data)
+        }, error => {
+
         })
     }
 
     const getHistories = () => {
-        SendApiService.getRequest(ExaminationResult.ExaminationResultUrl.findHistoriesOfPatient(), {}, async response => {
+        SendApiService.getRequest(ExaminationResult.ExaminationResultUrl.findHistoriesByPatientId(examinationResult.patientId), {}, async response => {
             const doctorIdSet = new Set()
             const tempHistories = response.data
             for (const result of response.data) {
                 doctorIdSet.add(result.employeeId)
             }
 
-            await getDoctors(tempHistories, doctorIdSet)
             console.log(tempHistories)
             setHistories(tempHistories)
         }, error => {
@@ -144,15 +133,15 @@ const ExaminationResultHistories = () => {
     }
 
     useEffect(() => {
+        getPatient()
         getHistories()
-    }, []);
+    }, [examinationResult]);
 
     return (<div>
             <div className={"mt-10"}>
-                <h2 className="text-xl font-bold text-green-600 mb-4">Lịch sử khám bệnh</h2>
                 <ul className="space-y-4 ml-5 mr-5">
                     {histories.map((record, index) => {
-                        if (!record.doctor.fullName) {
+                        if(!patient){
                             return null
                         }
 
@@ -163,39 +152,32 @@ const ExaminationResultHistories = () => {
                             <div className="flex justify-between">
                                 <div>
                                     <h3 className="text-xl font-semibold text-gray-800">
-                                    {`${record.doctor.fullName.firstName} ${record.doctor.fullName.middleName} ${record.doctor.fullName.lastName}`}
-                                </h3>
-                                <p className="text-sm text-gray-500">Mã lịch hẹn: {record.id}</p>
-                                <p className="text-sm text-gray-500">
-                                    Ngày tạo: {FormatCreatedDate(record.createdAt)}
+                                        {`${patient.fullName.lastName} ${patient.fullName.middleName} ${patient.fullName.firstName}`}
+                                    </h3>
+                                    <p className="text-sm text-gray-500">Mã lịch hẹn: {record.id}</p>
+                                    <p className="text-sm text-gray-500">
+                                        Ngày tạo: {FormatCreatedDate(record.createdAt)}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        Ngày khám: {FormatCreatedDate(record.examinatedAt)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="mt-2">
+                                <p className="text-gray-800">
+                                    <span className="font-medium">Triệu chứng:</span> {record.symptom}
                                 </p>
-                                <p className="text-sm text-gray-500">
-                                    Ngày khám: {FormatCreatedDate(record.examinatedAt)}
+                                <p className="text-gray-800">
+                                    <span className="font-medium">Điều trị:</span> {record.treatment}
                                 </p>
                             </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-700">
-                                    {record.doctor.introduce || 'Thông tin bác sĩ không có'}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mt-2">
-                            <p className="text-gray-800">
-                                <span className="font-medium">Triệu chứng:</span> {record.symptom}
-                            </p>
-                            <p className="text-gray-800">
-                                <span className="font-medium">Điều trị:</span> {record.treatment}
-                            </p>
-                        </div>
-                    </li>
-                })}
-            </ul>
+                        </li>
+                    })}
+                </ul>
+            </div>
+            <MedicineConsultationModal isOpen={isOpen} onClose={onCloseMedicineModal} id={examinationResultId}/>
         </div>
-        <MedicineConsultationModal isOpen={isOpen} onClose={onCloseMedicineModal} id={examinationResultId}/>
-    </div>
     )
 }
 
-export {
-    ExaminationResultHistories
-}
+export {PatientExaminationHistories}

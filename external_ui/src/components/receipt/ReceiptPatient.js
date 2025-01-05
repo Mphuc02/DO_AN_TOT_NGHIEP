@@ -79,7 +79,7 @@ function ReceiptPatient(){
 
             {selectedTab === 1 && <ReceiptWithFirstTimePatient workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap} />}
             {selectedTab === 3 && <ReceiptWithAppointment workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap} />}
-            {selectedTab === 4 && <ReceivedPatients />}
+            {selectedTab === 4 && <ReceivedPatients workingScheduleMap = {workingScheduleMap} workingRoomsMap = {workingRoomsMap}/>}
         </div>
     )
 }

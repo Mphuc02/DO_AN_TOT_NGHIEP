@@ -1,13 +1,20 @@
 import SideBar from '../../sideBar/patient/SideBar'
 import Header from "../../header/patient/Header";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import RoutesConstant from "../../../RoutesConstant";
 
 function PatientLayout({children}){
     const [patient, setPatient] = useState(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const json = localStorage.getItem('patient')
-        setPatient(JSON.parse(json))
+        const patient = JSON.parse(json)
+        if(!patient){
+            navigate(RoutesConstant.PATIENT.DASHBOARD)
+        }
+        setPatient(patient)
     }, []);
 
     return(

@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect} from "react";
 import {SendApiService} from "../../service/SendApiService";
 import {Greeting, HOSPITAL_INFORMATION, PATIENT, WEBSOCKET} from "../../ApiConstant";
 import styles from '../../layouts/body/style.module.css'
@@ -6,7 +6,6 @@ import WebSocketService from "../../service/WebSocketService";
 import {JwtService} from "../../service/JwtService";
 import { jsPDF } from 'jspdf';
 
-//Todo: Kiểm tra dữ liệu có hợp lệ hay không
 
 const printGreetingForm = (form, appointment) => {
     const ticketData = {

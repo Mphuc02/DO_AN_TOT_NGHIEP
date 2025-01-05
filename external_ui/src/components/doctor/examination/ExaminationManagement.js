@@ -1,6 +1,7 @@
 import styles from "../../../layouts/body/style.module.css";
 import {useState} from "react";
 import {WaitingExaminationPatientList} from "./WaitingExaminationPatientList";
+import {ExaminedResult} from "./ExaminedResult";
 
 const ExaminationManagement = () => {
     const [selectedTab, setSelectedTab] = useState(1)
@@ -23,6 +24,7 @@ const ExaminationManagement = () => {
             </div>
 
             {selectedTab === 1 && <WaitingExaminationPatientList/>}
+            {selectedTab === 2 && <ExaminedResult />}
         </div>
     )
 }

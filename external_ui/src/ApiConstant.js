@@ -283,6 +283,10 @@ class ExaminationResult{
         static findHistoriesByPatientId = (id) => {
             return this.getUrl() + `/find-by-patient-id/${id}`
         }
+
+        static getExaminedResultTodayOfDoctor = () => {
+            return this.getUrl() + "/get-examined-result-today-of-doctor"
+        }
     }
 
     static MedicineConsultationForm = class {

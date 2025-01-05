@@ -187,14 +187,47 @@ const MedicineConsultation = ({}) => {
         pdf.output('dataurlnewwindow');
     };
 
+    const getMedicine = (form) => {
+        const medicineMap = new Map()
+        for(const medicine of form.details){
+            medicineMap.set(medicine.medicineId, medicine)
+        }
+        return new Promise((resolve, reject) => {
+            SendApiService.postRequest(MEDICINE.Medicine.getByIDs(), [...medicineMap.keys()], {}, response => {
+                for(const medicine of response.data){
+                    medicineMap.get(medicine.id).medicine = medicine
+                }
+                setSelectedMedicinesMap(medicineMap)
+            }, error => {
+
+            })
+        })
+    }
+
+    const getConsultationForm = () => {
+        SendApiService.getRequest(ExaminationResult.MedicineConsultationForm.byId(id), {}, async response => {
+            if(response.data){
+                setFormResponse(response.data)
+                await getMedicine(response.data)
+            }
+        }, error => {
+
+        })
+    }
+
+    useEffect(() => {
+        getConsultationForm()
+    }, [])
+
     return (
         <div>
-            <button
+            {!formResponse && <button
                 className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                onClick={() => openChooseMedicineModal()}>Chọn thuốc</button>
+                onClick={() => openChooseMedicineModal()}>Chọn thuốc</button>}
             <ChooseMedicineModal isOpen={isOpenChooseMedicineModal} onClose={onCloseChooseMedicineModal}
                                  onChooseMedicine={onChooseMedicine}/>
 
+            <p className="text-red-500 text-sm font-medium">{formError.details}</p>
             <table className="table-auto border-collapse border border-gray-300 w-full text-left">
                 <thead className="bg-gray-200">
                     <tr>
@@ -203,13 +236,11 @@ const MedicineConsultation = ({}) => {
                         <td className="border border-gray-300 px-4 py-2">Số lượng trong kho</td>
                         <td className="border border-gray-300 px-4 py-2">Cách dùng</td>
                         <td className="border border-gray-300 px-4 py-2">Số lượng tư vấn</td>
-                        <td className="border border-gray-300 px-4 py-2"></td>
                     </tr>
                 </thead>
                 <tbody>
                 {[...selectedMedicinesMap].map(([key, value], index) => {
                     const detailAtIndex = `details[${index}].`
-                    console.log(detailAtIndex + 'treatment', formError)
 
                     return <>
                         <tr>
@@ -224,16 +255,27 @@ const MedicineConsultation = ({}) => {
                             <td>{index + 1}</td>
                             <td>{value.name}</td>
                             <td>{value.quantity}</td>
-                            <td><input
-                                className="w-3/4 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
-                                value={value.treatment}
-                                       onChange={(e) => onChangeUsageMedicine(key, e.target.value)}/></td>
-                            <td><input type={"number"} onChange={(e) => onChangeQuantity(key, e.target.value)}/></td>
                             <td>
+                                {!formResponse && <input
+                                    className="w-3/4 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                    value={value.treatment}
+                                    onChange={(e) => onChangeUsageMedicine(key, e.target.value)}/>}
+
+                                {formResponse && <p>{value.treatment}</p>}
+                            </td>
+                            <td>
+                                {!formResponse &&
+                                    <input type={"number"} onChange={(e) => onChangeQuantity(key, e.target.value)}/>}
+
+                                {formResponse && <p>{value.quantity}</p>}
+                            </td>
+
+                            {!formResponse && <td>
                                 <button
                                     className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                    onClick={() => onRemoveMedicine(key)}>Xóa</button>
-                            </td>
+                                    onClick={() => onRemoveMedicine(key)}>Xóa
+                                </button>
+                            </td>}
                         </tr>
                     </>
                 })}
@@ -246,7 +288,9 @@ const MedicineConsultation = ({}) => {
                 onClick={() => {
                 onClickCreateConsultationForm()
             }}>Tạo phiếu tư vấn thuốc</button>}
-            {formResponse && <button onClick={() => handleDownloadPdf()}>In phiếu tư vấn</button>}
+            {formResponse && <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-10"
+                onClick={() => handleDownloadPdf()}>In phiếu tư vấn</button>}
         </div>
     )
 }

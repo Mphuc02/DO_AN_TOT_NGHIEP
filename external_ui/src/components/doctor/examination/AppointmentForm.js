@@ -1,7 +1,7 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {GetTodayString} from "../../../service/TimeService";
 import {SendApiService} from "../../../service/SendApiService";
-import {PATIENT} from "../../../ApiConstant";
+import {ExaminationResult, PATIENT} from "../../../ApiConstant";
 
 const AppointmentForm = ({examinationResult}) => {
     const [appointmentForm, setAppointmentForm] = useState({patientId: examinationResult.patientId,
@@ -28,35 +28,69 @@ const AppointmentForm = ({examinationResult}) => {
         })
     }
 
+    const getAppointment = () => {
+        SendApiService.getRequest(PATIENT.APPOINTMENT.getById(examinationResult.id), {}, response => {
+            if(response.data){
+                setAppointmentFormResponse(response.data)
+            }
+        }, error => {
+
+        })
+    }
+
+    useEffect(() => {
+        getAppointment()
+    }, [examinationResult]);
+
     return (<>
-        <h2>Tạo lịch hẹn khám lại</h2>
         <table>
             <thead>
-                <tr></tr>
+            <tr></tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td>{errorResponse.appointmentDate}</td>
-                </tr>
+            <tr>
+                <td></td>
+                <td>{errorResponse.appointmentDate}</td>
+            </tr>
 
-                <tr>
-                    <td>Ngày đặt lịch(tháng-ngày-năm):</td>
-                    <td> <input min={today} onChange={(e) => {setAppointmentForm({...appointmentForm, appointmentDate: e.target.value})}} type={"date"}/> </td>
-                </tr>
+            <tr>
+                <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Ngày đặt lịch(tháng-ngày-năm):
+                </td>
+                <td>
+                    {!appointmentFormResponse && <input
+                        min={today}
+                        onChange={(e) => {
+                            setAppointmentForm({...appointmentForm, appointmentDate: e.target.value})
+                        }}
+                        type={"date"}/>}
+                    {appointmentFormResponse && <p>{appointmentFormResponse.appointmentDate}</p>}
+                </td>
+            </tr>
 
-                <tr>
-                    <td></td>
-                    <td>{errorResponse.description}</td>
-                </tr>
-                <tr>
-                    <td>Lý do:</td>
-                    <td> <input onChange={(e) => {setAppointmentForm({...appointmentForm, description: e.target.value})}} /> </td>
-                </tr>
+            <tr>
+                <td></td>
+                <td>{errorResponse.description}</td>
+            </tr>
+            <tr>
+                <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Lý do:</td>
+                <td>
+                    {!appointmentFormResponse && <input
+                        className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                        onChange={(e) => {
+                            setAppointmentForm({...appointmentForm, description: e.target.value})
+                        }}/>}
+                    {appointmentFormResponse && <p>{appointmentFormResponse.description}</p>}
+                </td>
+            </tr>
             </tbody>
-
-            <button onClick={() => onClickCreateAppointmentForm()}>Đặt lịch hẹn</button>
         </table>
+
+        {!appointmentFormResponse &&
+            <button
+                className="ml-10 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                onClick={() => onClickCreateAppointmentForm()}>Đặt lịch hẹn
+            </button>
+        }
     </>)
 }
 

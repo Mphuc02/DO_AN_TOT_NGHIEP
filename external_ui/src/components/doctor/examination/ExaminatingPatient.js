@@ -7,6 +7,7 @@ import styles from '../../../layouts/body/style.module.css'
 import {jsPDF} from "jspdf";
 import {MedicineConsultation} from "./MedicineConsultation";
 import {AppointmentForm} from "./AppointmentForm";
+import {PatientExaminationHistories} from "./PatientExaminationHistories";
 
 const HistoriesExamiantion = () => {
 
@@ -332,11 +333,11 @@ const Examination = ({examinationResult}) => {
                     </>
                 })}
                 {examinationResult.details && examinationResult.details.map(disease => {
-                    if(!disease){
+                    if(!disease || !diseasesMap.get(disease.diseaseId)){
                         return null
                     }
                     return <tr key={disease.id}>
-                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">{diseasesMap.get(disease.diseaseId).name}:</td>
+                            <td className=" pl-2 pr-1 font-medium text-red-500">{diseasesMap.get(disease.diseaseId).name}:</td>
                             <td>{disease.diseaseDescription}</td>
                     </tr>
                 })}
@@ -351,7 +352,7 @@ const Examination = ({examinationResult}) => {
                         onClick={() => onClickSaveResult()}>Lưu kết quả khám bệnh</button>}
 
             {examinationResult.examinatedAt &&
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-10"
                         onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
         </div>
     )
@@ -434,6 +435,7 @@ const ExaminatingPatient = () => {
             </div>
 
             {selectedTab === 1 && <Examination examinationResult={examinationResult}/>}
+            {selectedTab === 2 && <PatientExaminationHistories examinationResult={examinationResult} />}
             {selectedTab === 3 && <MedicineConsultation />}
             {selectedTab === 4 && <AppointmentForm examinationResult={examinationResult} />}
         </div>
