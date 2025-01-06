@@ -13,6 +13,6 @@ import java.util.UUID;
 @Builder
 public class ExaminationCostResponse {
     private UUID id;
-    private BigDecimal price;
+    private BigDecimal cost;
     private LocalDate appliedAt;
 }
