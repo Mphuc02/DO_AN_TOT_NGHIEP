@@ -114,6 +114,7 @@ public class AccountService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassWord()));
             return  (Account) authentication.getPrincipal();
         } catch (AuthenticationException e) {
+            log.error("exception", e);
             throw new FailAuthenticationException(AUTHENTICATION_EXCEPTION.FAIL_AUTHENTICATION);
         }
     }

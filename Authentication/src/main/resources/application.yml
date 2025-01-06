@@ -15,7 +15,8 @@ spring:
         show-sql: true
         hibernate:
             ddl-auto: update
-            
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        
     kafka:
         bootstrap-servers:
             - localhost:9092
@@ -59,8 +60,6 @@ eureka:
     instance:
         lease-renewal-interval-in-seconds: 5
         lease-expiration-duration-in-seconds: 5
-        hostname: localhost
-        
 minio:
     url: http://localhost:9000
     user-name: root
