@@ -1,4 +1,4 @@
-version: '2'
+
 services:
     zookeeper:
         image: confluentinc/cp-zookeeper:7.7.0
@@ -17,6 +17,7 @@ services:
         depends_on:
             - zookeeper
         ports:
+            - "29092:29092"
             - "9092:9092"
             - "9101:9101"
         environment:
@@ -53,15 +54,76 @@ services:
             CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
             CONFLUENT_METRICS_TOPIC_REPLICATION: 1
             PORT: 9021
-    
+        
     authentication-database:
         image: mysql:8.0
         environment:
             - MYSQL_ROOT_PASSWORD=123456
         ports:
-            - '3307:3306'
-        volumes:
-            - authentication_db:/var/lib/mysql
+            - '3320:3306'
+    
+    chat-database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3308:3306'
+    
+    employee-database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3309:3306'
+    
+    examination_result_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3310:3306'
+    
+    greeting_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3311:3306'
+            
+    hospital_information_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3312:3306'
+            
+    medicine_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3313:3306'
+    
+    patient_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3314:3306'
+    
+    payment_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3316:3306'
+    
+    working_schedule_database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3315:3306'
     
     redis:
         image: docker.io/bitnami/redis:7.4
@@ -74,31 +136,173 @@ services:
             - '6379:6379'
         volumes:
             - 'redis_data:/bitnami/redis/data'
-    
+
     discovery-server:
-        image: discovery-server
+        image: minhphuc2405/discovery-server
         container_name: discovery-server
         ports:
             - '8761:8761'
-    
+        
     api-gateway:
-        image: api-gateway
+        image: minhphuc2405/api-gateway
         container_name: api-gateway
         ports:
-            - '9000:9000'
+            - '9010:9010'
         environment:
             eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
     
     authentication-service:
-        image: authentication:0.0.1
+        image: minhphuc2405/authentication
         container_name: authentication-service
         ports:
             - '8080:8080'
         environment:
-            spring.datasource.url: jdbc:mysql://authentication-database:3307/authentication
-            spring.kafka.bootstrap-servers: broker:9092
+            spring.datasource.url: jdbc:mysql://authentication-database:3306/authentication?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
             spring.data.redis.host: redis
             eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: authentication-service
+    
+    chat-service:
+        image: minhphuc2405/chat
+        container_name: chat-service
+        ports:
+            - '8090:8090'
+        environment:
+            spring.datasource.url: jdbc:mysql://chat-database:3306/chat?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: chat-servic
+    
+    employee-service:
+        image: minhphuc2405/employee
+        container_name: employee-service
+        ports:
+            - '8081:8081'
+        environment:
+            spring.datasource.url: jdbc:mysql://employee-database:3306/employee?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: employee-service
+    
+    examination-result-service:
+        image: minhphuc2405/examination_result
+        container_name: examination-result-service
+        ports:
+            - '8088:8088'
+        environment:
+            spring.datasource.url: jdbc:mysql://examination_result_database:3306/examination_result?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: examination-result-service
+    
+    greeting-service:
+        image: minhphuc2405/greeting
+        container_name: greeting-service
+        ports:
+            - '8083:8083'
+        environment:
+            spring.datasource.url: jdbc:mysql://greeting_database:3306/greeting?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: greeting-service
+    
+    hospital_information-service:
+        image: minhphuc2405/hospital_information
+        container_name: hospital-information-service
+        ports:
+            - '8084:8084'
+        environment:
+            spring.datasource.url: jdbc:mysql://hospital_information_database:3306/clinic_information?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: hospital_information-service
+    
+    medicine-service:
+        image: minhphuc2405/medicine
+        container_name: medicine-service
+        ports:
+            - '8089:8089'
+        environment:
+            spring.datasource.url: jdbc:mysql://medicine_database:3306/medicine?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: medicine-service
+    
+    patient-service:
+        image: minhphuc2405/patient
+        container_name: patient_service
+        ports:
+            - '8086:8086'
+        environment:
+            spring.datasource.url: jdbc:mysql://patient_database:3306/patient?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: patient-service
+    
+    payment-service:
+        image: minhphuc2405/payment
+        container_name: payment_service
+        ports:
+            - '9011:9011'
+        environment:
+            spring.datasource.url: jdbc:mysql://payment_database:3306/payment?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: payment-service
+    
+    working-schedule-service:
+        image: minhphuc2405/working_schedule
+        container_name: working_schedule_service
+        ports:
+            - '8087:8087'
+        environment:
+            spring.datasource.url: jdbc:mysql://working_schedule_database:3306/working_schedule?createDatabaseIfNotExist=true
+            spring.jpa.database-platform: org.hibernate.dialect.MySQLDialect
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            eureka.instance.hostname: working-schedule-service
+
+    websocket-service:
+        image: minhphuc2405/websocket
+        container_name: websocket_service
+        ports:
+            - '8092:8092'
+        environment:
+            spring.kafka.bootstrap-servers: broker:29092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+            minio.url: http://minio:9000
+            ui.url: localhost:3000
+            eureka.instance.hostname: websocket-service
     
     minio:
         image: minio/minio:latest
@@ -112,11 +316,10 @@ services:
         volumes:
             - minio_data:/data
         command: server /data --console-address ":9001"
+    
 
 volumes:
     redis_data:
-        driver: local
-    authentication_db:
         driver: local
     minio_data:
         driver: local
