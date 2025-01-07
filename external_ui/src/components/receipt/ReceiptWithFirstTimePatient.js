@@ -5,40 +5,8 @@ import WebSocketService from "../../service/WebSocketService";
 import {JwtService} from "../../service/JwtService";
 import ToastPopup from "../common/ToastPopup";
 import {jsPDF} from "jspdf";
-
-const printGreetingForm = (form) => {
-    const ticketData = {
-        hospitalName: "Benh vien da lieu Minh Phuc",
-        ...form,
-    };
-
-    const createAndPrintPDF = () => {
-        const doc = new jsPDF();
-
-        // Nội dung PDF
-        doc.setFontSize(20);
-        doc.text(ticketData.hospitalName, 105, 20, { align: 'center' });
-
-        doc.setFontSize(16);
-        doc.text('PHIEU SO THU TU DOI KHAM', 105, 40, { align: 'center' });
-
-        doc.setFontSize(30);
-        doc.text(`So Thu Tu: ${ticketData.examinedNumber}`, 105, 70, { align: 'center' });
-
-        doc.setFontSize(14);
-        doc.text(`Ten Benh Nhan: ${ticketData.fullName.firstName + " " + ticketData.fullName.middleName + " " + ticketData.fullName.lastName}`, 20, 100);
-        doc.text(`Phong Kham: ${ticketData.roomName}`, 20, 120);
-
-        doc.setFontSize(12);
-        doc.text('Xin vui long doi den khi so cua ban duoc goi de vao kham.', 105, 140, { align: 'center' });
-
-        // Mở hộp thoại in
-        doc.autoPrint();
-        window.open(doc.output('bloburl'), '_blank');
-    };
-
-    createAndPrintPDF()
-}
+import html2canvas from "html2canvas";
+import {PrintComponent} from "../../service/PrintPdfService";
 
 const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     const [provinces, setProvinces] = useState(new Map())
@@ -58,6 +26,7 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
     const [gender, setGender] = useState(null)
     const [dateOfBirth, setDateOfBirth] = useState(null)
 
+    const printRef = useRef(null)
     const tomorrow = new Date()
     const formattedTomorrow = tomorrow.toISOString().split('T')[0];
 
@@ -158,7 +127,7 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
     return (
         <>
-            <table className="w-full border-collapse border border-gray-300 text-sm">
+            <table ref={printRef} className="w-1/2 border-collapse border border-gray-300 text-sm">
                 <thead><tr></tr></thead>
                 <tbody>
                 <tr>
@@ -352,8 +321,11 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
                 <tr>
                     <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Triệu chứng</td>
-                    <td><input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
-                               onChange={e => setSymptom(e.target.value)}/></td>
+                    <td>{!createdExaminationForm &&
+                            <input className="w-1/2 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                               onChange={e => setSymptom(e.target.value)}/>}
+                        {createdExaminationForm && <p>{createdExaminationForm.symptom}</p>}
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -366,7 +338,7 @@ const ReceiptWithFirstTimePatient = ({workingScheduleMap, workingRoomsMap}) => {
 
             {createdExaminationForm &&
                 <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
-                        onClick={() => printGreetingForm(createdExaminationForm)}>In phiếu khám bệnh</button>}
+                        onClick={() => PrintComponent(printRef)}>In phiếu khám bệnh</button>}
         </>
     )
 }

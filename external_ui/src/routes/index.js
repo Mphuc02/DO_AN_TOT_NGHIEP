@@ -29,10 +29,16 @@ import {DoctorMessage} from "../components/doctor/DoctorMessage";
 import {PayForInvoice, Payment} from "../components/receipt/Payment";
 import {AppointmentManagement} from "../components/patient/AppointmentManagement";
 import {ExaminationResultHistories} from "../components/patient/ExaminationResultHistories";
+import {CreateDisease, DiseaseManagement} from "../components/admin/DiseaseManagement";
+import {CreateCost, ExaminationCostManagement} from "../components/admin/ExaminationCostManagement";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
     {path: RoutesConstant.ADMIN.DASHBOARD, component: DashBoard, layout: AdminLayout},
+    {path: RoutesConstant.ADMIN.DISEASE_MANAGEMENT, component: DiseaseManagement, layout: AdminLayout},
+    {path: RoutesConstant.ADMIN.DISEASE_MANAGEMENT_CREATE, component: CreateDisease, layout: AdminLayout},
+    {path: RoutesConstant.ADMIN.EXAMINATION_COST_MANAGEMENT, component: ExaminationCostManagement, layout: AdminLayout},
+    {path: RoutesConstant.ADMIN.EXAMINATION_COST_MANAGEMENT_CREATE, component: CreateCost, layout: AdminLayout},
 
     //Employee management
     {path: RoutesConstant.ADMIN.EMPLOYEE_MANAGEMENT, component: EmployeeManagement, layout: AdminLayout},

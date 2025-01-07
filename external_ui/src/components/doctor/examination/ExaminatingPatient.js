@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {SendApiService} from "../../../service/SendApiService";
 import {ExaminationResult, HOSPITAL_INFORMATION, PATIENT} from "../../../ApiConstant";
 import RoutesConstant from "../../../RoutesConstant";
@@ -8,12 +8,11 @@ import {jsPDF} from "jspdf";
 import {MedicineConsultation} from "./MedicineConsultation";
 import {AppointmentForm} from "./AppointmentForm";
 import {PatientExaminationHistories} from "./PatientExaminationHistories";
-
-const HistoriesExamiantion = () => {
-
-}
+import html2canvas from "html2canvas";
+import {PrintComponent} from "../../../service/PrintPdfService";
 
 const SelectDiseaseModal = ({isOpen, onClose, diseasesMap, selectCallBack}) => {
+
     const [queryString, setQueryString] = useState('')
     const [queriedDiseases, setQueriedDiseases] = useState(null)
 
@@ -82,6 +81,8 @@ const Examination = ({examinationResult}) => {
     const [examinationResultResponse, setExaminationResultResponse] = useState(null)
     const [error, setError] = useState({})
     let isClickSaveButton = false
+
+    const printElement = useRef(null)
 
     const getDiseases = () => {
         SendApiService.getRequest(HOSPITAL_INFORMATION.DISEASES.getUrl(), {}, response => {
@@ -173,112 +174,99 @@ const Examination = ({examinationResult}) => {
         )
     }
 
-    const handlePrintExaminationResult = () => {
-        console.log(examinationResult)
-        const hospitalName = 'Benh vien da lieu Minh Phuc'
-        const fullName = examinationResult.patient.fullName
-        let dateOfBirth = examinationResult.patient.dateOfBirth
-        if(dateOfBirth){
-            dateOfBirth = examinationResult.patient.dateOfBirth.split('-').reverse().join('-')
-        }
-
-        const doc = new jsPDF();
-
-        doc.setFont('helvetica', 'normal');
-
-        doc.setFontSize(20);
-        doc.text(hospitalName, 105, 20, { align: 'center' });
-
-        doc.setFontSize(16);
-        doc.text('Ket qua kham benh', 105, 40, { align: 'center' });
-
-        doc.setFontSize(14);
-        doc.text(`Ten benh nhan: ${fullName.firstName + " " + fullName.middleName + " " + fullName.lastName}`, 20, 70);
-        doc.text(`Nam sinh: ${dateOfBirth}`, 20, 80)
-        doc.text('Que quan: ', 20,90)
-        doc.text(`Trieu chung: ${examinationResult.symptom}`, 20, 100)
-        doc.text(`Dieu tri: ${examinationResult.treatment}`, 20, 110)
-        doc.text('Ket qua kham benh:', 20, 130)
-
-        const header = ['Số thứ tự', 'Tên bệnh', 'Kết quả'];
-        const data = [
-                {'Số thứ tự': '1', 'Tên bệnh': 'Bệnh A', 'Kết quả': 'Kết quả 1 jkhjha ajhshhdhjag aassuy tdajsyhg d jhagsd jhasg hj gajh gd ajhsgd jha d'},
-                {'Số thứ tự': '2', 'Tên bệnh': 'Bệnh B', 'Kết quả': 'Kết quả 2'},
-                {'Số thứ tự': '3', 'Tên bệnh': 'Bệnh C', 'Kết quả': 'Kết quả 3'}
-        ];
-
-        var config = {
-            autoSize     : false,
-            printHeaders : true,
-            overflow: 'linebreak'
-        }
-
-        doc.table(10, 10, data, header, config);
-
-        doc.autoPrint();
-        window.open(doc.output('bloburl'), '_blank');
-    }
 
     return (
-        <div className="mt-5">
-            <table>
-                <thead>
+        <div className="mt-5 w-full" >
+            <div ref={printElement} className="w-full max-w-4xl">
+                <table className="w-full table-fixed border-collapse border border-gray-300">
+                    <thead>
+                    <tr>
+                        <td
+                            className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300"
+                            colSpan="2">
+                            Thông tin bệnh nhân
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">
+                            Bệnh nhân:
+                        </td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left border-b border-gray-300">
+                            {(() => {
+                                if (!thisExaminationResult || !thisExaminationResult.patient) {
+                                    return <p></p>;
+                                }
+                                const fullName = thisExaminationResult.patient.fullName;
+                                return `${fullName.firstName} ${fullName.middleName} ${fullName.lastName}`;
+                            })()}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">Giới tính</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">{thisExaminationResult.patient && thisExaminationResult.patient.gender === 1 ? 'Nam' : "Nữ"}</td>
+                    </tr>
+
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">Ngày sinh</td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">{thisExaminationResult.patient && thisExaminationResult.patient.dateOfBirth}</td>
+                    </tr>
+
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-1/4 border-b border-gray-300">
+                            Triệu chứng:
+                        </td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left border-b border-gray-300">
+                            {thisExaminationResult.symptom}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                {thisExaminationResult && thisExaminationResult.images && thisExaminationResult.images.size > 0 &&
+                    <table>
+                        <thead>
+                        <tr>
+                            <td
+                                colSpan={3}
+                                className="bg-blue-100 text-left text-lg font-semibold p-3 border-b border-gray-300">Hình
+                                ảnh chuẩn đoán
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr className="bg-gray-200">
+                            <td className="border border-gray-300 px-4 py-2">Hình ảnh</td>
+                            <td className="border border-gray-300 px-4 py-2">Kết quả chuẩn đoán</td>
+                        </tr>
+                        {(() => {
+                            if (!thisExaminationResult || !thisExaminationResult.images) {
+                                return <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>;
+                            }
+
+                            return thisExaminationResult.images.map(image => (
+                                <tr key={image.id}>
+                                    <td><img className={styles.previewImage} src={image.image} alt="Original"/></td>
+                                    <td><img className={styles.previewImage} src={image.processedImage}
+                                             alt="Processed"/></td>
+                                </tr>
+                            ));
+                        })()}
+                        </tbody>
+                    </table>}
+
+                <table>
+                    <thead>
                     <tr>
                         <td></td>
                         <td></td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Bệnh nhân:</td>
-                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">{(() => {
-                           if(!thisExaminationResult || !thisExaminationResult.patient){
-                               return <p></p>
-                           }
-                           const fullName = thisExaminationResult.patient.fullName
-                           return fullName.firstName + ' ' + fullName.middleName + ' ' + fullName.lastName
-                        })()}</td>
-                    </tr>
-
-                    <tr>
-                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Triệu chứng: </td>
-                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">{thisExaminationResult.symptom}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            {thisExaminationResult && thisExaminationResult.images && <table>
-                <thead>
-                    <tr><td>Hình ảnh chuẩn đoán</td></tr>
-                    <tr>
-                        <td>Hình ảnh</td>
-                        <td>Kết quả chuẩn đoán</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {(() => {
-                        if (!thisExaminationResult || !thisExaminationResult.images) {
-                            return <tr><td></td><td></td></tr>;
-                        }
-
-                        return thisExaminationResult.images.map(image => (
-                            <tr key={image.id}>
-                                <td><img className={styles.previewImage} src={image.image} alt="Original" /></td>
-                                <td><img className={styles.previewImage} src={image.processedImage} alt="Processed" /></td>
-                            </tr>
-                        ));
-                    })()}
-                </tbody>
-            </table> }
-
-            <table>
-                <thead>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr>
                         <td></td>
                         <td className="text-red-500 text-sm font-medium">{error.treatment}</td>
@@ -286,15 +274,21 @@ const Examination = ({examinationResult}) => {
 
                     <tr>
                         <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Điều trị:</td>
-                        {!examinationResult.examinatedAt && <td colSpan={2}><input className="w-1000 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2" onChange={(e) => setTreatment(e.target.value)}/></td>}
+                        {!examinationResult.examinatedAt &&
+                            <td colSpan={2}><input className="w-1000 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                                   onChange={(e) => setTreatment(e.target.value)}/></td>}
                         {examinationResult.examinatedAt && <td colSpan={2}>{examinationResult.treatment}</td>}
                     </tr>
 
                     <tr>
-                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Các bệnh mắc phải: </td>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Các bệnh mắc phải:</td>
 
-                        {!examinationResult.examinatedAt && <td><button className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh</button></td>}
+                        {!examinationResult.examinatedAt && <td>
+                            <button
+                                className="bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                onClick={() => onOpenSelectDiseaseModal()}>Lựa chọn bệnh
+                            </button>
+                        </td>}
                     </tr>
 
                     <tr>
@@ -302,50 +296,54 @@ const Examination = ({examinationResult}) => {
                         <td className="text-red-500 text-sm font-medium">{error.details}</td>
                     </tr>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            <table border={1}>
-                <tbody>
-                {[...selectedDiseasesMap].map(([key, value], index) => {
-                    if(!value){
-                        return ''
-                    }
+                <table border={1}>
+                    <tbody>
+                    {[...selectedDiseasesMap].map(([key, value], index) => {
+                        if (!value) {
+                            return ''
+                        }
 
-                    const errorAtIndex = `details[${index}].diseaseDescription`
-                    return <>
-                        <tr>
-                            <td></td>
-                            <td className="text-red-500 text-sm font-medium">{error[errorAtIndex]}</td>
-                        </tr>
+                        const errorAtIndex = `details[${index}].diseaseDescription`
+                        return <>
+                            <tr>
+                                <td></td>
+                                <td className="text-red-500 text-sm font-medium">{error[errorAtIndex]}</td>
+                            </tr>
 
-                        <tr >
-                            <td className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">{value.name}</td>
-                            <td><input
-                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
-                                onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
-                            </td>
-                            <td>
-                                <button className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-                                        onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này</button>
-                            </td>
-                        </tr>
-                    </>
-                })}
-                {examinationResult.details && examinationResult.details.map(disease => {
-                    if(!disease || !diseasesMap.get(disease.diseaseId)){
-                        return null
-                    }
-                    return <tr key={disease.id}>
+                            <tr>
+                                <td className="pl-2 pr-1 font-medium text-gray-700 text-left mb-4">{value.name}</td>
+                                <td><input
+                                    className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                    onChange={(e) => onChangeDiseaseDescriptionAtIndex(key, e.target.value)}/>
+                                </td>
+                                <td>
+                                    <button
+                                        className="bg-red-500 text-white font-semibold px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+                                        onClick={() => deleteSelectedDisease(key)}>Xóa bệnh này
+                                    </button>
+                                </td>
+                            </tr>
+                        </>
+                    })}
+                    {examinationResult.details && examinationResult.details.map(disease => {
+                        if (!disease || !diseasesMap.get(disease.diseaseId)) {
+                            return null
+                        }
+                        return <tr key={disease.id}>
                             <td className=" pl-2 pr-1 font-medium text-red-500">{diseasesMap.get(disease.diseaseId).name}:</td>
                             <td>{disease.diseaseDescription}</td>
-                    </tr>
-                })}
-                </tbody>
-            </table>
+                        </tr>
+                    })}
+                    </tbody>
+                </table>
 
-            <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal}
-                                diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
+                <SelectDiseaseModal isOpen={isSelectDiseaseOpen} onClose={onCloseSelectDieseaseModal}
+                                    diseasesMap={diseasesMap} selectCallBack={setSelectedDisease}/>
+
+            </div>
 
             {!examinationResult.examinatedAt &&
                 <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
@@ -353,7 +351,7 @@ const Examination = ({examinationResult}) => {
 
             {examinationResult.examinatedAt &&
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-10"
-                        onClick={() => handlePrintExaminationResult()}>In kết quả khám bệnh</button>}
+                        onClick={() => PrintComponent(printElement)}>In kết quả khám bệnh</button>}
         </div>
     )
 }

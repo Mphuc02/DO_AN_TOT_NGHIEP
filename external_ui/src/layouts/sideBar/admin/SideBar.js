@@ -88,6 +88,34 @@ function SideBar(){
                 </svg>
                 <span>Quản lý thông tin phòng khám</span>
             </Link></li>
+            <li><Link to={RoutesConstant.ADMIN.DISEASE_MANAGEMENT}
+                      className={currentPath.startsWith(RoutesConstant.ADMIN.DISEASE_MANAGEMENT) ? 'flex items-center p-2 text-white rounded-lg dark:text-white bg-green-700 group'
+                          : 'flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group'}>
+                <svg
+                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 2a6 6 0 100 12 6 6 0 000-12zm0 10a4 4 0 110-8 4 4 0 010 8zM2 20a10 10 0 0120 0H2z"/>
+                </svg>
+                <span>Quản lý thông tin bệnh</span>
+            </Link></li>
+            <li><Link to={RoutesConstant.ADMIN.EXAMINATION_COST_MANAGEMENT}
+                      className={currentPath.startsWith(RoutesConstant.ADMIN.EXAMINATION_COST_MANAGEMENT) ? 'flex items-center p-2 text-white rounded-lg dark:text-white bg-green-700 group'
+                          : 'flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group'}>
+                <svg
+                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 2a6 6 0 100 12 6 6 0 000-12zm0 10a4 4 0 110-8 4 4 0 010 8zM2 20a10 10 0 0120 0H2z"/>
+                </svg>
+                <span>Quản lý thông tin giá khám bệnh</span>
+            </Link></li>
             <li>
                 <button
                     onClick={() => onClickLogout()}

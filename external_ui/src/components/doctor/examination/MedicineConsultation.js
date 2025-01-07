@@ -164,27 +164,26 @@ const MedicineConsultation = ({}) => {
     }
 
     const handleDownloadPdf = async () => {
-        const element = printRef.current;
+        const element = printRef.current
+        if(!element){
+            return
+        }
+        const canva = await html2canvas(element)
+        const data = canva.toDataURL('image/png')
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "px",
+            format: "a4"
+        })
 
-        // Điều chỉnh kích thước canvas để giữ đúng cỡ chữ
-        const canvas = await html2canvas(element, {
-            scale: 3, // Giảm scale nếu chữ quá to để đảm bảo tỷ lệ phù hợp
-        });
+        const imageProperties = doc.getImageProperties(data)
+        const width = doc.internal.pageSize.getWidth()
 
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'pt',
-            format: 'a4',
-        });
-
-        // Điều chỉnh kích thước hình ảnh để phù hợp với PDF
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.output('dataurlnewwindow');
+        const height = (imageProperties.height * width) / imageProperties.width
+        doc.addImage(data, 'PNG', 0, 0, width, height)
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
     };
 
     const getMedicine = (form) => {
@@ -228,12 +227,12 @@ const MedicineConsultation = ({}) => {
                                  onChooseMedicine={onChooseMedicine}/>
 
             <p className="text-red-500 text-sm font-medium">{formError.details}</p>
-            <table className="table-auto border-collapse border border-gray-300 w-full text-left">
+            <table ref={printRef} className="table-auto border-collapse border border-gray-300 w-full text-left">
                 <thead className="bg-gray-200">
                     <tr>
                         <td className="border border-gray-300 px-4 py-2">Số thứ tự</td>
                         <td className="border border-gray-300 px-4 py-2">Tên thuốc</td>
-                        <td className="border border-gray-300 px-4 py-2">Số lượng trong kho</td>
+                        {!formResponse && <td className="border border-gray-300 px-4 py-2">Số lượng trong kho</td>}
                         <td className="border border-gray-300 px-4 py-2">Cách dùng</td>
                         <td className="border border-gray-300 px-4 py-2">Số lượng tư vấn</td>
                     </tr>
@@ -253,8 +252,8 @@ const MedicineConsultation = ({}) => {
                         </tr>
                         <tr>
                             <td>{index + 1}</td>
-                            <td>{value.name}</td>
-                            <td>{value.quantity}</td>
+                            <td>{value.medicine.name}</td>
+                            {!formResponse && <td>{value.medicine.quantity}</td>}
                             <td>
                                 {!formResponse && <input
                                     className="w-3/4 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"

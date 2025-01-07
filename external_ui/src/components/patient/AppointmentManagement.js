@@ -482,6 +482,7 @@ const AppointmentManagement = () => {
         setIsUpdateModalOpen(false);
     };
     const handleUpdateSchedule = (schedule) => {
+        console.log('appointment', schedule)
         setUpdatingData(schedule)
         openUpdateModal()
     }

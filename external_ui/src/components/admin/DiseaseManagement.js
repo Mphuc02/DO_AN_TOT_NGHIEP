@@ -1,16 +1,14 @@
 import {Link, useNavigate} from "react-router-dom";
-import styles from "../../layouts/body/style.module.css";
-import iconUpdate from "../../imgs/update.png";
 import {useEffect, useState} from "react";
-import {HOSPITAL_INFORMATION} from '../../ApiConstant'
-import axios from "axios";
 import {JwtService} from "../../service/JwtService";
+import axios from "axios";
+import {HOSPITAL_INFORMATION} from "../../ApiConstant";
 import routesConstant from "../../RoutesConstant";
 import RoutesConstant from "../../RoutesConstant";
 
 let page = ''
 let countError = 0
-const ExaminationRoomManagement = () => {
+const DiseaseManagement = () => {
     page = 'list'
     const navigate = useNavigate()
     const [rooms, setRooms] = useState([])
@@ -20,7 +18,7 @@ const ExaminationRoomManagement = () => {
             return
 
         const token = await JwtService.getAccessToken()
-        axios.get(HOSPITAL_INFORMATION.EXAMINATION_ROOM.getUrl(), {
+        axios.get(HOSPITAL_INFORMATION.DISEASES.getUrl(), {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -46,10 +44,10 @@ const ExaminationRoomManagement = () => {
     return (
         <>
             <h2
-                className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thông tin phòng khám bệnh</h2>
+                className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin thông tin bệnh</h2>
             <Link
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                to={'create'}>Thêm thông tin phòng khám</Link>
+                to={'create'}>Thêm thông tin bệnh</Link>
             <table border={1}
                    className="table-auto border-collapse border border-gray-300 w-full text-left mt-10">
                 <thead className="bg-gray-200">
@@ -60,7 +58,7 @@ const ExaminationRoomManagement = () => {
                 </thead>
                 <tbody>
                 {rooms.map((room, index) => (
-                    <tr onClick={() => navigate(routesConstant.ADMIN.UPDATE_ROOM(room.id))}
+                    <tr
                         className="hover:cursor-pointer hover:bg-gray-100 transition duration-200"
                         key={index}>
                         <td className="border border-gray-300 px-4 py-2 text-center">{room.id}</td>
@@ -70,10 +68,11 @@ const ExaminationRoomManagement = () => {
                 </tbody>
             </table>
         </>
-        )
+    )
 }
 
-const CreateExaminationRoom = () => {
+
+const CreateDisease = () => {
     page = 'create'
 
     const [roomError, setRoomError] = useState({})
@@ -86,7 +85,7 @@ const CreateExaminationRoom = () => {
             return
         console.log(room)
         const token = await JwtService.getAccessToken()
-        axios.post(HOSPITAL_INFORMATION.EXAMINATION_ROOM.getUrl(), JSON.stringify(room), {
+        axios.post(HOSPITAL_INFORMATION.DISEASES.getUrl(), JSON.stringify(room), {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -111,10 +110,10 @@ const CreateExaminationRoom = () => {
     return (
         <>
             <div>
-                <Link to={RoutesConstant.ADMIN.ROOM_MANAGEMENT}
-                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin phòng khám bệnh</Link>
+                <Link to={RoutesConstant.ADMIN.DISEASE_MANAGEMENT}
+                      className="text-xl font-bold text-green-600 mb-4">Quản lý thông tin bệnh</Link>
                 <span
-                    className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới thông tin phòng khám</span>
+                    className="text-xl font-bold text-green-600 mb-4"> ⟶ Thêm mới thông tin bệnh</span>
             </div>
             <div>
                 <table>
@@ -129,7 +128,17 @@ const CreateExaminationRoom = () => {
                             <input
                                 className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
                                 value={room.name} onChange={(e) => {
-                                    setRoom({...room, name: e.target.value})
+                                setRoom({...room, name: e.target.value})
+                            }}/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="pl-2 pr-1 font-medium text-gray-700 text-left w-32 mb-4">Mô tả:</td>
+                        <td>
+                            <input
+                                className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
+                                value={room.name} onChange={(e) => {
+                                setRoom({...room, description: e.target.value})
                             }}/>
                         </td>
                     </tr>
@@ -138,10 +147,11 @@ const CreateExaminationRoom = () => {
 
                 <button
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-10"
-                    onClick={() => handleCreateRoom()}>Lưu</button>
+                    onClick={() => handleCreateRoom()}>Lưu
+                </button>
             </div>
         </>
     )
 }
 
-export {ExaminationRoomManagement, CreateExaminationRoom}
+export {DiseaseManagement, CreateDisease}

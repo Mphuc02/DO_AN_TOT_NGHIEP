@@ -6,6 +6,7 @@ import {Link, useNavigate} from "react-router-dom";
 import RoutesConstant from "../../RoutesConstant";
 
 const PayForInvoice = (id) => {
+    const printRef = useRef(null)
     const [invoice, setInvoice] = useState({})
     const [consultedMedicinesMap, setConsultedMedicinesMap] = useState(new Map())
     const invoiceId = window.location.href.split('/').pop()

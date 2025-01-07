@@ -350,6 +350,10 @@ const PaymentApi = class {
     static payByVnpay = (id) => {
         return this.getUrl() + `/pay-by-vnpay/${id}`
     }
+
+    static EXAMINATION_COST_URL = () => {
+        return HOST.getHost() + "/api/examination-costs"
+    }
 }
 
 const VNPAY = class {

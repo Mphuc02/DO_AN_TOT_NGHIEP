@@ -11,6 +11,10 @@ class RoutesConstant{
         static MEDICINE_MANAGEMENT_ORIGIN_CREATE = '/admin/medicine-management/origin/create'
         static ROOM_MANAGEMENT = '/admin/examination-room-management'
         static ROOM_MANAGEMENT_CREATE = '/admin/examination-room-management/create'
+        static DISEASE_MANAGEMENT = "/admin/disease-management"
+        static DISEASE_MANAGEMENT_CREATE = "/admin/disease-management/create"
+        static EXAMINATION_COST_MANAGEMENT = "/admin/examination-costs"
+        static EXAMINATION_COST_MANAGEMENT_CREATE = "/admin/examination-costs/create"
 
         static UPDATE_MEDICINE = (id) => {
             return this.MEDICINE_MANAGEMENT + "/update/" + id
@@ -27,6 +31,7 @@ class RoutesConstant{
         static UPDATE_ROOM = (id) => {
             return this.ROOM_MANAGEMENT + "/update/" + id
         }
+
     }
 
     static DOCTOR  = class {
