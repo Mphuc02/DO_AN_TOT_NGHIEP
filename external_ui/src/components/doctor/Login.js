@@ -4,6 +4,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {SendApiService} from "../../service/SendApiService";
 import logo from "../../imgs/logo.jpg"
+import RoutesConstant from "../../RoutesConstant";
 
 function Login(){
     const [userName, setUserName] = useState('')
@@ -35,7 +36,7 @@ function Login(){
                 localStorage.setItem('refresh-token', response.data.refreshToken)
                 await getEmployeeInfor()
 
-                navigate('/employee/doctor')
+                navigate(RoutesConstant.DOCTOR.WORKING_SCHEDULE_MANAGEMENT)
             })
             .catch(error => {
                 console.log(error.response);

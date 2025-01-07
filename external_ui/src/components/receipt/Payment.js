@@ -23,7 +23,7 @@ const PayForInvoice = (id) => {
                 }
                 resolve()
             }, error => {
-                reject(error)
+                resolve(error)
             })
         })
     }
@@ -34,7 +34,7 @@ const PayForInvoice = (id) => {
                 patient.address = {...response.data, ...patient.address, }
                 resolve()
             }, error => {
-                reject(error)
+                resolve(error)
             })
         })
     }
@@ -54,7 +54,7 @@ const PayForInvoice = (id) => {
                 setConsultedMedicinesMap(tempMap)
                 resolve()
             },error => {
-                reject(error)
+                resolve(error)
             })
         })
     }
@@ -66,7 +66,7 @@ const PayForInvoice = (id) => {
                 await getAddressDetail(response.data)
                 resolve()
             }, error => {
-                reject(error)
+                resolve(error)
             })
         })
     }
@@ -331,7 +331,7 @@ const UnPaidInvoice = () => {
                 }
                 resolve()
             }, error => {
-                reject()
+                resolve()
             })
         })
     }

@@ -68,7 +68,7 @@ const CreateModal = ({ isOpen, onClose, roomMap, date }) => {
                 await handleCreateSchedule()
             }
             if(error.status === 400){
-                setErrorResponse(error.response.data)
+                setErrorResponse(error.response.data.fields)
                 setToast({message: "Lỗi khi kiểm tra thông tin", type: 'error'})
             }
         })

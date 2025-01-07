@@ -54,6 +54,7 @@ class RoutesConstant{
         static DIAGNOSTICS = '/patient/diagnostics'
         static CHAT = "/patient/messages"
         static EXAMINATION_HISTORIES = "/patient/examination-histories"
+        static SIGN_UP = "/patient/sign-up"
     }
 
     static RECEIPT = class {

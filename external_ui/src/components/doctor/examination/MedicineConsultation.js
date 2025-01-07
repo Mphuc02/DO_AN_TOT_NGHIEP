@@ -252,8 +252,8 @@ const MedicineConsultation = ({}) => {
                         </tr>
                         <tr>
                             <td>{index + 1}</td>
-                            <td>{value.medicine.name}</td>
-                            {!formResponse && <td>{value.medicine.quantity}</td>}
+                            <td>{value.medicine ? value.medicine.name : value.name}</td>
+                            {!formResponse && <td>{value.quantity}</td>}
                             <td>
                                 {!formResponse && <input
                                     className="w-3/4 border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"

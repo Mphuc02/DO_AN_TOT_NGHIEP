@@ -31,6 +31,7 @@ import {AppointmentManagement} from "../components/patient/AppointmentManagement
 import {ExaminationResultHistories} from "../components/patient/ExaminationResultHistories";
 import {CreateDisease, DiseaseManagement} from "../components/admin/DiseaseManagement";
 import {CreateCost, ExaminationCostManagement} from "../components/admin/ExaminationCostManagement";
+import {SignUp} from "../components/patient/SignUp";
 
 const publicRoutes = [
     {path: RoutesConstant.ADMIN.LOGIN, component: Login, layout: AdminLoginLayout},
@@ -72,6 +73,7 @@ const publicRoutes = [
     {path: RoutesConstant.PATIENT.CHAT, component: Message, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.APPOINTMENTS_MANAGEMENT, component: AppointmentManagement, layout: PatientLayout},
     {path: RoutesConstant.PATIENT.EXAMINATION_HISTORIES, component: ExaminationResultHistories, layout: PatientLayout},
+    {path: RoutesConstant.PATIENT.SIGN_UP, component: SignUp, layout: PatientLoginLayout},
 
     //Receipt staff
     {path: RoutesConstant.RECEIPT.LOGIN, component: ReceiptLogin, layout: ReceiptLoginLayout},

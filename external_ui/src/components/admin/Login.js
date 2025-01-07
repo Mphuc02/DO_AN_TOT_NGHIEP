@@ -38,7 +38,7 @@ function Login(){
 
                 await getEmployeeInformation()
 
-                navigate(RoutesConstant.ADMIN.DASHBOARD)
+                navigate(RoutesConstant.ADMIN.EMPLOYEE_MANAGEMENT)
             })
             .catch(error => {
                 console.log(error.response);

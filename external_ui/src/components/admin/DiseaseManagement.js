@@ -93,7 +93,7 @@ const CreateDisease = () => {
         }).then(response => {
             console.log(response)
             alert('Thêm thông tin thành công')
-            setRoom({name: ''})
+            window.location.reload()
         }).catch(async error => {
             console.log(error)
             const result = await JwtService.checkTokenExpired(error)
@@ -137,7 +137,7 @@ const CreateDisease = () => {
                         <td>
                             <input
                                 className="w-full border-2 border-gray-800 rounded-md p-2 mb-2 mt-2"
-                                value={room.name} onChange={(e) => {
+                                value={room.description} onChange={(e) => {
                                 setRoom({...room, description: e.target.value})
                             }}/>
                         </td>

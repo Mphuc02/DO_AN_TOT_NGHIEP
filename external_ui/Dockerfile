@@ -1,7 +1,7 @@
-# Sử dụng image Node.js chính thức làm base image
+# Dockerfile
 FROM node:16 AS build
 
-# Đặt thư mục làm việc trong container
+# Thiết lập thư mục làm việc trong container
 WORKDIR /app
 
 # Sao chép package.json và package-lock.json vào container
@@ -10,20 +10,20 @@ COPY package*.json ./
 # Cài đặt các dependencies
 RUN npm install
 
-# Sao chép mã nguồn React vào container
+# Sao chép toàn bộ mã nguồn vào container
 COPY . .
 
-# Build ứng dụng React
+# Build ứng dụng ReactJS
 RUN npm run build
 
-# Sử dụng nginx để phục vụ ứng dụng React đã build
+# Chọn image Nginx để phục vụ ứng dụng ReactJS
 FROM nginx:alpine
 
-# Sao chép các file build vào thư mục public của nginx
+# Sao chép các file đã build vào thư mục mà Nginx sử dụng
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Mở port 80 để phục vụ ứng dụng
-EXPOSE 80
+# Mở cổng 3000 thay vì cổng 80
+EXPOSE 3000
 
-# Khởi động nginx khi container chạy
-CMD ["nginx", "-g", "daemon off;"]
+# Lệnh khởi động Nginx với cổng 3000
+CMD ["nginx", "-g", "daemon off;", "-p", "3000"]

@@ -5,7 +5,7 @@ class HOST{
 
 class MinioUrl{
     static getHost = () => {
-        return 'http://localhost:9000'
+        return "http://localhost:9000"
     }
 
     static downloadFile = (url) => {
@@ -104,7 +104,7 @@ class ROLE{
 
 class WEBSOCKET{
     static getUrl = () => {
-        return HOST.getHost() + "/hospital_system";
+        return  "http://localhost:9010/hospital_system";
     }
 
     static topicCreateEmployee = (id) => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {AUTHENTICATION, PATIENT} from "../../ApiConstant";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import RoutesConstant from "../../RoutesConstant";
 import {JwtService} from "../../service/JwtService";
 import {SendApiService} from "../../service/SendApiService";
@@ -39,7 +39,7 @@ function Login(){
 
                 await getPatientInformation(JwtService.geUserFromToken())
 
-                navigate(RoutesConstant.PATIENT.DASHBOARD)
+                navigate(RoutesConstant.PATIENT.DIAGNOSTICS)
             })
             .catch(error => {
                 console.log(error.response);
@@ -107,11 +107,11 @@ function Login(){
 
                             <p>
                                 Chưa có tài khoản?
-                                <a
-                                    href="#"
+                                <Link
+                                    to={RoutesConstant.PATIENT.SIGN_UP}
                                     className="text-sm font-medium text-blue-600 hover:underline">
                                         Đăng ký ngay
-                                </a>
+                                </Link>
                             </p>
                         </div>
                         <button
