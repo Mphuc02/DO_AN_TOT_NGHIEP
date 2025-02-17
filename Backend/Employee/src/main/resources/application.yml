@@ -1,0 +1,65 @@
+spring:
+    application:
+        name: Employee
+        
+    kafka:
+        bootstrap-servers:
+            - localhost:9092
+        producer:
+            key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*"
+                
+    data:
+        redis:
+            port: 6379
+            host: localhost
+    
+    datasource:
+        url: jdbc:mysql://localhost:3306/employee
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+
+server:
+    port: 8081
+
+kafka:
+    topics:
+        create-employee-topic: create_employee
+        created-employee-topic: created_employee
+    group-id:
+        account: account_group
+        
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
+    refresh-token-expiration: 30000000
+
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

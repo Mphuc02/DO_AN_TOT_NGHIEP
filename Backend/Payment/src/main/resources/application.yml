@@ -1,0 +1,77 @@
+server:
+    port: 9011
+
+spring:
+    application:
+        name: Payment
+    
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/payment
+        username: root
+        password: 123456
+    
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                format_sql: true
+    
+    kafka:
+        bootstrap-servers:
+            - localhost:9092
+        producer:
+            key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*"
+    
+    main:
+        allow-bean-definition-overriding: true
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
+    refresh-token-expiration: 30000000
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+    
+kafka:
+    topics:
+        created-examination-result-success: created_examination_result_success
+        pay-medicine-in-cash: pay_medicine_in_cash
+        paid-medicine-invoice: paid_medicine_invoice
+        completed-payment-invoice: completed_payment_invoice
+        pay-medicine-online: pay_medicine_online
+    
+    group-id:
+        payment-group: payment_group
+        
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789
+    
+payment:
+    vnPay:
+        url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+        tmnCode: MTCLW0O7
+        secretKey: ENBZDMRPIYX6PTV3UM7E6IPNM74X7BUU
+        returnUrl: http://localhost:9011/api/invoices/vnpay-call-back
+        version: 2.1.0
+        command: pay
+        orderType: other

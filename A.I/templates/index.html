@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Upload Image</title>
+</head>
+<body>
+    <h1>Upload Image for YOLOv8 Detection</h1>
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        <input type="file" id="image" name="image">
+        <input type="submit" value="Upload">
+    </form>
+    <br>
+    <div id="result">
+        <h2>Result:</h2>
+        <img id="result-image" src="" alt="Result Image">
+    </div>
+    <script>
+        document.getElementById('upload-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('image', document.getElementById('image').files[0]);
+
+            const response = await fetch('/api/v1/ai/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const result = await response.text();
+                document.getElementById('result-image').src = 'data:image/jpeg;base64,' + result;
+            } else {
+                alert('Error uploading image');
+            }
+        };
+    </script>
+</body>
+</html>

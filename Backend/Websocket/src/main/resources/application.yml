@@ -1,0 +1,66 @@
+spring:
+    websocket:
+        maxMessageSize: 10485760
+        
+    application:
+        name: Websocket
+        
+    kafka:
+        bootstrap-servers:
+            - localhost:9092
+        producer:
+            key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*"
+    
+    main:
+        allow-bean-definition-overriding: true
+        
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
+    refresh-token-expiration: 30000000
+
+kafka:
+    topics:
+        create-employee-topic: create_employee
+        created-employee-topic: created_employee
+        detected-topic: detected_image
+        processed-image: processed-image
+        new-message: new_message
+        create-patient-account-from-greeting: create_patient_from_greeting
+        created-patient-account-from-greeting-success: created_patient_from_greeting_success
+        fail-create-patient-from-greeting-topic: fail_create_patient_from_greeting
+        received-new-message: received_new_message
+        updated-number-examination-form-topic: updated_number_examination_form_topic
+        received-image-message: received_image_message
+        received-message: received_message
+        completed-payment-invoice: completed_payment_invoice
+    
+    group-id:
+        websocket: websocket_group
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+
+
+server:
+    port: 8092
+
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789

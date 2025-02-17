@@ -1,0 +1,77 @@
+spring:
+    application:
+        name: Chat
+    
+    datasource:
+        url: jdbc:mysql://localhost:3306/chat
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    
+    jpa:
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+    
+    kafka:
+        bootstrap-servers:
+            - localhost:9092
+        producer:
+            key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*"
+    
+    data:
+        redis:
+            #            host: 10.10.100.42
+            port: 6379
+            host: localhost
+
+jwt:
+    secret-key: PHUXUYENhanoib20dccn503D20CNPM6d20cqcn11bhospitalsystemDOANTOTNGHIEP2024DINHMINHPHUC24052002
+    access-token=expiration: 300000
+    refresh-token-expiration: 30000000
+
+kafka:
+    topics:
+        detect-topic: request_detect_image
+        detected-topic: detected_image
+        create-relation-ship: create_relation_ship
+        new-message: new_message
+        received-image-message: received_image_message
+        received-message: received_message
+        
+    group-id:
+        chat: chat
+
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
+    
+    instance:
+        lease-renewal-interval-in-seconds: 5
+        lease-expiration-duration-in-seconds: 5
+        hostname: localhost
+        
+server:
+    port: 8090
+
+file:
+    upload-dir: src/main/resources/static/uploads
+    
+minio:
+    url: http://localhost:9000
+    user-name: root
+    pass-word: 123456789
+    

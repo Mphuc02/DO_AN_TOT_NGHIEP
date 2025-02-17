@@ -1,0 +1,122 @@
+version: '2'
+services:
+    zookeeper:
+        image: confluentinc/cp-zookeeper:7.7.0
+        hostname: zookeeper
+        container_name: zookeeper
+        ports:
+            - "2181:2181"
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+    
+    broker:
+        image: confluentinc/cp-server:7.7.0
+        hostname: broker
+        container_name: broker
+        depends_on:
+            - zookeeper
+        ports:
+            - "9092:9092"
+            - "9101:9101"
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+            KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+            KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_JMX_PORT: 9101
+            KAFKA_JMX_HOSTNAME: localhost
+            CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
+            CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+            CONFLUENT_METRICS_ENABLE: 'true'
+            CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    
+    control-center:
+        image: confluentinc/cp-enterprise-control-center:7.7.0
+        hostname: control-center
+        container_name: control-center
+        depends_on:
+            - broker
+        ports:
+            - "9021:9021"
+        environment:
+            CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+            CONTROL_CENTER_REPLICATION_FACTOR: 1
+            CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+            CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+            CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+            PORT: 9021
+    
+    authentication-database:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - '3307:3306'
+        volumes:
+            - authentication_db:/var/lib/mysql
+    
+    redis:
+        image: docker.io/bitnami/redis:7.4
+        container_name: cache_server
+        environment:
+            # ALLOW_EMPTY_PASSWORD is recommended only for development.
+            - ALLOW_EMPTY_PASSWORD=yes
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        ports:
+            - '6379:6379'
+        volumes:
+            - 'redis_data:/bitnami/redis/data'
+    
+    discovery-server:
+        image: discovery-server
+        container_name: discovery-server
+        ports:
+            - '8761:8761'
+    
+    api-gateway:
+        image: api-gateway
+        container_name: api-gateway
+        ports:
+            - '9000:9000'
+        environment:
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+    
+    authentication-service:
+        image: authentication:0.0.1
+        container_name: authentication-service
+        ports:
+            - '8080:8080'
+        environment:
+            spring.datasource.url: jdbc:mysql://authentication-database:3307/authentication
+            spring.kafka.bootstrap-servers: broker:9092
+            spring.data.redis.host: redis
+            eureka.client.service-url.defaultZone: http://discovery-server:8761/eureka
+    
+    minio:
+        image: minio/minio:latest
+        container_name: minio
+        environment:
+            MINIO_ROOT_USER: root
+            MINIO_ROOT_PASSWORD: 123456789
+        ports:
+            - "9000:9000"  # Cổng HTTP cho MinIO (web interface)
+            - "9001:9001"  # Cổng console MinIO
+        volumes:
+            - minio_data:/data
+        command: server /data --console-address ":9001"
+
+volumes:
+    redis_data:
+        driver: local
+    authentication_db:
+        driver: local
+    minio_data:
+        driver: local

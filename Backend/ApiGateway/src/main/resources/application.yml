@@ -1,0 +1,101 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka
+
+spring:
+    application:
+        name: ApiGateway
+
+    cloud:
+        gateway:
+            routes:
+                - id: faculty
+                  uri: lb://FACULTY
+                  predicates:
+                      - Path=/api/v1/faculty/**
+                
+                - id: authentication
+                  uri: lb://AUTHENTICATION
+                  predicates:
+                    - Path=/api/v1/authentication/**
+            
+                - id: employee
+                  uri: lb://EMPLOYEE
+                  predicates:
+                    - Path=/api/v1/employees/**, /api/v1/roles/**
+                    
+                - id: websocket
+                  uri: lb://Websocket
+                  predicates:
+                    - Path=/hospital_system/**
+                
+                - id: medicine
+                  uri: lb://MEDICINE
+                  predicates:
+                    - Path=/api/v1/medicines/** , /api/v1/origins/** , /api/v1/import-invoices/** , /api/v1/suppliers/**
+                
+                - id: hospital_information
+                  uri: lb://HOSPITALINFORMATION
+                  predicates:
+                    - Path=/api/examination-rooms/** , /api/provinces/**, /api/diseases/**
+                   
+                - id: working_schedule
+                  uri: lb://WORKINGSCHEDULE
+                  predicates:
+                    - Path=/api/v1/working-schedules/**
+                
+                - id: ai_service
+                  uri: lb://AISERVICE
+                  predicates:
+                    - Path=/api/v1/ai/**
+                
+                - id: patient
+                  uri: lb://PATIENT
+                  predicates:
+                    - Path=/api/patients/** , /api/appointments/**
+                    
+                - id: greeting
+                  uri: lb://GREETING
+                  predicates:
+                    - Path=/api/v1/greeting/**
+                
+                - id: examination_result
+                  uri: lb://EXAMINATIONRESULT
+                  predicates:
+                    - Path=/api/v1/appointment-form-next-examination/** , /api/examination-results/** , /api/consultation-form/**
+                    
+                - id: chat
+                  uri: lb://CHAT
+                  predicates:
+                    - Path=/api/chat/** , /api/relation-ship/**
+            
+                - id: payment
+                  uri: lb://PAYMENT
+                  predicates:
+                    - Path=/api/invoices/** , /api/examination-costs/**
+                
+            default-filters:
+                - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+            globalcors:
+                cors-configurations:
+                    '[/api/v1/**]':
+                        allowedOrigins: "*"
+                        allowedHeaders: "*"
+                        allowedMethods:
+                            - GET
+                            - POST
+                            - PUT
+                            - DELETE
+                    
+                    '[/api/**]':
+                        allowedOrigins: "*"
+                        allowedHeaders: "*"
+                        allowedMethods:
+                            - GET
+                            - POST
+                            - PUT
+                            - DELETE
+            
+server:
+    port: 9010
